@@ -1,0 +1,234 @@
+/* v4.1 — static shortcuts + NOCO Hub logo redesign */
+
+/* ── Shortcuts: fixed in place, fully clickable ── */
+.input-shortcuts-clean.input-shortcuts-rainbow {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.4rem !important;
+  overflow: visible !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  position: relative;
+  z-index: 3;
+}
+
+.input-shortcuts-clean .input-shortcut-chip {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto !important;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+body.is-chat-render-locked .input-shortcuts-clean .input-shortcut-chip {
+  pointer-events: none !important;
+}
+
+.input-shortcuts-track {
+  display: contents;
+}
+
+.input-shortcuts-track[data-marquee] {
+  animation: none !important;
+}
+
+/* ── NOCO Hub logo (shared component) ── */
+.noco-hub-logo {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.noco-hub-logo-sm {
+  width: 38px;
+  height: 38px;
+}
+
+.noco-hub-logo-xs {
+  width: 22px;
+  height: 22px;
+}
+
+.noco-hub-logo-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.45) 0%, rgba(94, 234, 212, 0.2) 45%, transparent 70%);
+  filter: blur(10px);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.noco-hub-logo-plate {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.14) 0%, transparent 48%),
+    linear-gradient(315deg, rgba(129, 140, 248, 0.12) 0%, transparent 55%),
+    rgba(8, 12, 26, 0.55);
+  border: 1px solid rgba(167, 139, 250, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 24px rgba(129, 140, 248, 0.2);
+  overflow: hidden;
+}
+
+.noco-hub-logo-sm .noco-hub-logo-plate {
+  border-radius: 12px;
+}
+
+.noco-hub-logo-xs .noco-hub-logo-plate {
+  border-radius: 7px;
+  border-width: 1px;
+}
+
+.noco-hub-logo-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.08) 50%, transparent 65%);
+  pointer-events: none;
+}
+
+.noco-hub-logo-sq {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #5eead4 0%, #818cf8 45%, #e879f9 100%);
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.55);
+  transform: rotate(18deg);
+  animation: hubLogoSqSpin 6s linear infinite;
+}
+
+.noco-hub-logo-sm .noco-hub-logo-sq {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+}
+
+.noco-hub-logo-xs .noco-hub-logo-sq {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.noco-hub-logo-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.noco-hub-logo-xs .noco-hub-logo-dot {
+  width: 3px;
+  height: 3px;
+}
+
+@keyframes hubLogoSqSpin {
+  0% { transform: rotate(18deg); }
+  100% { transform: rotate(378deg); }
+}
+
+/* Hub dialog header */
+.hub-v2-brand .noco-hub-logo + div h2,
+.hub-v2-brand h2 {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+.hub-dialog-v2 {
+  border-color: rgba(167, 139, 250, 0.24) !important;
+  background:
+    linear-gradient(168deg, rgba(94, 234, 212, 0.06) 0%, transparent 38%),
+    linear-gradient(220deg, rgba(129, 140, 248, 0.1) 0%, transparent 50%),
+    rgba(6, 10, 20, 0.9) !important;
+}
+
+.hub-v2-glow {
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(94, 234, 212, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse at 88% 100%, rgba(232, 121, 249, 0.12) 0%, transparent 48%) !important;
+}
+
+.hub-tab.active {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.12), rgba(129, 140, 248, 0.16)) !important;
+  border-color: rgba(167, 139, 250, 0.35) !important;
+}
+
+/* Features panel hub header */
+.info-header-icon.noco-hub-logo-wrap {
+  width: auto;
+  height: auto;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Shortcut Hub chip — mini logo */
+.input-shortcut-chip[data-shortcut="hub"] {
+  gap: 0.4rem;
+}
+
+.isc-hub-logo {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.isc-hub-logo .noco-hub-logo-plate {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+}
+
+.isc-hub-logo .noco-hub-logo-sq {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.isc-hub-logo .noco-hub-logo-glow,
+.isc-hub-logo .noco-hub-logo-dot {
+  display: none;
+}
+
+/* Top-left NOCO logo polish */
+.logo-mark-sm {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, #5eead4 0%, #818cf8 48%, #c084fc 100%) !important;
+}
+
+.logo-sq-spin {
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 3px;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.35), 0 0 20px rgba(129, 140, 248, 0.45);
+}
+
+.logo-mark-sm .logo-letters {
+  display: none;
+}
+
+.logo-mark-sm .logo-orbit,
+.logo-mark-sm .logo-shimmer,
+.logo-mark-sm .logo-ai-spark {
+  display: none;
+}

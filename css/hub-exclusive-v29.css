@@ -1,0 +1,441 @@
+/* v2.9 — Hub, Exclusive, Render HUD, Image actions */
+
+/* ── Hub v2 ── */
+
+.hub-dialog-v2 {
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, 0.1) 0%, transparent 36%),
+    linear-gradient(325deg, rgba(129, 140, 248, 0.12) 0%, transparent 48%),
+    rgba(6, 10, 20, 0.82);
+}
+
+.hub-v2-glow {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(94, 234, 212, 0.16) 0%, transparent 52%),
+    radial-gradient(ellipse at 85% 100%, rgba(167, 139, 250, 0.14) 0%, transparent 48%);
+}
+
+.hub-v2-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.5rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hub-v2-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.hub-v2-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.22), rgba(129, 140, 248, 0.18));
+  border: 1px solid rgba(94, 234, 212, 0.35);
+  color: var(--accent-teal);
+  font-size: 1.1rem;
+  box-shadow: 0 0 22px rgba(94, 234, 212, 0.18);
+}
+
+.hub-v2-tabs {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0 1.25rem 0.55rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hub-v2-scroll {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 1.25rem 0.75rem;
+  scrollbar-gutter: stable;
+}
+
+.hub-v2-scroll::-webkit-scrollbar { width: 6px; }
+.hub-v2-scroll::-webkit-scrollbar-thumb {
+  background: rgba(167, 139, 250, 0.25);
+  border-radius: 99px;
+}
+
+.hub-v2-footer {
+  flex-shrink: 0;
+  padding: 0.65rem 1.25rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 12, 24, 0.55);
+  position: relative;
+  z-index: 2;
+}
+
+.hub-v2-grid .discover-tile {
+  min-height: 88px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.09) 0%, transparent 50%),
+    rgba(10, 14, 28, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.06);
+}
+
+.hub-v2-grid .discover-tile:hover {
+  border-color: rgba(167, 139, 250, 0.38);
+  box-shadow: 0 0 28px rgba(129, 140, 248, 0.16);
+}
+
+.hub-dialog-v2 .discover-start-btn {
+  margin: 0;
+}
+
+/* ── Exclusive close + ex2 ── */
+
+.exclusive-dialog.is-closing {
+  animation: exclusiveCloseOut 0.34s var(--ease-out) forwards;
+}
+
+.exclusive-dialog.is-closing::backdrop {
+  animation: exclusiveBackdropOut 0.34s ease forwards;
+}
+
+@keyframes exclusiveCloseOut {
+  to { opacity: 0; transform: scale(0.94) translateY(8px); }
+}
+
+@keyframes exclusiveBackdropOut {
+  to { opacity: 0; }
+}
+
+.ex2-perk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0 0 0.65rem;
+  padding: 0;
+}
+
+.ex2-perk {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.7rem 0.75rem !important;
+  border-radius: var(--radius-md) !important;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.08) 0%, transparent 48%),
+    rgba(10, 14, 28, 0.38) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  animation: none !important;
+  min-height: 0;
+}
+
+.ex2-perk-glyph {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.22), rgba(232, 121, 249, 0.12));
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.15);
+}
+
+.ex2-perk-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.ex2-perk-copy strong {
+  font-size: 0.74rem;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.ex2-perk-copy span {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.ex2-plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.ex2-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-height: 96px;
+  padding: 0.95rem 1rem !important;
+  border-radius: var(--radius-md) !important;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1) 0%, transparent 45%),
+    rgba(8, 12, 26, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  text-align: left;
+  grid-template-columns: unset !important;
+  grid-template-rows: unset !important;
+  transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
+}
+
+.ex2-plan:hover {
+  transform: translateY(-2px);
+  border-color: rgba(167, 139, 250, 0.42) !important;
+  box-shadow: 0 0 32px rgba(129, 140, 248, 0.18) !important;
+}
+
+.ex2-plan.is-recommended {
+  border-color: rgba(94, 234, 212, 0.45) !important;
+  box-shadow: 0 0 28px rgba(94, 234, 212, 0.12) !important;
+}
+
+.ex2-plan-ribbon {
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.45rem;
+  border-radius: 99px;
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.25), rgba(129, 140, 248, 0.2));
+  color: var(--accent-teal);
+  margin-bottom: 0.15rem;
+}
+
+.ex2-plan .plan-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  grid-column: unset;
+  grid-row: unset;
+}
+
+.ex2-plan .plan-detail {
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.ex2-plan-price {
+  margin-top: 0.2rem;
+  font-size: 1.05rem !important;
+  font-weight: 700;
+  background: var(--iridescent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  grid-column: unset !important;
+  justify-self: unset !important;
+}
+
+.ex2-plan .plan-badge { display: none; }
+
+/* ── Render HUD hero text ── */
+
+.chat-render-hud.is-silent .render-hud-glass,
+.chat-render-hud.is-silent .render-hud-hero,
+.chat-render-hud.is-silent .render-hud-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chat-render-hud.is-silent {
+  justify-content: flex-end;
+}
+
+.render-hud-hero {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem 0.75rem;
+  gap: 0.35rem;
+}
+
+.render-hud-hero-text {
+  margin: 0;
+  font-size: clamp(1.05rem, 4.8vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #5eead4 0%, #818cf8 35%, #a78bfa 58%, #e879f9 82%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.35));
+  animation: renderHeroIn 0.32s var(--ease-out);
+}
+
+.render-hud-hero-text.is-finishing {
+  background: linear-gradient(135deg, #99f6e4, #c4b5fd, #f0abfc);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.render-hud-hero-step {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes renderHeroIn {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.chat-render-hud {
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.render-hud-glass {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 24, 0.25) 0%, rgba(6, 10, 20, 0.72) 100%);
+}
+
+.render-hud-bar {
+  margin-top: auto;
+  height: 3px;
+}
+
+.render-hud-bar-fill {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.45);
+}
+
+/* ── Image actions glass ── */
+
+.chat-image-actions-glass {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+  padding: 0.5rem 0.55rem;
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1) 0%, transparent 48%),
+    rgba(8, 12, 26, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-img-action-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.72rem;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.64rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.22s var(--ease-out);
+}
+
+.chat-img-action-glass .cia-icon {
+  font-size: 0.72rem;
+  background: var(--iridescent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.chat-img-action-glass:hover {
+  color: #fff;
+  border-color: rgba(167, 139, 250, 0.4);
+  box-shadow: 0 0 18px rgba(129, 140, 248, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ── Chat tools menu ── */
+
+.chat-tools-menu.liquid-glass-prism {
+  min-width: 240px;
+  z-index: 10150;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1) 0%, transparent 45%),
+    rgba(8, 12, 26, 0.88);
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(129, 140, 248, 0.14);
+}
+
+.chat-tool-btn {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    rgba(10, 14, 28, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ── Top bar clip fix ── */
+
+.top-nav {
+  overflow: visible;
+  padding: 0.4rem 0.55rem;
+}
+
+.nav-pill {
+  overflow: visible;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.top-bar-right {
+  overflow: visible;
+}
+
+.render-interrupt-panel {
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem 0.9rem;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1) 0%, transparent 45%),
+    rgba(8, 12, 26, 0.72) !important;
+}
+
+.render-interrupt-text {
+  font-size: clamp(0.9rem, 3.5vw, 1.15rem) !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+@media (max-width: 640px) {
+  .ex2-perk-grid,
+  .ex2-plans {
+    grid-template-columns: 1fr;
+  }
+  .discover-dialog {
+    width: calc(100vw - 0.75rem);
+    height: min(94dvh, 900px);
+    max-height: min(94dvh, 900px);
+  }
+}

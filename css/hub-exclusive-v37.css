@@ -1,0 +1,414 @@
+/* v3.8 — rainbow shell theme, lens HUD, rainbow frame reveal */
+
+/* ── Ambient rainbow atmosphere ── */
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 12% 18%, rgba(94, 234, 212, 0.07) 0%, transparent 48%),
+    radial-gradient(ellipse at 88% 22%, rgba(129, 140, 248, 0.08) 0%, transparent 46%),
+    radial-gradient(ellipse at 50% 92%, rgba(232, 121, 249, 0.06) 0%, transparent 52%),
+    radial-gradient(ellipse at 78% 68%, rgba(96, 165, 250, 0.05) 0%, transparent 44%);
+  z-index: 0;
+}
+
+/* ── Top bar & right controls ── */
+.top-bar.liquid-glass {
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.06) 0%, transparent 38%),
+    linear-gradient(225deg, rgba(129, 140, 248, 0.08) 0%, transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, transparent 55%),
+    rgba(8, 12, 24, 0.52) !important;
+  border-color: rgba(167, 139, 250, 0.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 40px rgba(129, 140, 248, 0.1) !important;
+}
+
+.top-bar-right .icon-btn {
+  border-color: rgba(167, 139, 250, 0.16);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    rgba(8, 12, 26, 0.35);
+}
+
+.top-bar-right .icon-btn:hover {
+  border-color: rgba(167, 139, 250, 0.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 20px rgba(129, 140, 248, 0.22);
+}
+
+.exclusive-top-btn {
+  border-color: rgba(167, 139, 250, 0.28) !important;
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.1) 0%, rgba(129, 140, 248, 0.12) 50%, rgba(232, 121, 249, 0.08) 100%) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.exclusive-top-btn:hover {
+  border-color: rgba(167, 139, 250, 0.48) !important;
+  box-shadow: 0 0 24px rgba(129, 140, 248, 0.28) !important;
+}
+
+.exclusive-top-btn.is-active {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.16), rgba(129, 140, 248, 0.2), rgba(232, 121, 249, 0.12)) !important;
+  box-shadow: 0 0 28px rgba(167, 139, 250, 0.35) !important;
+}
+
+.exclusive-icon-ring {
+  animation: none !important;
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.5) 0%, transparent 70%);
+  -webkit-mask: none;
+  mask: none;
+  filter: blur(4px);
+}
+
+.meta-pill.version {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.12), rgba(129, 140, 248, 0.12));
+  border-color: rgba(167, 139, 250, 0.28);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ── Nav: Chat · Hub · Mehr ── */
+.top-nav.liquid-glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%),
+    rgba(8, 12, 26, 0.38) !important;
+  border-color: rgba(167, 139, 250, 0.14) !important;
+}
+
+.nav-pill {
+  border-color: rgba(167, 139, 250, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, transparent 48%),
+    rgba(8, 12, 26, 0.28);
+}
+
+.nav-pill:hover {
+  border-color: rgba(167, 139, 250, 0.32);
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.08), rgba(129, 140, 248, 0.12));
+  box-shadow: 0 0 18px rgba(129, 140, 248, 0.14);
+}
+
+.nav-pill.active {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.14) 0%, rgba(129, 140, 248, 0.18) 45%, rgba(232, 121, 249, 0.1) 100%) !important;
+  border-color: rgba(167, 139, 250, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 26px rgba(129, 140, 248, 0.24) !important;
+}
+
+.nav-glow {
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9, #60a5fa) !important;
+  opacity: 0.22 !important;
+  animation: navRainbowPulse 5s ease-in-out infinite;
+}
+
+@keyframes navRainbowPulse {
+  0%, 100% { opacity: 0.14; }
+  50% { opacity: 0.28; }
+}
+
+.nav-more-menu,
+.chat-tools-menu {
+  border-color: rgba(167, 139, 250, 0.22) !important;
+  background:
+    linear-gradient(165deg, rgba(94, 234, 212, 0.08) 0%, rgba(129, 140, 248, 0.1) 40%, rgba(232, 121, 249, 0.06) 100%),
+    rgba(8, 12, 26, 0.88) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    0 0 32px rgba(129, 140, 248, 0.12) !important;
+}
+
+.nav-more-item:hover,
+.chat-tools-item:hover {
+  background: linear-gradient(90deg, rgba(94, 234, 212, 0.12), rgba(129, 140, 248, 0.14)) !important;
+  color: #fff !important;
+}
+
+/* ── Sidebar rainbow ── */
+.sidebar.liquid-glass {
+  background:
+    linear-gradient(168deg, rgba(94, 234, 212, 0.05) 0%, transparent 40%),
+    linear-gradient(220deg, rgba(129, 140, 248, 0.07) 0%, transparent 50%),
+    rgba(8, 12, 24, 0.48) !important;
+  border-color: rgba(167, 139, 250, 0.14) !important;
+}
+
+.sidebar-title {
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sidebar-collapse-head:hover {
+  color: rgba(167, 139, 250, 0.95);
+}
+
+.chat-list-item.active,
+.chat-list-item:hover {
+  border-color: rgba(167, 139, 250, 0.28);
+  background: linear-gradient(90deg, rgba(129, 140, 248, 0.12), rgba(94, 234, 212, 0.06));
+}
+
+.exclusive-card {
+  border-color: rgba(167, 139, 250, 0.2);
+  background:
+    linear-gradient(145deg, rgba(94, 234, 212, 0.06) 0%, rgba(129, 140, 248, 0.1) 50%, rgba(232, 121, 249, 0.05) 100%),
+    rgba(8, 12, 26, 0.35);
+}
+
+.exclusive-card::after {
+  background: linear-gradient(135deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa) !important;
+  opacity: 0.35;
+}
+
+.exclusive-card:hover::after,
+.exclusive-card.active-exclusive::after {
+  opacity: 0.75 !important;
+}
+
+.exclusive-card-ring {
+  animation: none !important;
+  opacity: 0.4;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.55) 0%, transparent 72%);
+  -webkit-mask: none;
+  mask: none;
+}
+
+.exclusive-card.active-exclusive {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.12), rgba(129, 140, 248, 0.16), rgba(232, 121, 249, 0.08)) !important;
+  box-shadow: 0 0 24px rgba(129, 140, 248, 0.2) !important;
+}
+
+.spark-filter-tab.active,
+.welcome-chip:hover {
+  border-color: rgba(167, 139, 250, 0.35);
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.14), rgba(94, 234, 212, 0.08));
+}
+
+/* ── News / feature banner — full rainbow ── */
+.noco-feature-banner {
+  border: 1px solid rgba(167, 139, 250, 0.32);
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.16) 0%, rgba(129, 140, 248, 0.14) 32%, rgba(167, 139, 250, 0.12) 55%, rgba(232, 121, 249, 0.1) 78%, rgba(96, 165, 250, 0.08) 100%),
+    rgba(8, 12, 26, 0.38) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 28px rgba(129, 140, 248, 0.14);
+}
+
+.nfb-glow {
+  animation: none !important;
+  opacity: 0.28;
+  background: linear-gradient(135deg, #5eead4 0%, #818cf8 25%, #a78bfa 50%, #e879f9 75%, #60a5fa 100%);
+  filter: blur(20px);
+}
+
+.toast {
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.18) 0%, rgba(129, 140, 248, 0.16) 35%, rgba(232, 121, 249, 0.12) 70%, rgba(96, 165, 250, 0.1) 100%),
+    rgba(8, 12, 24, 0.9) !important;
+}
+
+/* ── NOCO Lens typing HUD ── */
+body.is-lens-active .typing-indicator {
+  padding-bottom: 0.55rem;
+}
+
+.typing-indicator.is-lens-mode .typing-glass {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  padding: 0.65rem 1rem 0.7rem;
+  border-color: rgba(94, 234, 212, 0.28);
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.12) 0%, rgba(129, 140, 248, 0.1) 45%, rgba(96, 165, 250, 0.08) 100%),
+    rgba(8, 12, 26, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 24px rgba(94, 234, 212, 0.12);
+  min-width: min(100%, 22rem);
+}
+
+.typing-indicator.is-lens-mode .typing-dot {
+  background: linear-gradient(135deg, #5eead4, #818cf8);
+  opacity: 0.85;
+  box-shadow: 0 0 10px rgba(94, 234, 212, 0.45);
+}
+
+.typing-indicator.is-lens-mode .typing-label {
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+  min-width: 10rem;
+}
+
+.typing-lens-scan {
+  width: 100%;
+  order: 4;
+  height: 3px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.typing-lens-scan[hidden] { display: none !important; }
+
+.typing-lens-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa);
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px rgba(129, 140, 248, 0.45);
+}
+
+.typing-lens-glow {
+  position: absolute;
+  inset: -6px;
+  background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.35), transparent);
+  animation: lensScanSweep 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes lensScanSweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateX(200%); opacity: 0; }
+}
+
+/* Lens result card */
+.lens-detect-report {
+  margin-top: 0.35rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(94, 234, 212, 0.22);
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.1) 0%, rgba(129, 140, 248, 0.09) 50%, rgba(96, 165, 250, 0.07) 100%),
+    rgba(8, 12, 26, 0.32);
+  animation: lensReportIn 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes lensReportIn {
+  0% { opacity: 0; transform: translateY(8px) scale(0.98); filter: blur(3px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.detect-engine-tag {
+  background: linear-gradient(90deg, #5eead4, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+/* ── Finished image — rainbow border + soft overblend reveal ── */
+.chat-image-frame.is-sharp,
+.chat-image-frame.is-rainbow-reveal {
+  border: 1px solid transparent !important;
+  position: relative;
+  overflow: visible;
+}
+
+.chat-image-frame.is-rainbow-reveal {
+  animation: rainbowFrameReveal 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chat-image-frame.is-sharp,
+.chat-image-wrap.is-render-highlight .chat-image-frame.is-sharp {
+  animation: rainbowFrameSettle 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chat-image-frame.is-sharp::before,
+.chat-image-frame.is-rainbow-reveal::before {
+  content: "";
+  display: block !important;
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa, #5eead4);
+  background-size: 320% 320%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rainbowBorderFlow 8s linear infinite;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.chat-image-frame.is-sharp::before,
+.chat-image-frame.is-rainbow-reveal::before {
+  animation: rainbowBorderFlow 8s linear infinite, rainbowBorderFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes rainbowBorderFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 320% 50%; }
+}
+
+@keyframes rainbowBorderFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 0.88; }
+}
+
+@keyframes rainbowFrameReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(5px);
+  }
+  45% {
+    opacity: 0.75;
+    transform: scale(1.012);
+    filter: blur(1.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes rainbowFrameSettle {
+  0% { opacity: 0.88; }
+  100% { opacity: 1; }
+}
+
+.chat-image-frame.is-sharp .chat-image-canvas,
+.chat-image-frame.is-rainbow-reveal .chat-image-canvas {
+  animation: canvasOverblendIn 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes canvasOverblendIn {
+  0% { opacity: 0.55; transform: scale(0.985); filter: brightness(1.15); }
+  60% { opacity: 0.92; transform: scale(1.005); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+
+/* Fluid omnidirectional finish burst */
+.chat-image-frame.is-burst {
+  animation: imageLedBurstFluid 1.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes imageLedBurstFluid {
+  0% { transform: scale(1); }
+  22% {
+    transform: scale(1.035);
+    box-shadow:
+      22px -8px 42px rgba(129, 140, 248, 0.48),
+      -20px 12px 42px rgba(232, 121, 249, 0.4),
+      8px 22px 42px rgba(94, 234, 212, 0.42),
+      -10px -20px 42px rgba(96, 165, 250, 0.38);
+  }
+  100% { transform: scale(1); }
+}

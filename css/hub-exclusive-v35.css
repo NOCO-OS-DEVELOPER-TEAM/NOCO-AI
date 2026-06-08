@@ -1,0 +1,255 @@
+/* v3.6 — rainbow toast, boot burst, feature banner, shortcuts */
+
+/* ── Rainbow toast ── */
+.toast {
+  border: 1px solid rgba(167, 139, 250, 0.35) !important;
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.14) 0%, rgba(129, 140, 248, 0.12) 35%, rgba(232, 121, 249, 0.1) 70%, rgba(96, 165, 250, 0.08) 100%),
+    rgba(8, 12, 24, 0.88) !important;
+  box-shadow:
+    0 0 28px rgba(129, 140, 248, 0.28),
+    0 8px 32px rgba(0, 0, 0, 0.45) !important;
+  color: rgba(255, 255, 255, 0.96) !important;
+}
+
+.toast::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa);
+  opacity: 0.45;
+  filter: blur(14px);
+  z-index: -1;
+}
+
+.toast {
+  position: fixed;
+  overflow: visible;
+}
+
+.toast.toast-rainbow strong,
+.toast.toast-rainbow em {
+  font-style: normal;
+  background: linear-gradient(90deg, #5eead4, #a78bfa, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.toast.show {
+  animation: toastRainbowIn 0.42s var(--ease-out);
+}
+
+@keyframes toastRainbowIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* ── Feature notification banner ── */
+.noco-feature-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0.65rem 0.45rem;
+  padding: 0.55rem 0.75rem 0.55rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.1) 0%, rgba(129, 140, 248, 0.09) 40%, rgba(232, 121, 249, 0.07) 100%),
+    rgba(8, 12, 26, 0.42);
+  overflow: hidden;
+  animation: bannerSlideIn 0.55s var(--ease-out);
+}
+
+.noco-feature-banner[hidden] { display: none !important; }
+
+.nfb-glow {
+  position: absolute;
+  inset: -8px;
+  background: conic-gradient(from 0deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa, #5eead4);
+  opacity: 0.2;
+  filter: blur(16px);
+  animation: imageRainbowSpin 12s linear infinite;
+  pointer-events: none;
+}
+
+.nfb-content {
+  flex: 1;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.nfb-content strong {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.nfb-content em {
+  font-style: normal;
+  color: rgba(94, 234, 212, 0.95);
+  font-weight: 600;
+}
+
+.nfb-close {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.nfb-close:hover { background: rgba(255, 255, 255, 0.14); }
+
+@keyframes bannerSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.meta-pill.meta-motifs {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.18), rgba(167, 139, 250, 0.18));
+  border-color: rgba(167, 139, 250, 0.35);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.58rem;
+}
+
+/* ── Boot screen glow + shatter ── */
+.boot-screen.is-booting .boot-logo {
+  transition: transform 0.6s var(--ease-out), filter 0.6s;
+}
+
+.boot-logo.is-lit .logo-mark-boot {
+  box-shadow:
+    0 0 40px rgba(129, 140, 248, 0.55),
+    0 0 80px rgba(94, 234, 212, 0.35),
+    inset 0 0 24px rgba(255, 255, 255, 0.15);
+  animation: bootLogoPulse 1.8s ease-in-out infinite;
+}
+
+.boot-logo.is-shatter .logo-mark-boot {
+  opacity: 0;
+  transform: scale(1.15);
+  filter: blur(6px);
+  transition: opacity 0.5s, transform 0.8s, filter 0.8s;
+}
+
+@keyframes bootLogoPulse {
+  0%, 100% { filter: brightness(1) saturate(1.1); }
+  50% { filter: brightness(1.25) saturate(1.35); }
+}
+
+.boot-screen.is-exiting {
+  background: radial-gradient(ellipse at 50% 45%, rgba(129, 140, 248, 0.12) 0%, var(--bg-deep) 65%);
+}
+
+.boot-label {
+  background: linear-gradient(135deg, #5eead4 0%, #818cf8 40%, #e879f9 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+.rainbow-shard-burst-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10001;
+}
+
+/* ── Shortcuts rainbow ── */
+.input-shortcuts-rainbow .input-shortcut-chip {
+  position: relative;
+  overflow: visible;
+  border-color: rgba(167, 139, 250, 0.22) !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, transparent 45%),
+    rgba(8, 12, 26, 0.38) !important;
+}
+
+.input-shortcuts-rainbow .input-shortcut-chip::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #a78bfa, #e879f9);
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.25s;
+  z-index: -1;
+}
+
+.input-shortcuts-rainbow .input-shortcut-chip:hover::before,
+.input-shortcuts-rainbow .input-shortcut-chip:focus-visible::before {
+  opacity: 0.55;
+}
+
+.input-shortcuts-rainbow .isc-icon {
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+.input-shortcut-render .isc-icon,
+.input-shortcut-glow .isc-icon {
+  filter: drop-shadow(0 0 8px rgba(129, 140, 248, 0.45));
+}
+
+/* Exclusive activate burst backdrop */
+body.exclusive-activated::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(ellipse at 50% 30%, rgba(129, 140, 248, 0.2) 0%, transparent 55%);
+  animation: exclusiveFlashBg 1.2s ease-out forwards;
+}
+
+@keyframes exclusiveFlashBg {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Rainbow finish status below image ── */
+.chat-render-status-below.is-done {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: none;
+  animation: rainbowStatusFade 3.2s var(--ease-out) forwards;
+}
+
+.chat-render-status-below.is-done .render-status-text {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  animation: rainbowTextShift 2.4s linear infinite;
+}
+
+.chat-render-status-below.is-done .render-status-bar-fill {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+}
+
+@keyframes rainbowStatusFade {
+  0%, 72% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(6px); }
+}
+
+@keyframes rainbowTextShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}

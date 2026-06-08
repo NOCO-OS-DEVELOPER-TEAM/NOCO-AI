@@ -1,0 +1,276 @@
+/* v3.9 — boot welcome rainbow + clean handoff to chat */
+
+/* ── Boot atmosphere ── */
+.boot-screen.is-booting {
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(129, 140, 248, 0.14) 0%, transparent 52%),
+    radial-gradient(ellipse at 18% 78%, rgba(94, 234, 212, 0.08) 0%, transparent 48%),
+    radial-gradient(ellipse at 82% 24%, rgba(232, 121, 249, 0.08) 0%, transparent 46%),
+    var(--bg-deep);
+  transition: opacity 1.1s var(--ease-out), visibility 1.1s, background 1.4s var(--ease-out);
+}
+
+.boot-rainbow-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.07) 0%, transparent 35%),
+    linear-gradient(225deg, rgba(129, 140, 248, 0.09) 0%, transparent 40%),
+    linear-gradient(315deg, rgba(232, 121, 249, 0.06) 0%, transparent 38%);
+  animation: bootVeilIn 1.8s var(--ease-out) forwards;
+}
+
+.boot-screen.is-booting .boot-rainbow-veil {
+  opacity: 1;
+}
+
+@keyframes bootVeilIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.boot-rainbow-sweep {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.06) 50%, transparent 62%);
+  opacity: 0;
+  animation: bootSweep 3.2s ease-in-out 0.4s infinite;
+}
+
+.boot-screen.is-exiting .boot-rainbow-sweep {
+  animation: bootSweepExit 1.4s ease-out forwards;
+}
+
+@keyframes bootSweep {
+  0%, 100% { transform: translateX(-30%) rotate(0deg); opacity: 0; }
+  45% { opacity: 0.55; }
+  50% { transform: translateX(30%) rotate(0deg); opacity: 0.55; }
+}
+
+@keyframes bootSweepExit {
+  to { opacity: 0; transform: translateX(40%); }
+}
+
+.boot-glass {
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, transparent 48%),
+    linear-gradient(315deg, rgba(129, 140, 248, 0.1) 0%, transparent 55%),
+    rgba(8, 12, 26, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 48px rgba(129, 140, 248, 0.16),
+    0 24px 56px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out), filter 0.85s;
+}
+
+.boot-screen.is-booting .boot-glass {
+  animation: bootGlassIn 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes bootGlassIn {
+  0% { opacity: 0; transform: translateY(20px) scale(0.94); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.boot-screen.is-handoff .boot-glass,
+.boot-screen.is-exiting .boot-glass {
+  opacity: 0;
+  transform: translateY(-16px) scale(0.95);
+  filter: blur(6px);
+}
+
+.boot-logo.is-lit .logo-mark-boot {
+  background: linear-gradient(145deg, #5eead4 0%, #818cf8 42%, #c084fc 72%, #e879f9 100%) !important;
+  box-shadow:
+    0 0 48px rgba(129, 140, 248, 0.62),
+    0 0 96px rgba(94, 234, 212, 0.38),
+    0 0 120px rgba(232, 121, 249, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+.boot-logo.is-lit .logo-orbit {
+  animation: none !important;
+  opacity: 0.2;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+  -webkit-mask: none;
+  mask: none;
+}
+
+.boot-tagline {
+  margin: -0.65rem 0 1.1rem;
+  font-size: 0.62rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  animation: bootTaglineIn 1.2s var(--ease-out) 0.35s forwards;
+}
+
+@keyframes bootTaglineIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 0.85; transform: translateY(0); }
+}
+
+.boot-progress {
+  width: 240px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.boot-screen.is-booting .boot-progress-bar {
+  animation: none;
+  width: 0%;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa);
+  background-size: 200% 100%;
+  animation: bootBarShine 2.4s linear infinite;
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.45);
+}
+
+@keyframes bootBarShine {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.boot-dot.active {
+  background: linear-gradient(135deg, #5eead4, #818cf8) !important;
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.55) !important;
+}
+
+.boot-dot.done {
+  background: linear-gradient(135deg, #818cf8, #e879f9) !important;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.4) !important;
+}
+
+.boot-status {
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 0 16px rgba(129, 140, 248, 0.25);
+  transition: opacity 0.35s;
+}
+
+.boot-screen.is-exiting .boot-status {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Handoff — boot fades while chat rises through */
+.boot-screen.is-handoff {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.boot-screen.is-handoff.hidden,
+.boot-screen.hidden {
+  opacity: 0 !important;
+}
+
+body.boot-handoff-active .ambient {
+  opacity: 1;
+  transition: opacity 1.2s var(--ease-out);
+}
+
+.app-shell {
+  transition:
+    opacity 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.05s,
+    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.05s,
+    filter 1s var(--ease-out) 0.05s;
+}
+
+.app-shell.is-boot-handoff {
+  opacity: 0.35;
+  transform: translateY(10px) scale(0.992);
+  filter: blur(2px);
+}
+
+.app-shell.ready {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  filter: none !important;
+}
+
+.app-shell.is-boot-handoff.ready {
+  animation: chatHandoffIn 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes chatHandoffIn {
+  0% { opacity: 0.28; transform: translateY(14px) scale(0.988); filter: blur(3px); }
+  55% { opacity: 0.82; transform: translateY(4px) scale(0.996); filter: blur(0.5px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: none; }
+}
+
+/* Welcome block enters after boot */
+.welcome-block.is-boot-enter {
+  animation: welcomeBootEnter 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes welcomeBootEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+    filter: blur(8px);
+  }
+  50% {
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: none;
+  }
+}
+
+.welcome-block.is-boot-enter .welcome-render-mark {
+  animation: welcomeMarkPop 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes welcomeMarkPop {
+  0% { opacity: 0; transform: scale(0.7); }
+  70% { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.welcome-block.is-boot-enter .welcome-title-rainbow,
+.welcome-block.is-boot-enter .welcome-title {
+  animation: welcomeTextGlow 1.2s var(--ease-out) 0.25s both;
+}
+
+@keyframes welcomeTextGlow {
+  from { opacity: 0; letter-spacing: 0.2em; filter: blur(4px); }
+  to { opacity: 1; letter-spacing: normal; filter: none; }
+}
+
+.boot-handoff-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(129, 140, 248, 0.22) 0%, transparent 58%),
+    radial-gradient(ellipse at 30% 70%, rgba(94, 234, 212, 0.12) 0%, transparent 50%);
+  opacity: 0;
+  animation: bootHandoffFlash 1.6s var(--ease-out) forwards;
+}
+
+@keyframes bootHandoffFlash {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.rainbow-shard-burst-canvas {
+  z-index: 10002;
+}

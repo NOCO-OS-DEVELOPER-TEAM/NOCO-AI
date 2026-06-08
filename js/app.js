@@ -15,6 +15,7 @@
   var PIXEL_GALLERY_KEY = "noco-ai-pixel-gallery-v1";
   var PIXEL_STATS_KEY = "noco-ai-pixel-stats-v1";
   var GUIDE_KEY = "noco-ai-guide-seen-v1";
+  var FEATURE_BANNER_KEY = "noco-ai-feature-banner-v36";
 
   var bootScreen = document.getElementById("bootScreen");
   var bootStatus = document.getElementById("bootStatus");
@@ -102,7 +103,6 @@
   var pixelProgress = document.getElementById("pixelProgress");
   var pixelProgressBar = document.getElementById("pixelProgressBar");
   var pixelProgressText = document.getElementById("pixelProgressText");
-  var pixelScanLine = document.getElementById("pixelScanLine");
   var settingsExclusiveHint = document.getElementById("settingsExclusiveHint");
   var inputExclusiveGate = document.getElementById("inputExclusiveGate");
   var inputExclusiveBtn = document.getElementById("inputExclusiveBtn");
@@ -149,6 +149,8 @@
   var discoverHint = document.getElementById("discoverHint");
   var discoverHintBtn = document.getElementById("discoverHintBtn");
   var discoverHintClose = document.getElementById("discoverHintClose");
+  var nocoFeatureBanner = document.getElementById("nocoFeatureBanner");
+  var nfbClose = document.getElementById("nfbClose");
   var planDiscoverBtn = document.getElementById("planDiscoverBtn");
   var planSpeedBadge = document.getElementById("planSpeedBadge");
   var discoverStartBtn = document.getElementById("discoverStartBtn");
@@ -235,17 +237,20 @@
   ];
 
   var FEATURE_TIPS = [
+    { icon: "◇", text: "Neu: <strong>3600 Motive</strong> in NOCO Render — z.B. *Mach ein Bild von Katze*", action: "render" },
     { icon: "◎", text: "Tipp: <strong>Hub</strong> zeigt alle Funktionen auf einen Blick.", action: "hub" },
     { icon: "🧠", text: "Tipp: <strong>NOCO Echo</strong> merkt sich deinen Chat — frag *Was habe ich geschrieben?*", action: "echo" },
-    { icon: "✦", text: "Tipp: <strong>Zufall</strong> entdeckt neue Vault-Themen — oder tippe <strong>/random</strong>", action: "random" },
-    { icon: "▦", text: "Tipp: <strong>NOCO Render</strong> — Mach ein Bild von … im Chat oder ▦ Button", action: "render" },
+    { icon: "✦", text: "Tipp: <strong>NOCO Glow</strong> erkennt Intent live beim Tippen.", action: "glow" },
+    { icon: "▦", text: "Tipp: <strong>NOCO Render</strong> — Rainbow-Shards & Status unten im Chat.", action: "render" },
     { icon: "⚡", text: "Tipp: <strong>NOCO Rush</strong> — Exclusive antwortet spuerbar schneller (~90 ms)", action: "exclusive" }
   ];
 
   var bootSteps = [
-    "NOCO AI v2.6 wird gestartet…",
-    "NOCO Vault & NOCO Echo laden…",
-    "NOCO Render & NOCO Access bereit…",
+    "NOCO AI v4.0 startet…",
+    "Rainbow Sheen wird geladen…",
+    "3600 Render-Motive laden…",
+    "NOCO Vault · Echo · Glow bereit…",
+    "Rainbow-Shards initialisieren…",
     "Willkommen."
   ];
 
@@ -282,16 +287,36 @@
     return chat ? chat.messages : [];
   }
 
-  function showToast(text) {
+  function showToast(text, opts) {
+    opts = opts || {};
     if (!toast) return;
-    toast.textContent = text;
+    if (opts.rainbow) {
+      toast.classList.add("toast-rainbow");
+      toast.innerHTML = text;
+    } else {
+      toast.classList.remove("toast-rainbow");
+      toast.textContent = text;
+    }
     toast.hidden = false;
     toast.classList.add("show");
     clearTimeout(showToast._t);
+    var dur = opts.duration || (opts.rainbow ? 3000 : 2200);
     showToast._t = setTimeout(function () {
       toast.classList.remove("show");
       setTimeout(function () { toast.hidden = true; }, 350);
-    }, 2200);
+    }, dur);
+  }
+
+  function playRainbowBurst(anchorEl, opts) {
+    if (typeof NocoBootFX === "undefined") return;
+    opts = opts || {};
+    var rect = anchorEl && anchorEl.getBoundingClientRect ? anchorEl.getBoundingClientRect() : null;
+    NocoBootFX.playShardBurst({
+      x: rect ? rect.left + rect.width / 2 : window.innerWidth * 0.5,
+      y: rect ? rect.top + rect.height / 2 : window.innerHeight * 0.38,
+      count: opts.count || 64,
+      duration: opts.duration || 2800
+    }, opts.onDone);
   }
 
   function getTodayKey() {
@@ -400,6 +425,36 @@
     return isRenderingChatImage || !!activeChatImageAnimCancel;
   }
 
+  function setChatRenderLock(on) {
+    document.body.classList.toggle("is-chat-render-locked", !!on);
+    var strip = document.getElementById("renderLockStrip");
+    if (strip) strip.hidden = !on;
+    if (chatInput) chatInput.disabled = !!on;
+    if (sendBtn) sendBtn.disabled = !!on || !(chatInput && chatInput.value.trim());
+  }
+
+  function buildMessageAvatar(role, isImage) {
+    var avatar = document.createElement("div");
+    avatar.setAttribute("aria-hidden", "true");
+    if (isImage) {
+      avatar.className = "message-avatar message-avatar-render message-avatar-ai";
+      avatar.innerHTML =
+        '<span class="avatar-rainbow-glow" aria-hidden="true"></span>' +
+        '<span class="avatar-logo-core" aria-hidden="true"><span class="avatar-logo-sq render-avatar-core"></span></span>';
+      return avatar;
+    }
+    if (role === "ai") {
+      avatar.className = "message-avatar message-avatar-ai";
+      avatar.innerHTML =
+        '<span class="avatar-rainbow-glow" aria-hidden="true"></span>' +
+        '<span class="avatar-logo-core" aria-hidden="true"><span class="avatar-logo-sq"></span></span>';
+      return avatar;
+    }
+    avatar.className = "message-avatar";
+    avatar.textContent = role === "system" ? "i" : "Du";
+    return avatar;
+  }
+
   function canGenerateImageInChat() {
     return canGenerateImage() && !isChatImageRendering();
   }
@@ -411,8 +466,16 @@
     };
   }
 
+  function closeAllDialogs(except) {
+    var list = [exclusiveDialog, settingsDialog, discoverDialog, termDialog, pixelDialog, briefDialog, tosDialog];
+    list.forEach(function (d) {
+      if (d && d !== except && d.open) d.close();
+    });
+  }
+
   function showCenteredDialog(dialog) {
     if (!dialog) return;
+    closeAllDialogs(dialog);
     dialog.showModal();
     dialog.style.removeProperty("top");
     dialog.style.removeProperty("left");
@@ -433,8 +496,13 @@
     }
   }
 
+  function easeOutBarVisual(p) {
+    return 1 - Math.pow(1 - Math.min(1, Math.max(0, p)), 2.5);
+  }
+
   function setImageMode(on) {
     imageModeActive = !!on;
+    document.body.classList.toggle("is-image-render-mode", imageModeActive);
     if (chatImageBtn) {
       chatImageBtn.classList.toggle("is-active", imageModeActive);
       chatImageBtn.setAttribute("aria-pressed", imageModeActive ? "true" : "false");
@@ -592,6 +660,39 @@
     autoResizeInput();
   }
 
+  var LENS_PHASES = [
+    { p: 0, text: "NOCO Lens scannt Pixel…" },
+    { p: 0.26, text: "Raster & Farben werden gelesen…" },
+    { p: 0.48, text: "NOCO Render Signatur…" },
+    { p: 0.68, text: "Blaula Lens gleicht ab…" },
+    { p: 0.84, text: "Fast fertig — Ergebnis formt sich…" }
+  ];
+
+  function easeOutLensVisual(p) {
+    return 1 - Math.pow(1 - Math.min(1, Math.max(0, p)), 3.6);
+  }
+
+  function setLensHudMode(on) {
+    document.body.classList.toggle("is-lens-active", !!on);
+    if (typingIndicator) typingIndicator.classList.toggle("is-lens-mode", !!on);
+    var bar = document.getElementById("typingLensBar");
+    var fill = document.getElementById("typingLensFill");
+    if (bar) bar.hidden = !on;
+    if (!on && fill) fill.style.width = "0%";
+  }
+
+  function getLensPhaseText(p) {
+    var i;
+    var text = LENS_PHASES[0].text;
+    for (i = LENS_PHASES.length - 1; i >= 0; i--) {
+      if (p >= LENS_PHASES[i].p) {
+        text = LENS_PHASES[i].text;
+        break;
+      }
+    }
+    return text;
+  }
+
   function triggerImageDetectPicker() {
     var input = document.getElementById("imageDetectInput");
     if (input) input.click();
@@ -606,19 +707,56 @@
     switchView("chat");
     appendMessage("user", "KI-Bild erkennen: " + (file.name || "Bild"));
     setTyping(true);
-    if (typingLabel) typingLabel.textContent = "NOCO Lens prueft Pixel…";
+    setLensHudMode(true);
+
+    var lensMinMs = 3400;
+    var lensStart = performance.now();
+    var lensResult = null;
+    var lensError = false;
+    var lensAnimId = null;
+
     NocoImageDetect.analyzeFile(file, getDetectSources()).then(function (result) {
-      setTyping(false);
-      if (typingLabel) typingLabel.textContent = "NOCO AI denkt…";
-      var report = result.reportHtml || result.detail;
-      appendMessage("ai", report, { animate: true, related: [] });
-      updateModelUI();
-      showToast((result.engine || "Blaula Lens") + " — " + result.confidence + "%");
+      lensResult = result;
     }).catch(function () {
+      lensError = true;
+    });
+
+    function finishLensDetect() {
+      if (lensAnimId) cancelAnimationFrame(lensAnimId);
+      setLensHudMode(false);
       setTyping(false);
       if (typingLabel) typingLabel.textContent = "NOCO AI denkt…";
-      showToast("Bild konnte nicht analysiert werden");
-    });
+      if (lensResult) {
+        var report = lensResult.reportHtml || lensResult.detail;
+        appendMessage("ai", report, { animate: true, related: [] });
+        updateModelUI();
+        showToast(
+          "<strong>" + escapeHtml(lensResult.engine || "Blaula Lens") + "</strong> — " + lensResult.confidence + "%",
+          { rainbow: true, duration: 3000 }
+        );
+      } else {
+        showToast("Bild konnte nicht analysiert werden");
+      }
+    }
+
+    function lensTick(now) {
+      var elapsed = now - lensStart;
+      var raw = Math.min(1, elapsed / lensMinMs);
+      var p = easeOutLensVisual(raw);
+      var fill = document.getElementById("typingLensFill");
+      if (fill) fill.style.width = (p * 100).toFixed(1) + "%";
+      if (typingLabel) typingLabel.textContent = getLensPhaseText(p);
+
+      var ready = lensResult || lensError;
+      var canFinish = ready && p >= 0.9 && elapsed >= 2200;
+      if (canFinish || (ready && elapsed >= lensMinMs)) {
+        finishLensDetect();
+        return;
+      }
+      lensAnimId = requestAnimationFrame(lensTick);
+    }
+
+    lensAnimId = requestAnimationFrame(lensTick);
   }
 
   function incrementImageQuota() {
@@ -629,7 +767,22 @@
   }
 
   function getPixelSize() { return isExclusiveActive() ? 52 : 40; }
-  function getPixelDuration() { return isExclusiveActive() ? 8000 : 12000; }
+  function getPixelDuration() { return isExclusiveActive() ? 35000 : 60000; }
+
+  function getRenderPhaseStart(durationMs) {
+    durationMs = durationMs || getPixelDuration();
+    if (typeof NocoPixel !== "undefined" && NocoPixel.getRenderPhaseStart) {
+      return NocoPixel.getRenderPhaseStart(durationMs);
+    }
+    return (durationMs - 15000) / durationMs;
+  }
+
+  function getRenderPhaseRaw(p, durationMs) {
+    durationMs = durationMs || getPixelDuration();
+    var start = getRenderPhaseStart(durationMs);
+    if (p < start) return -1;
+    return (p - start) / (1 - start);
+  }
 
   function drawChatImageCrisp(result, canvas, scale) {
     if (!canvas || !result || typeof NocoPixel === "undefined") return;
@@ -638,24 +791,55 @@
   }
 
   function finalizeChatImageDisplay(canvas, result, scale, frame, progressEl) {
-    drawChatImageCrisp(result, canvas, scale);
-    if (frame) {
-      frame.classList.remove("is-rendering");
-      frame.classList.add("is-sharp");
-      var hud = frame.querySelector(".chat-render-hud");
-      if (hud) hud.classList.add("is-done");
+    if (!frame) {
+      drawChatImageCrisp(result, canvas, scale);
+      if (progressEl) progressEl.textContent = "";
+      return;
     }
-    if (progressEl) progressEl.textContent = "";
+    var wrap = frame.closest(".chat-image-wrap");
+    if (wrap) {
+      wrap.classList.remove("is-render-active");
+      wrap.style.removeProperty("--render-progress");
+      wrap.classList.add("is-render-burst");
+    }
+    frame.classList.add("is-burst", "is-rainbow-reveal");
+    document.body.classList.add("is-image-finish-flash");
+    window.setTimeout(function () {
+      document.body.classList.remove("is-image-finish-flash");
+    }, 1500);
+    window.setTimeout(function () {
+      canvas.style.width = "";
+      canvas.style.height = "";
+      drawChatImageCrisp(result, canvas, scale);
+      frame.classList.remove("is-rendering", "is-burst");
+      frame.classList.add("is-sharp");
+      window.setTimeout(function () {
+        frame.classList.remove("is-rainbow-reveal");
+      }, 1500);
+      if (wrap) {
+        wrap.classList.remove("is-render-burst");
+        wrap.classList.add("is-render-highlight");
+      }
+      var status = wrap && wrap.querySelector(".chat-render-status-below");
+      if (status) {
+        status.classList.add("is-done");
+        var txt = status.querySelector(".render-status-text");
+        if (txt) txt.textContent = "Bild fertig — Liquid Glass";
+      }
+      if (progressEl) progressEl.textContent = "";
+    }, 1380);
   }
 
   function getChatImageScale(size) {
     return size <= 40 ? 9 : 7;
   }
 
-  function getRenderInterruptInfo(p, interrupt) {
+  function getRenderInterruptInfo(p, interrupt, durationMs) {
     if (interrupt && interrupt.text) return interrupt;
+    var phaseRaw = getRenderPhaseRaw(p, durationMs);
+    if (phaseRaw < 0) return { index: 0, text: "", total: 10, step: 0 };
     if (typeof NocoPixel !== "undefined" && NocoPixel.getRenderInterrupt) {
-      return NocoPixel.getRenderInterrupt(p);
+      return NocoPixel.getRenderInterrupt(phaseRaw);
     }
     return { index: 0, text: "NOCO Render…", total: 10, step: 1 };
   }
@@ -665,62 +849,69 @@
     return "NOCO Render…";
   }
 
-  function buildChatRenderHud(frame) {
-    if (!frame || frame.querySelector(".chat-render-hud")) return;
-    var hud = document.createElement("div");
-    hud.className = "chat-render-hud";
-    hud.setAttribute("aria-hidden", "true");
-    hud.innerHTML =
-      '<div class="render-hud-glass"></div>' +
-      '<div class="render-hud-head">' +
-        '<span class="render-hud-brand">NOCO Render</span>' +
-        '<span class="render-hud-step">01 / 10</span>' +
-      '</div>' +
-      '<ul class="render-hud-feed"></ul>' +
-      '<div class="render-hud-bar"><span class="render-hud-bar-fill"></span></div>' +
-      '<span class="render-hud-status">Auftrag empfangen</span>';
-    frame.insertBefore(hud, frame.firstChild);
-  }
-
-  function pushRenderInterruptTick(frame, interrupt) {
-    if (!frame || !interrupt) return;
-    var feed = frame.querySelector(".render-hud-feed");
-    if (!feed) return;
-    var key = "tick-" + interrupt.index;
-    if (feed.querySelector('[data-tick="' + key + '"]')) return;
-    var li = document.createElement("li");
-    li.className = "render-hud-tick is-active";
-    li.setAttribute("data-tick", key);
-    li.textContent = interrupt.text;
-    var prev = feed.querySelector(".render-hud-tick.is-active");
-    if (prev && prev !== li) prev.classList.remove("is-active");
-    feed.appendChild(li);
-    while (feed.children.length > 4) feed.removeChild(feed.firstChild);
+  function buildChatRenderStatus(wrap) {
+    if (!wrap || wrap.querySelector(".chat-render-status-below")) return;
+    var status = document.createElement("div");
+    status.className = "chat-render-status-below liquid-glass liquid-glass-prism";
+    status.setAttribute("aria-live", "polite");
+    status.innerHTML =
+      '<p class="render-status-text"></p>' +
+      '<span class="render-status-step"></span>' +
+      '<div class="render-status-bar"><span class="render-status-bar-fill"></span></div>';
+    var frame = wrap.querySelector(".chat-image-frame");
+    if (frame && frame.nextSibling) wrap.insertBefore(status, frame.nextSibling);
+    else wrap.appendChild(status);
   }
 
   function updateChatRenderHud(frame, p, phase, interrupt) {
-    if (!frame) return;
-    var info = getRenderInterruptInfo(p, interrupt);
-    var barFill = frame.querySelector(".render-hud-bar-fill") || frame.querySelector(".chat-render-bar-fill");
-    var statusEl = frame.querySelector(".render-hud-status") || frame.querySelector(".chat-render-phase-label");
-    var stepEl = frame.querySelector(".render-hud-step");
+    if (!frame || !interrupt || !interrupt.text) return;
+    var wrap = frame.closest(".chat-image-wrap");
+    if (!wrap) return;
+    var status = wrap.querySelector(".chat-render-status-below");
+    var duration = getPixelDuration();
+    var barFill = status && status.querySelector(".render-status-bar-fill");
+    var heroText = status && status.querySelector(".render-status-text");
+    var heroStep = status && status.querySelector(".render-status-step");
     var progress = frame.querySelector(".chat-image-progress");
-    var pct = Math.round(p * 100);
-    if (barFill) barFill.style.width = pct + "%";
-    if (statusEl) statusEl.textContent = info.text;
-    if (stepEl) {
-      var pad = info.step < 10 ? "0" : "";
-      var tot = info.total < 10 ? "0" : "";
-      stepEl.textContent = pad + info.step + " / " + (tot || "") + info.total;
+    var barP = easeOutBarVisual(p);
+    var pct = Math.round(barP * 100);
+    var info = interrupt;
+    var lastIdx = wrap.getAttribute("data-hud-step");
+
+    if (barFill) barFill.style.width = (barP * 100).toFixed(1) + "%";
+    if (progress) progress.textContent = pct + "%";
+    if (wrap) {
+      wrap.classList.add("is-render-active");
+      wrap.style.setProperty("--render-progress", String(Math.min(1, barP)));
+      scrollImageRenderIntoView(wrap);
     }
-    pushRenderInterruptTick(frame, info);
-    if (progress) progress.textContent = pct + "% · " + info.text;
-    updatePixelInterruptPanel(p, info);
+
+    if (lastIdx !== String(info.index)) {
+      wrap.setAttribute("data-hud-step", String(info.index));
+      if (heroText) {
+        heroText.textContent = info.text;
+        heroText.classList.toggle("is-finishing", info.step >= info.total);
+        heroText.style.animation = "none";
+        void heroText.offsetWidth;
+        heroText.style.animation = "";
+      }
+      if (heroStep) {
+        var sPad = info.step < 10 ? "0" : "";
+        var tPad = info.total < 10 ? "0" : "";
+        heroStep.textContent = "Schritt " + sPad + info.step + " / " + tPad + info.total;
+      }
+    }
+    updatePixelInterruptPanel(p, info, false, duration);
   }
 
-  function updatePixelInterruptPanel(p, interrupt) {
-    var info = getRenderInterruptInfo(p, interrupt);
+  function updatePixelInterruptPanel(fullP, interrupt, silent, durationMs) {
     var panel = document.getElementById("pixelInterruptPanel");
+    if (silent || !interrupt || !interrupt.text) {
+      if (panel) panel.hidden = true;
+      return;
+    }
+    durationMs = durationMs || getPixelDuration();
+    var info = interrupt;
     var stepEl = document.getElementById("pixelInterruptStep");
     var textEl = document.getElementById("pixelInterruptText");
     var phaseEl = document.getElementById("pixelGenPhase");
@@ -736,7 +927,7 @@
       phaseEl.textContent = info.text;
     }
     if (pixelProgressText) {
-      pixelProgressText.textContent = Math.round(p * 100) + "% · " + info.text;
+      pixelProgressText.textContent = Math.round(fullP * 100) + "% · " + info.text;
     }
   }
 
@@ -1097,6 +1288,19 @@
     discoverHint.hidden = false;
   }
 
+  function maybeShowFeatureBanner() {
+    if (!nocoFeatureBanner) return;
+    try {
+      if (localStorage.getItem(FEATURE_BANNER_KEY)) return;
+    } catch (e) { return; }
+    nocoFeatureBanner.hidden = false;
+  }
+
+  function dismissFeatureBanner() {
+    if (nocoFeatureBanner) nocoFeatureBanner.hidden = true;
+    try { localStorage.setItem(FEATURE_BANNER_KEY, String(Date.now())); } catch (e) { /* */ }
+  }
+
   function handleDiscoverAction(action) {
     if (action === "detect") {
       triggerImageDetectPicker();
@@ -1395,24 +1599,108 @@
 
   /* ── Boot ── */
 
+  function setBootProgress(step, total) {
+    var bar = bootScreen && bootScreen.querySelector(".boot-progress-bar");
+    if (!bar || !total) return;
+    var p = easeOutBarVisual((step + 1) / total);
+    bar.style.width = (p * 100).toFixed(1) + "%";
+  }
+
+  function triggerBootHandoff() {
+    if (!bootScreen || bootScreen.classList.contains("is-handoff")) return;
+    bootScreen.classList.add("is-handoff");
+    document.body.classList.add("boot-handoff-active");
+    if (appShell) {
+      appShell.classList.add("is-boot-handoff", "ready");
+    }
+    if (welcomeBlock) welcomeBlock.classList.add("is-boot-enter");
+    var flash = document.createElement("div");
+    flash.className = "boot-handoff-flash";
+    flash.setAttribute("aria-hidden", "true");
+    document.body.appendChild(flash);
+    window.setTimeout(function () {
+      if (flash.parentNode) flash.parentNode.removeChild(flash);
+    }, 1700);
+  }
+
+  function finishBootSequence(logoWrap) {
+    if (bootScreen) {
+      bootScreen.classList.add("hidden");
+      bootScreen.classList.remove("is-booting", "is-exiting", "is-handoff");
+    }
+    if (logoWrap) logoWrap.classList.remove("is-lit", "is-shatter");
+    document.body.classList.remove("boot-handoff-active");
+    if (appShell) {
+      appShell.classList.add("ready");
+      appShell.classList.remove("is-boot-handoff");
+    }
+    if (discoverHint) discoverHint.hidden = true;
+    closeAllDialogs();
+    maybeShowFeatureBanner();
+    window.setTimeout(function () {
+      if (welcomeBlock) welcomeBlock.classList.remove("is-boot-enter");
+    }, 1600);
+  }
+
   function boot() {
+    if (!bootScreen) {
+      if (appShell) appShell.classList.add("ready");
+      maybeShowFeatureBanner();
+      return;
+    }
+    var logoWrap = bootScreen.querySelector(".boot-logo");
     var dots = bootScreen.querySelectorAll(".boot-dot");
     var step = 0;
+    var totalSteps = bootSteps.length;
+    bootScreen.classList.add("is-booting");
+    bootScreen.classList.remove("hidden", "is-handoff", "is-exiting");
+    if (appShell) {
+      appShell.classList.remove("ready", "is-boot-handoff");
+    }
+    document.body.classList.remove("boot-handoff-active");
+    setBootProgress(-1, totalSteps);
+
+    window.setTimeout(function () {
+      if (logoWrap) logoWrap.classList.add("is-lit");
+    }, 480);
+
     var interval = setInterval(function () {
-      if (step < bootSteps.length) {
+      if (step < totalSteps) {
         if (bootStatus) bootStatus.textContent = bootSteps[step];
-        if (dots[step]) { dots[step].classList.add("done"); dots[step].classList.remove("active"); }
+        setBootProgress(step, totalSteps);
+        if (dots[step]) {
+          dots[step].classList.add("done");
+          dots[step].classList.remove("active");
+        }
         if (dots[step + 1]) dots[step + 1].classList.add("active");
         step++;
       } else {
         clearInterval(interval);
-        setTimeout(function () {
-          bootScreen.classList.add("hidden");
-          appShell.classList.add("ready");
-          if (discoverHint) discoverHint.hidden = true;
-        }, 400);
+        if (bootStatus) bootStatus.textContent = "Willkommen im Chat…";
+        setBootProgress(totalSteps - 1, totalSteps);
+        bootScreen.classList.add("is-exiting");
+        if (logoWrap) logoWrap.classList.add("is-shatter");
+        var mark = bootScreen.querySelector(".logo-mark-boot");
+        var rect = mark ? mark.getBoundingClientRect() : null;
+        if (typeof NocoBootFX !== "undefined") {
+          NocoBootFX.playShardBurst({
+            x: rect ? rect.left + rect.width / 2 : window.innerWidth * 0.5,
+            y: rect ? rect.top + rect.height / 2 : window.innerHeight * 0.42,
+            count: 96,
+            duration: 5800,
+            handoffAt: 0.4,
+            onHandoff: triggerBootHandoff
+          }, function () {
+            finishBootSequence(logoWrap);
+          });
+        } else {
+          triggerBootHandoff();
+          window.setTimeout(function () {
+            finishBootSequence(logoWrap);
+          }, 900);
+        }
       }
-    }, 450);
+    }, 520);
   }
 
   /* ── Settings ── */
@@ -1555,6 +1843,7 @@
   /* ── Views ── */
 
   var navMoreMenuHome = null;
+  var chatToolsMenuHome = null;
 
   function positionOverlayMenu(anchor, menu) {
     if (!anchor || !menu) return;
@@ -1583,6 +1872,19 @@
     } else {
       menu.classList.remove("is-portaled", "is-open");
       if (navMoreMenuHome && menu.parentNode === document.body) navMoreMenuHome.appendChild(menu);
+    }
+  }
+
+  function portalChatToolsMenu(menu, open) {
+    var wrap = document.querySelector(".chat-header-tools");
+    if (!menu) return;
+    if (open) {
+      if (!chatToolsMenuHome) chatToolsMenuHome = wrap;
+      if (menu.parentNode !== document.body) document.body.appendChild(menu);
+      menu.classList.add("is-portaled", "is-open");
+    } else {
+      menu.classList.remove("is-portaled", "is-open");
+      if (chatToolsMenuHome && menu.parentNode === document.body) chatToolsMenuHome.appendChild(menu);
     }
   }
 
@@ -1631,10 +1933,13 @@
     setNavMoreExpanded(false);
     if (chatToolsMenu) {
       chatToolsMenu.hidden = true;
+      portalChatToolsMenu(chatToolsMenu, false);
       chatToolsMenu.style.position = "";
       chatToolsMenu.style.top = "";
       chatToolsMenu.style.left = "";
       chatToolsMenu.style.right = "";
+      chatToolsMenu.style.zIndex = "";
+      chatToolsMenu.style.minWidth = "";
     }
     if (chatToolsBtn) chatToolsBtn.setAttribute("aria-expanded", "false");
   }
@@ -1656,7 +1961,13 @@
 
   navPills.forEach(function (pill) {
     pill.addEventListener("click", function () {
-      switchView(pill.getAttribute("data-view"));
+      var view = pill.getAttribute("data-view");
+      if (view === "features") {
+        switchView("chat");
+        openDiscoverDialog("overview");
+        return;
+      }
+      switchView(view);
     });
   });
 
@@ -1709,8 +2020,13 @@
 
   function getWelcomeHtml() {
     return (
-      '<h2 class="welcome-title">NOCO AI</h2>' +
-      '<p class="welcome-text" id="welcomeText">Frag etwas — oder tippe <strong>▦</strong> fuer ein Bild.</p>' +
+      '<div class="welcome-render-mark" aria-hidden="true">' +
+        '<span class="welcome-mark-glow"></span>' +
+        '<span class="welcome-mark-core">◆</span>' +
+      '</div>' +
+      '<h2 class="welcome-title welcome-title-rainbow">NOCO AI</h2>' +
+      '<p class="welcome-text" id="welcomeText">Frag etwas — oder starte <strong>NOCO Render</strong> mit <em>3600 Motiven</em> (◇ Bild).</p>' +
+      '<p class="welcome-sub">Liquid Glass · Rainbow Shards · Epic Sheen</p>' +
       '<div class="welcome-chips welcome-chips-compact" id="welcomeChips"></div>'
     );
   }
@@ -1791,17 +2107,13 @@
     return actions;
   }
 
-  function createMessageEl(msg, msgIndex, contentHtml) {
+  function createMessageEl(msg, msgIndex, contentHtml, renderPending) {
     var el = document.createElement("div");
     el.className = "message " + msg.role + (msg.type === "image" ? " image" : "");
     el.setAttribute("role", "article");
     el.setAttribute("data-msg-index", msgIndex);
 
-    var avatar = document.createElement("div");
-    avatar.className = "message-avatar";
-    if (msg.type === "image") avatar.textContent = "▦";
-    else avatar.textContent = msg.role === "ai" ? "N" : msg.role === "system" ? "◎" : "Du";
-    avatar.setAttribute("aria-hidden", "true");
+    var avatar = buildMessageAvatar(msg.role, msg.type === "image");
 
     var body = document.createElement("div");
     body.className = "message-body";
@@ -1810,7 +2122,7 @@
     bubble.className = "message-bubble";
 
     if (msg.type === "image" && msg.image && typeof NocoPixel !== "undefined") {
-      var imgResult = resolveChatImage(msg);
+      var imgResult = renderPending ? null : resolveChatImage(msg);
       var wrap = document.createElement("div");
       wrap.className = "chat-image-wrap";
       var frame = document.createElement("div");
@@ -1821,14 +2133,18 @@
       if (imgResult) {
         drawChatImageCrisp(imgResult, canvas, getChatImageScale(imgResult.size));
         frame.classList.add("is-sharp");
+        wrap.classList.add("is-render-highlight");
+      } else if (renderPending) {
+        frame.classList.add("is-rendering");
+        wrap.classList.add("is-render-active");
       }
       var progress = document.createElement("span");
       progress.className = "chat-image-progress";
       progress.textContent = "";
-      buildChatRenderHud(frame);
       frame.appendChild(canvas);
       frame.appendChild(progress);
       wrap.appendChild(frame);
+      if (renderPending) buildChatRenderStatus(wrap);
       var imgBadge = document.createElement("span");
       imgBadge.className = "chat-image-badge";
       imgBadge.textContent = imgResult && imgResult.motifLabel ? imgResult.motifLabel : (msg.image.motifLabel || "Motiv");
@@ -1839,19 +2155,25 @@
       meta.textContent = sz + "×" + sz + " · " + (msg.image.styleName || "Standard") + " · NOCO Render";
       wrap.appendChild(meta);
       var actRow = document.createElement("div");
-      actRow.className = "chat-image-actions-row";
+      actRow.className = "chat-image-actions-glass liquid-glass liquid-glass-prism";
       var copyBtn = document.createElement("button");
       copyBtn.type = "button";
-      copyBtn.className = "chat-img-action chat-img-copy";
+      copyBtn.className = "chat-img-action-glass chat-img-copy";
       copyBtn.setAttribute("data-msg-id", msg.id);
-      copyBtn.textContent = "Kopieren";
+      copyBtn.innerHTML = '<span class="cia-icon">⧉</span><span>Kopieren</span>';
       var saveBtn = document.createElement("button");
       saveBtn.type = "button";
-      saveBtn.className = "chat-img-action chat-img-save";
+      saveBtn.className = "chat-img-action-glass chat-img-save";
       saveBtn.setAttribute("data-msg-id", msg.id);
-      saveBtn.textContent = "Speichern";
+      saveBtn.innerHTML = '<span class="cia-icon">↓</span><span>Speichern</span>';
+      var studioBtn = document.createElement("button");
+      studioBtn.type = "button";
+      studioBtn.className = "chat-img-action-glass chat-img-studio";
+      studioBtn.setAttribute("data-msg-id", msg.id);
+      studioBtn.innerHTML = '<span class="cia-icon">◇</span><span>Studio</span>';
       actRow.appendChild(copyBtn);
       actRow.appendChild(saveBtn);
+      actRow.appendChild(studioBtn);
       wrap.appendChild(actRow);
       bubble.classList.add("message-bubble-image");
       bubble.appendChild(wrap);
@@ -1964,24 +2286,24 @@
     var plain = msg.text;
     var result = createMessageEl(msg, idx, "");
     var bubble = result.bubble;
-    bubble.classList.add("typing-cursor");
+    bubble.classList.add("message-writing");
     chatMessages.appendChild(result.el);
     scrollToBottom(true);
 
     return new Promise(function (resolve) {
-      var i = 0;
-      var speed = settings.speed === "fast" ? 10 : settings.speed === "slow" ? 26 : 16;
+      var tokens = plain.match(/\S+|\s+/g) || [plain];
+      var ti = 0;
+      var built = "";
+      var baseSpeed = settings.speed === "fast" ? 22 : settings.speed === "slow" ? 52 : 34;
       function tick() {
-        if (i < plain.length) {
-          i++;
-          var timeEl = bubble.querySelector(".message-time");
-          var partial = plain.slice(0, i);
-          bubble.innerHTML = escapeHtml(partial).replace(/\n/g, "<br>");
-          if (timeEl) bubble.appendChild(timeEl);
+        if (ti < tokens.length) {
+          built += tokens[ti++];
+          bubble.innerHTML = escapeHtml(built).replace(/\n/g, "<br>") + '<span class="write-caret" aria-hidden="true"></span>';
           scrollToBottom(true);
-          setTimeout(tick, speed);
+          var delay = /^\s+$/.test(tokens[ti - 1]) ? baseSpeed * 0.35 : baseSpeed;
+          setTimeout(tick, delay);
         } else {
-          bubble.classList.remove("typing-cursor");
+          bubble.classList.remove("message-writing");
           bubble.innerHTML = renderAiHtml(plain);
           if (msg.topic) {
             var prismBadge = document.createElement("span");
@@ -2039,6 +2361,18 @@
       setTimeout(doScroll, 180);
       setTimeout(doScroll, 420);
     }
+  }
+
+  function scrollImageRenderIntoView(wrap) {
+    if (!wrap || !chatMessages) return;
+    requestAnimationFrame(function () {
+      var wrapRect = wrap.getBoundingClientRect();
+      var chatRect = chatMessages.getBoundingClientRect();
+      var viewH = chatMessages.clientHeight;
+      var relativeTop = wrapRect.top - chatRect.top + chatMessages.scrollTop;
+      var ideal = relativeTop - Math.max(48, (viewH - wrapRect.height) * 0.42);
+      chatMessages.scrollTop = Math.max(0, ideal);
+    });
   }
 
   /* ── Send / Regenerate ── */
@@ -2232,7 +2566,6 @@
       motifIndex: opts.random ? null : (opts.motifIndex != null ? opts.motifIndex : null)
     });
     if (!result) {
-      if (pixelScanLine) pixelScanLine.hidden = true;
       if (pixelProgress) pixelProgress.hidden = true;
       var phaseElFail = document.getElementById("pixelGenPhase");
       if (phaseElFail) phaseElFail.hidden = true;
@@ -2245,7 +2578,7 @@
     var scale = size <= 40 ? 10 : 7;
 
     if (opts.useProgress && pixelProgress) pixelProgress.hidden = false;
-    updatePixelInterruptPanel(0, getRenderInterruptInfo(0));
+    updatePixelInterruptPanel(0, null, true, duration);
     if (pixelPreviewPlaceholder) pixelPreviewPlaceholder.hidden = true;
     if (pixelCanvas) pixelCanvas.hidden = false;
     var previewWrap = pixelPreviewWrap || (pixelCanvas ? pixelCanvas.closest(".pixel-preview-wrap") : null);
@@ -2256,7 +2589,7 @@
 
     NocoPixel.animateFill(canvas, result, scale, duration, function (p, phase, interrupt) {
       if (pixelProgressBar) pixelProgressBar.style.width = Math.round(p * 100) + "%";
-      updatePixelInterruptPanel(p, interrupt);
+      updatePixelInterruptPanel(p, interrupt, false, duration);
     }, function () {
       NocoPixel.drawToCanvas(result, canvas, scale);
       if (pixelProgress) pixelProgress.hidden = true;
@@ -2268,7 +2601,7 @@
       if (pixelToChatBtn) pixelToChatBtn.disabled = false;
       onPixelGenerationComplete(result, false, opts);
       if (onDone) onDone(result);
-    });
+    }, { mode: "studio" });
     return result;
   }
 
@@ -2282,7 +2615,7 @@
     if (animate) {
       NocoPixel.animateFill(pixelCanvas, result, scale, getPixelDuration(), null, function () {
         onPixelGenerationComplete(result, !!skipGallery, { syncSelection: true });
-      });
+      }, { mode: "studio" });
     } else {
       NocoPixel.drawToCanvas(result, pixelCanvas, scale);
       onPixelGenerationComplete(result, true, { syncSelection: true });
@@ -2451,7 +2784,10 @@
         return;
       }
       incrementImageQuota();
-      showToast("Pixel fertig — " + (result.motifLabel || "Motiv") + " · " + getPixelSize() + "x" + getPixelSize());
+      showToast(
+        "<strong>Pixel fertig</strong> — " + escapeHtml(result.motifLabel || "Motiv") + " · <em>3600 Motive</em>",
+        { rainbow: true, duration: 3000 }
+      );
     });
   }
 
@@ -2502,11 +2838,13 @@
       if (!chat) { resolve(); return; }
 
       isRenderingChatImage = true;
+      setChatRenderLock(true);
       var result = opts.result;
       if (!result) {
         var resolved = NocoPixel.resolveMotif ? NocoPixel.resolveMotif(promptText) : null;
         if (resolved && !resolved.supported) {
           isRenderingChatImage = false;
+          setChatRenderLock(false);
           appendMessage("ai", resolved.message || (NocoPixel.buildUnsupportedMessage
             ? NocoPixel.buildUnsupportedMessage(resolved.subject)
             : "Dieses Motiv kenne ich noch nicht — probier ein einfaches Wort wie Katze oder Haus."));
@@ -2519,10 +2857,12 @@
           style: style,
           random: !!opts.random,
           allowFallback: false,
-          motifIndex: null
+          motifIndex: null,
+          uniqueId: Date.now()
         });
         if (!result) {
           isRenderingChatImage = false;
+          setChatRenderLock(false);
           var subj = resolved && resolved.subject
             ? resolved.subject
             : (NocoPixel.extractSubject ? NocoPixel.extractSubject(promptText) : promptText);
@@ -2558,9 +2898,12 @@
       saveChats();
 
       var idx = chat.messages.length - 1;
-      var built = createMessageEl(msg, idx);
+      var built = createMessageEl(msg, idx, "", true);
       chatMessages.appendChild(built.el);
-      scrollToBottom();
+      setTyping(false);
+      var renderWrapEarly = built.el.querySelector(".chat-image-wrap");
+      scrollImageRenderIntoView(renderWrapEarly);
+      scrollToBottom(true);
 
       var canvas = built.el.querySelector(".chat-image-canvas");
       var scale = getChatImageScale(result.size);
@@ -2570,16 +2913,28 @@
         if (ctx) {
           canvas.width = result.size * scale;
           canvas.height = result.size * scale;
-          ctx.fillStyle = "rgba(6,10,18,0.95)";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         var progressEl = built.el.querySelector(".chat-image-progress");
         var chatFrame = built.el.querySelector(".chat-image-frame");
         if (chatFrame) {
+          chatFrame.classList.remove("is-sharp");
           chatFrame.classList.add("is-rendering");
-          buildChatRenderHud(chatFrame);
-          var hud = chatFrame.querySelector(".chat-render-hud");
-          if (hud) hud.classList.remove("is-done");
+          var imgWrap = chatFrame.closest(".chat-image-wrap");
+          if (imgWrap) {
+            buildChatRenderStatus(imgWrap);
+            imgWrap.removeAttribute("data-hud-step");
+            var statusEl = imgWrap.querySelector(".chat-render-status-below");
+            if (statusEl) {
+              statusEl.classList.remove("is-done");
+              var stTxt = statusEl.querySelector(".render-status-text");
+              var stStep = statusEl.querySelector(".render-status-step");
+              var stBar = statusEl.querySelector(".render-status-bar-fill");
+              if (stTxt) stTxt.textContent = "Auftrag empfangen";
+              if (stStep) stStep.textContent = "Schritt 01 / 10";
+              if (stBar) stBar.style.width = "0%";
+            }
+          }
         }
         var revealMs = getPixelDuration();
         var renderDone = false;
@@ -2590,17 +2945,23 @@
           finalizeChatImageDisplay(canvas, result, scale, chatFrame, progressEl);
           activeChatImageAnimCancel = null;
           isRenderingChatImage = false;
+          setChatRenderLock(false);
           if (!opts.skipQuota) incrementImageQuota();
           resolve();
         }
-        var failsafe = setTimeout(finishChatImageRender, revealMs + 120);
-        activeChatImageAnimCancel = NocoPixel.animateFill(canvas, result, scale, revealMs, function (p, phase, interrupt) {
-          updateChatRenderHud(chatFrame, p, phase, interrupt);
-          scrollToBottom(true);
-        }, finishChatImageRender);
+        var failsafe = setTimeout(finishChatImageRender, revealMs + 3200);
+        try {
+          activeChatImageAnimCancel = NocoPixel.animateFill(canvas, result, scale, revealMs, function (p, phase, interrupt) {
+            updateChatRenderHud(chatFrame, p, phase, interrupt);
+            scrollToBottom(true);
+          }, finishChatImageRender, { mode: "chat" });
+        } catch (animErr) {
+          finishChatImageRender();
+        }
       } else {
         if (canvas) finalizeChatImageDisplay(canvas, result, scale, built.el.querySelector(".chat-image-frame"), built.el.querySelector(".chat-image-progress"));
         isRenderingChatImage = false;
+        setChatRenderLock(false);
         if (!opts.skipQuota) incrementImageQuota();
         resolve();
       }
@@ -2631,13 +2992,15 @@
     setTyping(true);
     if (typingLabel) typingLabel.textContent = isExclusiveActive() ? "NOCO Render zeichnet…" : "NOCO Render startet…";
     appendImageMessage(text, { skipUserAppend: true }).then(function () {
-      setTyping(false);
       if (typingLabel) typingLabel.textContent = "NOCO AI denkt…";
       incrementQuota();
       updateModelUI();
       if (latencyVal) latencyVal.textContent = getPixelDuration() + " ms";
       var subjLabel = NocoPixel.extractSubject ? NocoPixel.extractSubject(text) : text;
-      showToast("Bild fertig — " + (subjLabel || "Motiv"));
+      showToast(
+        "<strong>Bild fertig</strong> — " + escapeHtml(subjLabel || "Motiv") + " · <em>3600 Motive</em>",
+        { rainbow: true, duration: 3200 }
+      );
     });
   }
 
@@ -3257,6 +3620,10 @@
     opts = opts || {};
     text = (text || "").trim();
     if (!text || isTyping) return;
+    if (isChatImageRendering()) {
+      showToast("NOCO Render laeuft — bitte warten bis das Bild fertig ist.");
+      return;
+    }
     hideWriteAssist();
     hideGlowPrism();
 
@@ -3443,10 +3810,21 @@
       ex.label = months + " Monat(e)";
     }
     saveExclusive(ex);
-    if (exclusiveDialog) exclusiveDialog.close();
+    if (exclusiveDialog && exclusiveDialog.open) {
+      exclusiveDialog.classList.add("is-purchasing");
+      exclusiveDialog.classList.remove("is-closing");
+      window.setTimeout(function () {
+        exclusiveDialog.classList.remove("is-purchasing", "is-closing");
+        exclusiveDialog.close();
+      }, 420);
+    }
+    playRainbowBurst(exclusiveTopBtn || exclusiveCard, { count: 56, duration: 2800 });
     document.body.classList.add("exclusive-activated");
-    setTimeout(function () { document.body.classList.remove("exclusive-activated"); }, 800);
-    showToast("NOCO Exclusive aktiv — NOCO Flux + Rush ~90 ms · " + ex.label);
+    setTimeout(function () { document.body.classList.remove("exclusive-activated"); }, 1400);
+    showToast(
+      "<strong>NOCO Exclusive aktiv</strong> — Flux + Rush ~90 ms · " + escapeHtml(ex.label),
+      { rainbow: true, duration: 3400 }
+    );
     updateModelUI();
     updateExclusiveStats();
   }
@@ -3470,6 +3848,19 @@
     var imgSave = e.target.closest(".chat-img-save");
     if (imgSave) {
       saveChatImage(imgSave.getAttribute("data-msg-id") || imgSave.getAttribute("data-msg-index"));
+      return;
+    }
+    var imgStudio = e.target.closest(".chat-img-studio");
+    if (imgStudio) {
+      var studioMsg = getMessageById(imgStudio.getAttribute("data-msg-id"));
+      if (studioMsg && studioMsg.image) {
+        var studioResult = resolveChatImage(studioMsg);
+        if (studioResult) {
+          lastPixelResult = studioResult;
+          if (pixelPrompt && studioResult.prompt) pixelPrompt.value = studioResult.prompt;
+        }
+      }
+      openPixelStudio(studioResult && studioResult.prompt ? studioResult.prompt : "");
       return;
     }
 
@@ -3527,10 +3918,26 @@
   if (chatMessages) chatMessages.addEventListener("scroll", closeFeedbackFloat);
 
   function openExclusiveDialog() {
+    if (exclusiveDialog) exclusiveDialog.classList.remove("is-closing");
     updateExclusiveStats();
     updateExclusiveSidebar();
     animateExclusiveSpeedBars();
     showCenteredDialog(exclusiveDialog);
+  }
+
+  function closeExclusiveDialog(opts) {
+    opts = opts || {};
+    if (!exclusiveDialog || !exclusiveDialog.open) return;
+    if (!opts.skipBurst) {
+      var burstAnchor = closeExclusive || exclusiveTopBtn;
+      playRainbowBurst(burstAnchor, { count: 40, duration: 2400 });
+    }
+    exclusiveDialog.classList.add("is-closing");
+    exclusiveDialog.classList.remove("is-purchasing");
+    window.setTimeout(function () {
+      exclusiveDialog.classList.remove("is-closing");
+      exclusiveDialog.close();
+    }, 380);
   }
 
   if (exclusiveCard) exclusiveCard.addEventListener("click", openExclusiveDialog);
@@ -3699,10 +4106,10 @@
   if (closeExclusive && exclusiveDialog) {
     closeExclusive.addEventListener("click", function (e) {
       e.preventDefault();
-      exclusiveDialog.close();
+      closeExclusiveDialog();
     });
     exclusiveDialog.addEventListener("click", function (e) {
-      if (e.target === exclusiveDialog) exclusiveDialog.close();
+      if (e.target === exclusiveDialog) closeExclusiveDialog();
     });
   }
   document.querySelectorAll(".exclusive-plan").forEach(function (btn) {
@@ -3887,6 +4294,14 @@
     closeOverlayMenus();
     openDiscoverDialog();
   });
+  var chatToolsImageBtn = document.getElementById("chatToolsImageBtn");
+  if (chatToolsImageBtn) {
+    chatToolsImageBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      closeOverlayMenus();
+      focusChatImagePrompt();
+    });
+  }
   var openPixelStudioBtn = document.getElementById("openPixelStudioBtn");
   if (openPixelStudioBtn) {
     openPixelStudioBtn.addEventListener("click", function (e) {
@@ -3904,6 +4319,7 @@
   }
   if (discoverHintBtn) discoverHintBtn.addEventListener("click", openDiscoverDialog);
   if (discoverHintClose) discoverHintClose.addEventListener("click", markGuideSeen);
+  if (nfbClose) nfbClose.addEventListener("click", dismissFeatureBanner);
   if (closeDiscover && discoverDialog) {
     closeDiscover.addEventListener("click", function () {
       markGuideSeen();
@@ -3972,6 +4388,7 @@
       closeOverlayMenus();
       if (open) {
         chatToolsMenu.hidden = false;
+        portalChatToolsMenu(chatToolsMenu, true);
         positionOverlayMenu(chatToolsBtn, chatToolsMenu);
         chatToolsBtn.setAttribute("aria-expanded", "true");
       }
@@ -3998,8 +4415,15 @@
     if (e.key === "Escape") closeOverlayMenus();
   });
 
-  document.querySelectorAll(".input-shortcut").forEach(function (btn) {
-    btn.addEventListener("click", function () {
+  var shortcutsBar = document.querySelector(".input-shortcuts-clean");
+  if (shortcutsBar) {
+    shortcutsBar.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-shortcut]");
+      if (!btn || !shortcutsBar.contains(btn)) return;
+      if (isChatImageRendering()) {
+        showToast("NOCO Render laeuft — bitte warten…");
+        return;
+      }
       var sc = btn.getAttribute("data-shortcut");
       if (sc === "hub") openDiscoverDialog("overview");
       else if (sc === "brief") handleQuickAction("brief");
@@ -4016,7 +4440,7 @@
         }
       }
     });
-  });
+  }
 
   if (sidebarHubBtn) {
     sidebarHubBtn.addEventListener("click", function (e) {
@@ -4505,6 +4929,7 @@
     renderSavedList();
     renderSystemPanel();
     setupDialogDismiss();
+    if (welcomeBlock) welcomeBlock.innerHTML = getWelcomeHtml();
     renderWelcomeChips();
     renderInputSuggestions();
     if (inputSuggestionsTimer) clearInterval(inputSuggestionsTimer);

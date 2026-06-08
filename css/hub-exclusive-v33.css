@@ -1,0 +1,62 @@
+/* v3.3 — 100% zoom layout, stronger rainbow finish */
+
+.chat-render-shard-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 200 !important;
+}
+
+.chat-image-wrap.is-render-highlight::before {
+  opacity: 0.78 !important;
+  filter: blur(26px) !important;
+}
+
+.chat-image-wrap.is-render-highlight::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: calc(var(--radius-md) + 14px);
+  background: conic-gradient(from 0deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa, #5eead4);
+  opacity: 0.22;
+  filter: blur(12px);
+  z-index: 0;
+  pointer-events: none;
+  animation: imageRainbowSpin 8s linear infinite;
+}
+
+@keyframes imageRainbowSpin {
+  to { transform: rotate(360deg); }
+}
+
+body.is-image-finish-flash::after {
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(129, 140, 248, 0.38) 0%, transparent 55%),
+    radial-gradient(ellipse at 18% 78%, rgba(94, 234, 212, 0.26) 0%, transparent 48%),
+    radial-gradient(ellipse at 84% 24%, rgba(232, 121, 249, 0.28) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(96, 165, 250, 0.14) 0%, transparent 70%);
+}
+
+.chat-image-frame.is-sharp {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 40px rgba(0, 0, 0, 0.32),
+    0 0 32px rgba(129, 140, 248, 0.22),
+    0 12px 32px rgba(0, 0, 0, 0.42) !important;
+}
+
+.chat-image-frame.is-burst {
+  animation: imageLedBurst 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes imageLedBurst {
+  0% { transform: scale(1); }
+  32% {
+    transform: scale(1.05);
+    box-shadow:
+      20px 0 44px rgba(129, 140, 248, 0.62),
+      -20px 0 44px rgba(232, 121, 249, 0.55),
+      0 20px 44px rgba(94, 234, 212, 0.55),
+      0 -20px 44px rgba(96, 165, 250, 0.5);
+  }
+  100% { transform: scale(1); }
+}

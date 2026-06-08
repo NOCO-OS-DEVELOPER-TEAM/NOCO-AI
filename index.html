@@ -12,10 +12,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v29.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v30.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v31.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v32.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v33.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v34.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v35.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v36.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v37.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v38.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v40.css">
+  <link rel="stylesheet" href="css/hub-exclusive-v41.css">
 </head>
 <body>
   <div class="boot-screen" id="bootScreen" aria-hidden="true">
-    <div class="boot-glass liquid-glass">
+    <div class="boot-rainbow-veil" aria-hidden="true"></div>
+    <div class="boot-rainbow-sweep" aria-hidden="true"></div>
+    <div class="boot-glass liquid-glass liquid-glass-prism">
       <div class="boot-logo">
         <div class="logo-mark logo-mark-boot" aria-hidden="true">
           <span class="logo-orbit"></span>
@@ -26,9 +40,11 @@
         <span class="boot-ring"></span>
       </div>
       <p class="boot-label">NOCO AI</p>
+      <p class="boot-tagline">Liquid Glass · Rainbow Sheen</p>
       <div class="boot-dots" aria-hidden="true">
         <span class="boot-dot active"></span>
-        <span class="boot-dot active"></span>
+        <span class="boot-dot"></span>
+        <span class="boot-dot"></span>
         <span class="boot-dot"></span>
         <span class="boot-dot"></span>
         <span class="boot-dot"></span>
@@ -52,6 +68,7 @@
     <header class="top-bar liquid-glass">
       <div class="top-bar-left">
         <div class="logo-mark logo-mark-sm" aria-hidden="true">
+          <span class="logo-sq-spin"></span>
           <span class="logo-orbit"></span>
           <span class="logo-shimmer"></span>
           <span class="logo-letters"><span class="logo-no">NO</span><span class="logo-co">CO</span></span>
@@ -76,11 +93,11 @@
             Mehr
           </button>
           <div class="nav-more-menu liquid-glass" id="navMoreMenu" hidden role="menu">
-            <button type="button" class="nav-more-item" data-view="system" role="menuitem">System</button>
-            <button type="button" class="nav-more-item" data-view="about" role="menuitem">Ueber uns</button>
-            <button type="button" class="nav-more-item" id="navImageBtn" role="menuitem">Bild im Chat</button>
-            <button type="button" class="nav-more-item" id="navDetectBtn" role="menuitem">KI-Bild erkennen</button>
-            <button type="button" class="nav-more-item" data-action="open-settings" role="menuitem">Einstellungen</button>
+            <button type="button" class="nav-more-item" data-view="system" role="menuitem"><svg class="nav-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>System</button>
+            <button type="button" class="nav-more-item" data-view="about" role="menuitem"><svg class="nav-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>Info</button>
+            <button type="button" class="nav-more-item" id="navImageBtn" role="menuitem"><svg class="nav-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 14l3-3 2 2 3-4 2 3"/></svg>Bild</button>
+            <button type="button" class="nav-more-item" id="navDetectBtn" role="menuitem"><svg class="nav-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg>Lens</button>
+            <button type="button" class="nav-more-item" data-action="open-settings" role="menuitem"><svg class="nav-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2"/></svg>Einstellungen</button>
           </div>
         </div>
       </nav>
@@ -98,13 +115,16 @@
           </span>
           <span class="exclusive-top-label">Exclusive</span>
         </button>
-        <span class="meta-pill version">v2.6</span>
+        <span class="meta-pill meta-motifs" title="NOCO Render Motiv-Bibliothek">3600 Motive</span>
+        <span class="meta-pill version">v4.1</span>
+        <div class="top-sys-cluster">
         <button class="icon-btn" id="newChatBtn" type="button" title="Neuer Chat" aria-label="Neuer Chat">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
         </button>
         <button class="icon-btn" id="settingsBtn" type="button" title="Einstellungen" aria-label="Einstellungen">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>
         </button>
+        </div>
       </div>
     </header>
 
@@ -206,13 +226,14 @@
               <button type="button" class="chat-tool-btn" id="chatToolsBtn" title="Chat-Tools" aria-label="Chat-Tools" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
               </button>
-              <div class="chat-tools-menu liquid-glass" id="chatToolsMenu" hidden>
+              <div class="chat-tools-menu liquid-glass liquid-glass-prism" id="chatToolsMenu" hidden role="menu">
                 <div class="chat-search-wrap chat-search-wrap-menu">
                   <input type="search" class="chat-search" id="chatSearch" placeholder="Chat durchsuchen…" aria-label="Chat durchsuchen">
                 </div>
-                <button type="button" class="chat-tools-item" id="renameChatBtn">Chat umbenennen</button>
-                <button type="button" class="chat-tools-item" id="openPixelStudioBtn">Bild-Studio (optional)</button>
-                <button type="button" class="chat-tools-item" id="planDiscoverBtn">NOCO Hub</button>
+                <button type="button" class="chat-tools-item" id="renameChatBtn" role="menuitem">Chat umbenennen</button>
+                <button type="button" class="chat-tools-item" id="chatToolsImageBtn" role="menuitem">Bild im Chat</button>
+                <button type="button" class="chat-tools-item" id="openPixelStudioBtn" role="menuitem">Bild-Studio</button>
+                <button type="button" class="chat-tools-item" id="planDiscoverBtn" role="menuitem">NOCO Hub</button>
               </div>
             </div>
           </div>
@@ -224,6 +245,19 @@
             <span class="plan-model" id="planModelText" hidden>NOCO Prism</span>
             <span class="plan-quota" id="planQuotaText" hidden>20/20</span>
             <span class="plan-speed-badge" id="planSpeedBadge" hidden>Rush</span>
+          </div>
+
+          <div class="render-lock-strip" id="renderLockStrip" hidden role="status">
+            <span class="render-lock-sq" aria-hidden="true"></span>
+            <span class="render-lock-text">NOCO Render laeuft — bitte warten…</span>
+          </div>
+
+          <div class="noco-feature-banner" id="nocoFeatureBanner" hidden role="status">
+            <span class="nfb-glow" aria-hidden="true"></span>
+            <div class="nfb-content" id="nfbContent">
+              <strong>Neu in NOCO v4.0:</strong> <em>3600 Render-Motive</em>, Rainbow-Shard-Animation, NOCO Glow, Brief &amp; Echo — tippe <strong>◎ Hub</strong> oder nutze die Shortcuts unten.
+            </div>
+            <button type="button" class="nfb-close" id="nfbClose" aria-label="Hinweis schliessen">×</button>
           </div>
 
           <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions">
@@ -240,20 +274,27 @@
               <span class="typing-dot"></span>
               <span class="typing-dot"></span>
               <span class="typing-label" id="typingLabel">NOCO AI denkt…</span>
+              <div class="typing-lens-scan" id="typingLensBar" hidden>
+                <span class="typing-lens-glow" aria-hidden="true"></span>
+                <span class="typing-lens-fill" id="typingLensFill"></span>
+              </div>
             </div>
           </div>
 
           <form class="input-bar" id="chatForm" autocomplete="off">
             <div class="input-bar-stack">
-            <div class="input-shortcuts liquid-glass liquid-glass-prism input-shortcuts-rainbow" role="toolbar" aria-label="Schnellzugriff">
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="hub" title="NOCO Hub"><span class="isc-icon">◎</span><span class="isc-label">Hub</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-render" data-shortcut="image" title="Bild im Chat"><span class="isc-icon">◇</span><span class="isc-label">Bild</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-brief" data-shortcut="brief" title="NOCO Brief — Recherche"><span class="isc-icon">◈</span><span class="isc-label">Brief</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-glow" data-shortcut="glow" title="NOCO Glow — Live Intent"><span class="isc-icon">✦</span><span class="isc-label">Glow</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="echo" title="NOCO Echo"><span class="isc-icon">◉</span><span class="isc-label">Echo</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-lens" data-shortcut="detect" title="KI-Bild erkennen"><span class="isc-icon">◌</span><span class="isc-label">Lens</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="new" title="Neuer Chat"><span class="isc-icon">↻</span><span class="isc-label">Neu</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="help" title="Hilfe"><span class="isc-icon">?</span><span class="isc-label">Help</span></button>
+            <div class="input-shortcuts liquid-glass liquid-glass-prism input-shortcuts-rainbow input-shortcuts-clean" role="toolbar" aria-label="Schnellzugriff">
+              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="hub" title="NOCO Hub">
+                <span class="isc-hub-logo" aria-hidden="true"><span class="noco-hub-logo-plate"><span class="noco-hub-logo-sq"></span></span></span>
+                <span class="isc-label">Hub</span>
+              </button>
+              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-render" data-shortcut="image" title="Bild im Chat"><span class="isc-label">Bild</span></button>
+              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-brief" data-shortcut="brief" title="NOCO Brief"><span class="isc-label">Brief</span></button>
+              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-glow" data-shortcut="glow" title="NOCO Glow"><span class="isc-label">Glow</span></button>
+              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="echo" title="NOCO Echo"><span class="isc-label">Echo</span></button>
+              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-lens" data-shortcut="detect" title="NOCO Lens"><span class="isc-label">Lens</span></button>
+              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="new" title="Neuer Chat"><span class="isc-label">Neu</span></button>
+              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="help" title="Hilfe"><span class="isc-label">Help</span></button>
             </div>
             <div class="input-row-main">
             <div class="chat-input-tools">
@@ -310,7 +351,7 @@
               <button type="button" class="command-chip" data-cmd="/hub">/hub</button>
               <span class="command-palette-more">mehr in /help</span>
             </div>
-            <p class="input-hint" id="inputHint"><span class="hint-blue">/</span> Befehle · <span class="hint-glow">✦ Glow</span> live · Enter senden</p>
+            <p class="input-hint" id="inputHint"><span class="hint-blue">/</span> Befehle · <span class="hint-glow">◇ 3600 Motive</span> · <span class="hint-glow">✦ Glow</span> live · Enter senden</p>
             </div>
           </form>
         </section>
@@ -351,7 +392,12 @@
 
         <section class="info-panel liquid-glass view-panel" id="featuresPanel" data-view="features" hidden>
           <div class="info-header">
-            <div class="info-header-icon">◎</div>
+            <div class="info-header-icon noco-hub-logo-wrap">
+              <div class="noco-hub-logo noco-hub-logo-sm" aria-hidden="true">
+                <span class="noco-hub-logo-glow"></span>
+                <span class="noco-hub-logo-plate"><span class="noco-hub-logo-sq"></span><span class="noco-hub-logo-dot"></span></span>
+              </div>
+            </div>
             <div>
               <h2>NOCO Hub</h2>
               <p>Uebersicht &amp; lohnende Funktionen</p>
@@ -368,87 +414,6 @@
             <button type="button" class="hub-action-card liquid-glass" data-qa="detect"><span>◎</span><strong>Erkennen</strong><span>KI-Bild pruefen</span></button>
             <button type="button" class="hub-action-card liquid-glass" data-qa="random"><span>✦</span><strong>Zufalls</strong><span>Vault</span></button>
             <button type="button" class="hub-action-card liquid-glass" data-qa="exclusive"><span>⚡</span><strong>NOCO Rush</strong><span>Exclusive &amp; Flux</span></button>
-          </div>
-          <div class="feature-showcase">
-            <article class="showcase-card liquid-glass liquid-glass-prism showcase-hero showcase-brief">
-              <span class="showcase-badge">Brief</span>
-              <span class="showcase-icon">◎</span>
-              <h3>NOCO Brief</h3>
-              <p>Strukturierte Recherche-Briefings — TL;DR, Kernpunkte, verwandte Themen &amp; Vergleich (z.&nbsp;B. Python vs JavaScript).</p>
-            </article>
-            <article class="showcase-card liquid-glass liquid-glass-prism showcase-glow">
-              <span class="showcase-badge">Glow</span>
-              <span class="showcase-icon">✦</span>
-              <h3>NOCO Glow</h3>
-              <p>Live-Intent-Prism beim Tippen — Kategorie, Vault-Vorschau &amp; 2 Related-Chips. Ab 2 Zeichen, lokal &amp; sofort.</p>
-            </article>
-            <article class="showcase-card liquid-glass liquid-glass-prism">
-              <span class="showcase-badge">Echo</span>
-              <span class="showcase-icon">🧠</span>
-              <h3>NOCO Echo</h3>
-              <p>Frag <strong>Was habe ich geschrieben?</strong> — Chat-Recall &amp; Zusammenfassung. Lokal, kein Server. Auch <code>/summary</code>.</p>
-            </article>
-            <article class="showcase-card liquid-glass">
-              <span class="showcase-badge">Render</span>
-              <span class="showcase-icon">▦</span>
-              <h3>NOCO Render</h3>
-              <p><strong>Mach ein Bild von …</strong> im Chat · 1 Bild zur Zeit · 3600 Motive · Epic Sheen. Exclusive.</p>
-            </article>
-            <article class="showcase-card liquid-glass">
-              <span class="showcase-badge">Access</span>
-              <span class="showcase-icon">◎</span>
-              <h3>NOCO Access</h3>
-              <p>Plan-Leiste live: Access Free (Prism → Spark) oder Exclusive (Flux + Rush). Immer transparent.</p>
-            </article>
-            <article class="showcase-card liquid-glass">
-              <span class="showcase-badge">Vault</span>
-              <span class="showcase-icon">✦</span>
-              <h3>NOCO Vault</h3>
-              <p>520+ Themen-Wissens-Engine. NOCO OS, Wissenschaft, Tech, Gesellschaft &amp; Medizin.</p>
-            </article>
-          </div>
-          <h3 class="features-grid-title">Funktionen — kompakt</h3>
-          <div class="feature-packs">
-            <div class="feature-pack liquid-glass">
-              <h4>Chat &amp; Echo</h4>
-              <ul>
-                <li><strong>Multi-Chat</strong> — mehrere Gespraeche parallel</li>
-                <li><strong>NOCO Brief</strong> — Recherche-Briefings &amp; Vergleiche</li>
-                <li><strong>NOCO Glow</strong> — Live-Intent beim Tippen</li>
-                <li><strong>NOCO Echo</strong> — Verlauf &amp; /summary</li>
-                <li><strong>Neu generieren</strong> — andere Antworten</li>
-                <li><strong>Kopieren &amp; Speichern</strong> — Stern-Favoriten</li>
-                <li><strong>Schreibhilfe</strong> — Vorschlaege beim Tippen</li>
-              </ul>
-            </div>
-            <div class="feature-pack liquid-glass">
-              <h4>Render &amp; Bilder</h4>
-              <ul>
-                <li><strong>Standard-Modus</strong> — meistgenutzt, natuerliche Pixel</li>
-                <li><strong>Im Chat:</strong> Mach ein Bild von … / Erstelle ein Bild von …</li>
-                <li><strong>▦ Button</strong> — Bildmodus, Motiv tippen, senden</li>
-                <li><strong>1 zur Zeit</strong> — naechstes Bild nach Sheen</li>
-                <li><strong>Nur Exclusive</strong> — Flux fuer Bildgenerierung</li>
-              </ul>
-            </div>
-            <div class="feature-pack liquid-glass">
-              <h4>Plan &amp; Exclusive</h4>
-              <ul>
-                <li><strong>Access Free</strong> — 20/Tag, Prism dann Spark</li>
-                <li><strong>Exclusive</strong> — Flux, Rush, Lens, Render</li>
-                <li><strong>NOCO Lens</strong> — Keywords erklaeren (Exclusive)</li>
-                <li><strong>NOCO Rush</strong> — ~90 ms Antworten</li>
-              </ul>
-            </div>
-            <div class="feature-pack liquid-glass">
-              <h4>System &amp; Hub</h4>
-              <ul>
-                <li><strong>NOCO Vault</strong> — 520+ Themen</li>
-                <li><strong>Slash-Befehle</strong> — /help, /pixel, /random, /hub</li>
-                <li><strong>Hub-Fenster</strong> — Uebersicht, Aktionen, Sparks</li>
-                <li><strong>NOCO Feedback</strong> — Daumen ohne Scroll-Bug</li>
-              </ul>
-            </div>
           </div>
         </section>
 
@@ -495,76 +460,71 @@
     <span id="clockDisplay" hidden aria-hidden="true">--:--</span>
   </div>
 
-  <dialog class="settings-dialog liquid-glass" id="settingsDialog">
-    <div class="dialog-glow" aria-hidden="true"></div>
-    <div class="dialog-header">
-      <div>
-        <h2>Einstellungen</h2>
-        <p class="dialog-sub">Liquid Glass · NOCO AI</p>
+  <dialog class="settings-dialog st3-dialog liquid-glass liquid-glass-prism" id="settingsDialog">
+    <div class="dialog-glow st3-glow" aria-hidden="true"></div>
+    <header class="st3-head">
+      <div class="st3-brand">
+        <span class="st3-mark" aria-hidden="true"></span>
+        <div>
+          <h2>Einstellungen</h2>
+          <p class="dialog-sub">Lokal · Liquid Glass</p>
+        </div>
       </div>
       <button class="icon-btn dialog-close" type="button" id="closeSettings" aria-label="Schließen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
-    </div>
-    <div class="dialog-body settings-dialog-body">
-      <div class="settings-stack">
-      <div class="settings-plan-card liquid-glass" id="settingsPlanCard">
+    </header>
+    <div class="st3-scroll settings-dialog-body">
+      <div class="settings-plan-card st3-plan liquid-glass-prism" id="settingsPlanCard">
         <div class="settings-plan-top">
-          <span class="settings-plan-label">Aktueller Plan</span>
+          <span class="settings-plan-label">Plan</span>
           <span class="settings-plan-badge" id="settingsPlanBadge">Access Free</span>
         </div>
         <p class="settings-plan-model" id="settingsPlanModel">Modell: NOCO Prism</p>
         <p class="settings-plan-detail" id="settingsPlanDetail">20 Nachrichten/Tag · Reset um 0:00 Uhr</p>
-        <button type="button" class="settings-plan-upgrade" id="settingsPlanUpgrade">NOCO Exclusive entdecken</button>
+        <button type="button" class="settings-plan-upgrade" id="settingsPlanUpgrade">NOCO Exclusive</button>
       </div>
-      <div class="settings-hero liquid-glass">
-        <span class="settings-hero-icon">◈</span>
-        <div>
-          <p class="settings-hero-title">NOCO AI Einstellungen</p>
-          <p class="settings-hero-sub">Alles bleibt lokal auf deinem Geraet</p>
-        </div>
-      </div>
-      <div class="settings-group liquid-glass">
-        <h3 class="settings-group-title">Darstellung</h3>
-        <label class="setting-row">
-          <span class="setting-label">Hintergrund-Animationen<small>Orbs & Canvas-Blobs</small></span>
+      <section class="st3-section liquid-glass-prism">
+        <h3 class="st3-section-title">Darstellung</h3>
+        <label class="setting-row st3-row">
+          <span class="setting-label">Animationen<small>Orbs &amp; Blobs</small></span>
           <input type="checkbox" id="animToggle" checked>
         </label>
-        <label class="setting-row">
-          <span class="setting-label">Liquid Glass Intensität<small>Blur-Stärke der Panels</small></span>
+        <label class="setting-row st3-row">
+          <span class="setting-label">Glass<small>Blur-Staerke</small></span>
           <select id="glassSelect">
             <option value="normal" selected>Normal</option>
             <option value="high">Hoch</option>
             <option value="low">Niedrig</option>
           </select>
         </label>
-        <label class="setting-row">
-          <span class="setting-label">Kompakte Nachrichten<small>Weniger Abstand in Bubbles</small></span>
+        <label class="setting-row st3-row">
+          <span class="setting-label">Kompakt<small>Weniger Abstand</small></span>
           <input type="checkbox" id="compactToggle">
         </label>
-      </div>
-      <div class="settings-group liquid-glass">
-        <h3 class="settings-group-title">Chat & Antworten</h3>
-        <label class="setting-row">
-          <span class="setting-label">Schreib-Effekt<small>Buchstabe für Buchstabe</small></span>
+      </section>
+      <section class="st3-section liquid-glass-prism">
+        <h3 class="st3-section-title">Chat</h3>
+        <label class="setting-row st3-row">
+          <span class="setting-label">Schreib-Effekt<small>Typewriter</small></span>
           <input type="checkbox" id="typewriterToggle" checked>
         </label>
-        <label class="setting-row">
-          <span class="setting-label">Antwort-Geschwindigkeit<small>Schnell oder Normal — Exclusive noch schneller</small></span>
+        <label class="setting-row st3-row">
+          <span class="setting-label">Geschwindigkeit<small>Antwort-Tempo</small></span>
           <select id="speedSelect">
             <option value="fast">Schnell</option>
             <option value="normal" selected>Normal</option>
           </select>
         </label>
-        <p class="settings-exclusive-hint" id="settingsExclusiveHint">Exclusive: schnellste Antworten, Keywords &amp; 52x52 Pro Render</p>
-        <label class="setting-row">
-          <span class="setting-label">Kopier-Bestätigung<small>Toast nach Kopieren</small></span>
+        <p class="settings-exclusive-hint" id="settingsExclusiveHint">Exclusive: Rush, Render 35s, 52×52</p>
+        <label class="setting-row st3-row">
+          <span class="setting-label">Kopier-Toast<small>Nach Kopieren</small></span>
           <input type="checkbox" id="soundToggle" checked>
         </label>
-      </div>
-      <div class="settings-group liquid-glass settings-tos-group">
-        <h3 class="settings-group-title">Nutzungsbedingungen</h3>
-        <p class="tos-summary">NOCO AI ist eine <strong>simulierte Chat-Webseite</strong> im Browser — online nutzbar, aber ohne Cloud-KI. Deine Chats bleiben lokal.</p>
+      </section>
+      <section class="st3-section liquid-glass-prism settings-tos-group">
+        <h3 class="st3-section-title">Nutzung</h3>
+        <p class="tos-summary">Simulierte Chat-Webseite — Daten bleiben lokal.</p>
         <button type="button" class="tos-more-btn" id="settingsTosMore" aria-expanded="false">
           <span>Mehr anzeigen</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -572,23 +532,22 @@
         <div class="tos-full" id="settingsTosFull" hidden>
           <div class="tos-full-inner" id="settingsTosText"></div>
         </div>
-        <p class="tos-accepted-note" id="tosAcceptedNote" hidden>Akzeptiert · jederzeit hier nachlesbar</p>
-      </div>
-      <div class="settings-group liquid-glass settings-privacy-group">
-        <h3 class="settings-group-title">Daten & Privatsphäre</h3>
-        <p class="settings-privacy-note">Kein Server · Kein Tracking · Kein Cloud-LLM</p>
-        <button type="button" class="setting-btn" id="exportChatsBtn">Chats exportieren (.json)</button>
-        <button type="button" class="setting-btn" id="importChatsBtn">Chats importieren (.json)</button>
+        <p class="tos-accepted-note" id="tosAcceptedNote" hidden>Akzeptiert</p>
+      </section>
+      <section class="st3-section liquid-glass-prism settings-privacy-group">
+        <h3 class="st3-section-title">Daten</h3>
+        <p class="settings-privacy-note">Kein Server · Kein Tracking</p>
+        <button type="button" class="setting-btn st3-btn" id="exportChatsBtn">Export (.json)</button>
+        <button type="button" class="setting-btn st3-btn" id="importChatsBtn">Import (.json)</button>
         <input type="file" id="importChatsFile" accept=".json,application/json" hidden>
-        <button type="button" class="setting-btn danger" id="clearAllChatsBtn">Alle Chats löschen</button>
-      </div>
-      <div class="settings-group liquid-glass settings-danger-group">
-        <h3 class="settings-group-title">Zuruecksetzen</h3>
-        <p class="settings-reset-note">Loescht alles wie ein neuer Account: Chats, Limits, Exclusive, Galerie, Einstellungen und Voreinstellungen.</p>
-        <button type="button" class="setting-btn danger setting-btn-reset" id="resetAppBtn">Alles zuruecksetzen</button>
-      </div>
-      <p class="setting-note">NOCO AI = <strong>simulierte Wissens-KI</strong>. Kein Cloud-LLM. Alle Daten bleiben lokal — privat, schnell, offline-faehig.</p>
-      </div>
+        <button type="button" class="setting-btn st3-btn danger" id="clearAllChatsBtn">Chats loeschen</button>
+      </section>
+      <section class="st3-section liquid-glass-prism settings-danger-group">
+        <h3 class="st3-section-title">Reset</h3>
+        <p class="settings-reset-note">Alles wie neu: Chats, Limits, Exclusive, Galerie.</p>
+        <button type="button" class="setting-btn st3-btn danger setting-btn-reset" id="resetAppBtn">Alles zuruecksetzen</button>
+      </section>
+      <p class="setting-note st3-foot">NOCO AI — simulierte Wissens-KI, offline-faehig.</p>
     </div>
   </dialog>
 
@@ -629,26 +588,35 @@
     </div>
   </dialog>
 
-  <dialog class="discover-dialog liquid-glass" id="discoverDialog">
-    <div class="dialog-glow discover-dialog-glow" aria-hidden="true"></div>
-    <div class="dialog-header">
-      <div>
-        <h2>NOCO Hub</h2>
-        <p class="dialog-sub">Uebersicht · Aktionen · Sparks</p>
+  <dialog class="discover-dialog hub-dialog-v2 liquid-glass liquid-glass-prism" id="discoverDialog">
+    <div class="dialog-glow hub-v2-glow" aria-hidden="true"></div>
+    <header class="hub-v2-header">
+      <div class="hub-v2-brand">
+        <div class="noco-hub-logo" aria-hidden="true">
+          <span class="noco-hub-logo-glow"></span>
+          <span class="noco-hub-logo-plate">
+            <span class="noco-hub-logo-sq"></span>
+            <span class="noco-hub-logo-dot"></span>
+          </span>
+        </div>
+        <div>
+          <h2>NOCO Hub</h2>
+          <p class="dialog-sub">Uebersicht · Aktionen · Sparks</p>
+        </div>
       </div>
       <button class="icon-btn dialog-close" type="button" id="closeDiscover" aria-label="Schliessen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
+    </header>
+    <div class="hub-v2-tabs" role="tablist" aria-label="Hub Bereiche">
+      <button type="button" class="hub-tab active" data-hub-tab="overview" role="tab">Uebersicht</button>
+      <button type="button" class="hub-tab" data-hub-tab="actions" role="tab">Aktionen</button>
+      <button type="button" class="hub-tab" data-hub-tab="sparks" role="tab">Sparks</button>
     </div>
-    <div class="dialog-body">
-      <div class="hub-tabs" role="tablist" aria-label="Hub Bereiche">
-        <button type="button" class="hub-tab active" data-hub-tab="overview" role="tab">Uebersicht</button>
-        <button type="button" class="hub-tab" data-hub-tab="actions" role="tab">Aktionen</button>
-        <button type="button" class="hub-tab" data-hub-tab="sparks" role="tab">Sparks</button>
-      </div>
+    <div class="hub-v2-scroll" id="hubScrollArea">
       <div class="hub-panel active" data-hub-panel="overview" role="tabpanel">
       <p class="discover-intro">Alles Wichtige auf einen Blick — klick eine Kachel oder wechsle zu <strong>Aktionen</strong>.</p>
-      <div class="discover-grid" id="discoverGrid">
+      <div class="discover-grid hub-v2-grid" id="discoverGrid">
         <button type="button" class="discover-tile liquid-glass" data-prompt="Was sind die NOCO Modell-Namen?">
           <span class="discover-tile-icon">✦</span>
           <strong>NOCO Modelle</strong>
@@ -685,14 +653,6 @@
           <span>~90 ms · nur mit Flux/Exclusive</span>
         </button>
       </div>
-      <div class="discover-tips liquid-glass">
-        <p><strong>Lohnt sich besonders:</strong></p>
-        <ul>
-          <li><strong>NOCO Echo</strong> — vergisst nie was du gefragt hast</li>
-          <li><strong>/random</strong> — neue Vault-Themen entdecken</li>
-          <li><strong>NOCO Rush</strong> — spuerbar schnellere Antworten (Exclusive)</li>
-        </ul>
-      </div>
       </div>
       <div class="hub-panel" data-hub-panel="actions" role="tabpanel" hidden>
         <p class="discover-intro">Ein Klick — sofort nutzen. Das sind die Funktionen die sich am meisten lohnen:</p>
@@ -712,47 +672,41 @@
         <div class="hub-spark-tabs" id="hubSparkTabs"></div>
         <div class="hub-spark-list" id="hubSparkList"></div>
       </div>
-      <button type="button" class="discover-start-btn iridescent-btn" id="discoverStartBtn">
-        <span class="btn-shimmer"></span>
-        Zufalls-Frage
-      </button>
     </div>
   </dialog>
 
-  <dialog class="exclusive-dialog liquid-glass" id="exclusiveDialog">
-    <div class="dialog-glow" aria-hidden="true"></div>
-    <div class="dialog-header">
-      <div>
-        <h2>NOCO Exclusive</h2>
-        <p class="dialog-sub">NOCO Flux · NOCO Rush · Alles simuliert</p>
+  <dialog class="exclusive-dialog ex3-dialog liquid-glass liquid-glass-prism" id="exclusiveDialog">
+    <div class="dialog-glow ex3-glow" aria-hidden="true"></div>
+    <header class="ex3-head">
+      <div class="ex3-brand">
+        <span class="ex3-mark" aria-hidden="true"></span>
+        <div>
+          <h2>NOCO Exclusive</h2>
+          <p class="dialog-sub">Flux · Rush · Render · simuliert</p>
+        </div>
       </div>
       <button class="icon-btn dialog-close" type="button" id="closeExclusive" aria-label="Schliessen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
-    </div>
-    <div class="dialog-body">
-      <div class="exclusive-unlock-banner liquid-glass" id="exclusiveUnlockBanner">
+    </header>
+    <div class="ex3-scroll">
+      <div class="exclusive-unlock-banner ex3-banner liquid-glass-prism" id="exclusiveUnlockBanner">
         <span class="unlock-banner-icon">◆</span>
         <div>
           <p class="unlock-banner-title">Exclusive freischalten</p>
           <p class="unlock-banner-sub">Flux · Rush · Render · Lens</p>
         </div>
       </div>
-      <div class="exclusive-speed-active liquid-glass" id="exclusiveSpeedActive" hidden>
+      <div class="exclusive-speed-active ex3-banner liquid-glass-prism" id="exclusiveSpeedActive" hidden>
         <span class="speed-active-bolt" aria-hidden="true">⚡</span>
         <div>
           <p class="speed-active-title">Exclusive aktiv</p>
           <p class="speed-active-sub">Flux · Rush · Render</p>
         </div>
       </div>
-      <div class="exclusive-speed-hero liquid-glass" id="exclusiveSpeedHero">
-        <div class="speed-hero-head">
-          <span class="speed-bolt-wrap" aria-hidden="true"><span class="speed-bolt">⚡</span></span>
-          <div>
-            <p class="speed-hero-title">Warum Exclusive?</p>
-            <p class="speed-hero-sub">Schneller · Unbegrenzt · Render</p>
-          </div>
-        </div>
+      <section class="exclusive-speed-hero ex3-speed liquid-glass-prism" id="exclusiveSpeedHero">
+        <p class="ex3-speed-title">Warum Exclusive?</p>
+        <p class="ex3-speed-sub">Schneller · Unbegrenzt · 35s Render</p>
         <div class="speed-compare-bars">
           <div class="speed-bar-row">
             <span class="speed-bar-label">Free</span>
@@ -765,78 +719,45 @@
             <span class="speed-bar-ms is-fast">~90 ms</span>
           </div>
         </div>
-      </div>
-      <div class="exclusive-hero liquid-glass">
-        <span class="exclusive-hero-icon">
-          <span class="exclusive-hero-ring"></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 7.5H22l-6 4.5 2.5 7.5L12 17l-6.5 4.5L8 14 2 9.5h7.5z"/></svg>
-        </span>
-        <div>
-          <p class="exclusive-hero-title">NOCO Flux</p>
-          <p class="exclusive-hero-sub" id="exclusiveHeroSub">Flux · Unbegrenzt</p>
-        </div>
-      </div>
-      <div class="exclusive-stats liquid-glass" id="exclusiveStats">
+      </section>
+      <div class="exclusive-stats ex3-stats liquid-glass-prism" id="exclusiveStats">
         <div class="ex-stat ex-stat-speed"><span class="ex-stat-val" id="exStatSpeed">~90</span><span class="ex-stat-label">ms</span></div>
         <div class="ex-stat"><span class="ex-stat-val" id="exStatPixels">0</span><span class="ex-stat-label">Pixel</span></div>
-        <div class="ex-stat"><span class="ex-stat-val" id="exStatMsgs">0</span><span class="ex-stat-label">Antworten</span></div>
+        <div class="ex-stat"><span class="ex-stat-val" id="exStatMsgs">0</span><span class="ex-stat-label">Msgs</span></div>
         <div class="ex-stat"><span class="ex-stat-val" id="exStatMotifs">3600</span><span class="ex-stat-label">Motive</span></div>
       </div>
-      <div class="exclusive-feature-tabs" role="tablist" aria-label="Exclusive Kategorien">
-        <button type="button" class="ex-tab active" data-ex-tab="all">Alle</button>
-        <button type="button" class="ex-tab" data-ex-tab="chat">Chat</button>
-        <button type="button" class="ex-tab" data-ex-tab="pixel">Pixel</button>
-        <button type="button" class="ex-tab" data-ex-tab="premium">Premium</button>
+      <p class="exclusive-hero-sub ex3-flux-line" id="exclusiveHeroSub">NOCO Flux · Unbegrenzt</p>
+      <div class="ex3-benefits">
+        <div class="ex3-benefit liquid-glass-prism"><span>⚡</span><strong>Rush</strong><em>90 ms</em></div>
+        <div class="ex3-benefit liquid-glass-prism"><span>▦</span><strong>Render</strong><em>35 Sek.</em></div>
+        <div class="ex3-benefit liquid-glass-prism"><span>◇</span><strong>Lens</strong><em>Terms</em></div>
+        <div class="ex3-benefit liquid-glass-prism"><span>∞</span><strong>Chat</strong><em>Kein Limit</em></div>
       </div>
-      <div class="exclusive-compare liquid-glass">
-        <div class="exclusive-compare-col">
-          <span class="compare-label">Access Free</span>
-          <span class="compare-val">20/Tag</span>
-          <span class="compare-detail">Spark nach 10</span>
-        </div>
-        <div class="exclusive-compare-divider"></div>
-        <div class="exclusive-compare-col is-exclusive-col">
-          <span class="compare-label">Exclusive</span>
-          <span class="compare-val">⚡</span>
-          <span class="compare-detail">Rush · Unbegrenzt</span>
-        </div>
-      </div>
-      <ul class="exclusive-features" id="exclusiveFeatures">
-        <li class="exclusive-feature exclusive-feature-speed liquid-glass" data-ex-cat="chat premium"><span class="ex-feat-icon">⚡</span><span><strong>NOCO Rush</strong> — ~90 ms statt ~500 ms, immer mit Flux</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="chat premium"><span class="ex-feat-icon">◆</span><span><strong>NOCO Flux</strong> — volle Vault-Antworten, unbegrenzt</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="chat"><span class="ex-feat-icon">💬</span><span><strong>Unbegrenzter Chat</strong> — Free nur 20/Tag</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="chat"><span class="ex-feat-icon">∞</span><span><strong>Unbegrenzte Nachrichten</strong> — kein Tageslimit</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="chat"><span class="ex-feat-icon">◇</span><span><strong>NOCO Lens</strong> — blaue Begriffe anklicken</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="chat"><span class="ex-feat-icon">🔄</span><span><strong>Neu generieren+</strong> — unbegrenzte Varianten</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="pixel"><span class="ex-feat-icon">▦</span><span><strong>NOCO Render</strong> — Bilder im Chat, 3600 Motive, Epic Sheen <em>(nur Exclusive)</em></span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="pixel"><span class="ex-feat-icon">✨</span><span><strong>Epic Sheen</strong> — Spiral-Reveal, Particles, Replay</span></li>
-        <li class="exclusive-feature liquid-glass" data-ex-cat="premium"><span class="ex-feat-icon">✦</span><span><strong>Premium-Badge</strong> — Exclusive-Icon &amp; Glow</span></li>
-      </ul>
-      <p class="exclusive-dialog-section-label">Plan waehlen (simuliert)</p>
-      <div class="exclusive-plans">
-        <button type="button" class="exclusive-plan liquid-glass is-recommended" data-plan="trial">
-          <span class="plan-badge">Empfohlen</span>
+      <p class="ex3-plans-label">Plan waehlen (simuliert)</p>
+      <div class="exclusive-plans ex3-plans">
+        <button type="button" class="exclusive-plan ex3-plan liquid-glass-prism is-recommended" data-plan="trial">
           <span class="plan-name">Testphase</span>
-          <span class="plan-detail">1 Tag gratis · Kein Abo</span>
-          <span class="plan-price">0 Fake-Euro</span>
+          <span class="plan-detail">1 Tag gratis</span>
+          <span class="plan-price">0 €</span>
         </button>
-        <button type="button" class="exclusive-plan liquid-glass" data-plan="1">
+        <button type="button" class="exclusive-plan ex3-plan liquid-glass-prism" data-plan="1">
           <span class="plan-name">1 Monat</span>
-          <span class="plan-detail">NOCO Flux · Unbegrenzt</span>
-          <span class="plan-price">12 Fake-Euro</span>
+          <span class="plan-detail">Flux</span>
+          <span class="plan-price">12 €</span>
         </button>
-        <button type="button" class="exclusive-plan liquid-glass" data-plan="12">
+        <button type="button" class="exclusive-plan ex3-plan liquid-glass-prism" data-plan="12">
           <span class="plan-name">12 Monate</span>
-          <span class="plan-detail">Jahres-Premium</span>
-          <span class="plan-price">99 Fake-Euro</span>
+          <span class="plan-detail">Jahr</span>
+          <span class="plan-price">99 €</span>
         </button>
-        <button type="button" class="exclusive-plan liquid-glass" data-plan="90">
+        <button type="button" class="exclusive-plan ex3-plan liquid-glass-prism" data-plan="90">
           <span class="plan-name">90 Monate</span>
-          <span class="plan-detail">Maximal-Paket</span>
-          <span class="plan-price">599 Fake-Euro</span>
+          <span class="plan-detail">Max</span>
+          <span class="plan-price">599 €</span>
         </button>
       </div>
-      <p class="exclusive-fake-note">Alles simuliert — kein echtes Geld, keine Zahlung. Einfach Plan waehlen und bestaetigen.</p>
+      <p class="exclusive-fake-note ex3-note">Alles simuliert — kein echtes Geld.</p>
+      <ul class="exclusive-features" id="exclusiveFeatures" hidden aria-hidden="true"></ul>
     </div>
   </dialog>
 
@@ -977,6 +898,7 @@
   <script src="js/brain.js" charset="UTF-8"></script>
   <script src="js/pixelgen.js" charset="UTF-8"></script>
   <script src="js/imgdetect.js" charset="UTF-8"></script>
+  <script src="js/boot-fx.js" charset="UTF-8"></script>
   <script src="js/app.js" charset="UTF-8"></script>
 </body>
 </html>

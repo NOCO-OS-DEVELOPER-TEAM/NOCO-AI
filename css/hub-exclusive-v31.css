@@ -1,0 +1,162 @@
+/* v3.1 — puzzle fly-in render, status below frame, LED finish */
+
+.chat-image-frame.is-rendering {
+  overflow: visible;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, transparent 42%),
+    linear-gradient(315deg, rgba(129, 140, 248, 0.06) 0%, transparent 50%),
+    rgba(8, 12, 24, 0.28) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.chat-image-frame.is-rendering .chat-image-canvas {
+  background: transparent;
+  border-radius: 8px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Status commands — below image, not on canvas */
+.chat-render-status-below {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.08) 0%, transparent 48%),
+    rgba(8, 12, 26, 0.42);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.render-status-text {
+  margin: 0;
+  font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  animation: statusTextIn 0.35s var(--ease-out);
+}
+
+.render-status-text.is-finishing {
+  color: rgba(94, 234, 212, 0.95);
+}
+
+.render-status-step {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: rgba(167, 139, 250, 0.82);
+}
+
+.render-status-bar {
+  height: 2px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.render-status-bar-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #a78bfa, #e879f9);
+  transition: width 0.12s linear;
+}
+
+.chat-render-status-below.is-done {
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+}
+
+@keyframes statusTextIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* LED edge burst on completion */
+.chat-image-frame.is-burst {
+  animation: imageLedBurst 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes imageLedBurst {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(94, 234, 212, 0);
+  }
+  35% {
+    transform: scale(1.035);
+    box-shadow:
+      12px 0 28px rgba(129, 140, 248, 0.45),
+      -12px 0 28px rgba(232, 121, 249, 0.4),
+      0 12px 28px rgba(94, 234, 212, 0.4),
+      0 -12px 28px rgba(96, 165, 250, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(94, 234, 212, 0);
+  }
+}
+
+/* Finished frame — rainbow LED glow like input field */
+.chat-image-frame.is-sharp {
+  position: relative;
+  padding: 0.65rem;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(129, 140, 248, 0.14) 0%, transparent 58%),
+    rgba(4, 6, 14, 0.72);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.45),
+    0 10px 30px rgba(0, 0, 0, 0.38);
+  animation: imageLockIn 0.65s var(--ease-out);
+}
+
+.chat-image-frame.is-sharp::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: calc(var(--radius-md) + 2px);
+  background: linear-gradient(135deg, #5eead4 0%, #818cf8 28%, #a78bfa 52%, #e879f9 78%, #60a5fa 100%);
+  opacity: 0.55;
+  filter: blur(18px);
+  z-index: 0;
+  pointer-events: none;
+  animation: imageRainbowGlow 6s ease-in-out infinite;
+}
+
+.chat-image-frame.is-sharp::after {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border-radius: calc(var(--radius-md) - 4px);
+  pointer-events: none;
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.32);
+  z-index: 3;
+}
+
+.chat-image-frame.is-sharp .chat-image-canvas {
+  position: relative;
+  z-index: 2;
+  filter: brightness(0.9) contrast(1.08) saturate(1.08);
+  box-shadow:
+    0 6px 22px rgba(0, 0, 0, 0.48),
+    0 0 20px rgba(94, 234, 212, 0.1);
+  border-radius: 8px;
+}
+
+@keyframes imageRainbowGlow {
+  0%, 100% { filter: blur(16px) hue-rotate(0deg); opacity: 0.5; }
+  50% { filter: blur(22px) hue-rotate(28deg); opacity: 0.68; }
+}
+
+/* Hub dialog — no dead space at bottom */
+.discover-dialog.hub-dialog-v2 .hub-v2-scroll {
+  padding-bottom: 0.75rem;
+}

@@ -192,7 +192,8 @@
 
   function buildReportHtml(meta) {
     var lines = [];
-    lines.push('<span class="detect-engine-tag">Erkannt von Blaula Lens</span>');
+    lines.push('<div class="lens-detect-report liquid-glass liquid-glass-prism">');
+    lines.push('<span class="detect-engine-tag">NOCO Lens</span>');
     lines.push("<p><strong>" + meta.title + "</strong> — " + meta.summary + "</p>");
     lines.push('<div class="detect-metric-row"><span>Confidence</span><span class="detect-metric-val">' + meta.confidence + "%</span></div>");
     lines.push('<div class="detect-metric-row"><span>Pixel-Grid</span><span class="detect-metric-val">' + meta.gridScore + "%</span></div>");
@@ -202,6 +203,7 @@
       lines.push('<div class="detect-metric-row"><span>Motiv</span><span class="detect-metric-val">' + meta.motifLabel + "</span></div>");
     }
     lines.push("<p>" + meta.detail + "</p>");
+    lines.push("</div>");
     return lines.join("");
   }
 

@@ -1,0 +1,216 @@
+/* v3.5 — smaller sharper shards, rainbow chat, brighter glass */
+
+/* ── Brighter chat atmosphere ── */
+.chat-panel.liquid-glass {
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, 0.09) 0%, transparent 42%),
+    linear-gradient(220deg, rgba(129, 140, 248, 0.07) 0%, transparent 50%),
+    rgba(8, 12, 24, 0.48) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 48px rgba(129, 140, 248, 0.08) !important;
+}
+
+.chat-messages {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(129, 140, 248, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgba(94, 234, 212, 0.05) 0%, transparent 45%);
+}
+
+/* Rainbow message bubbles */
+.chat-messages .message.ai .message-bubble {
+  background:
+    linear-gradient(135deg, rgba(129, 140, 248, 0.1) 0%, transparent 42%),
+    linear-gradient(315deg, rgba(94, 234, 212, 0.06) 0%, transparent 38%),
+    rgba(167, 139, 250, 0.1) !important;
+  border-color: rgba(167, 139, 250, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(129, 140, 248, 0.06);
+}
+
+.chat-messages .message.user .message-bubble {
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.12) 0%, transparent 40%),
+    linear-gradient(315deg, rgba(96, 165, 250, 0.07) 0%, transparent 36%),
+    rgba(94, 234, 212, 0.11) !important;
+  border-color: rgba(94, 234, 212, 0.24) !important;
+  box-shadow: 0 0 16px rgba(94, 234, 212, 0.07);
+}
+
+.message.image .message-bubble.message-bubble-image {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0.15rem 0 !important;
+}
+
+/* Render avatar logo */
+.message-avatar-render {
+  position: relative;
+  display: grid !important;
+  place-items: center;
+  background: transparent !important;
+  border: none !important;
+  overflow: visible !important;
+}
+
+.render-avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  background: conic-gradient(from 0deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa, #5eead4);
+  opacity: 0.75;
+  filter: blur(6px);
+  animation: renderAvatarSpin 5s linear infinite;
+}
+
+.render-avatar-core {
+  position: relative;
+  z-index: 1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(129, 140, 248, 0.9);
+}
+
+@keyframes renderAvatarSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Welcome — new chat */
+.welcome-render-mark {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1rem;
+  display: grid;
+  place-items: center;
+}
+
+.welcome-mark-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa, #5eead4);
+  opacity: 0.55;
+  filter: blur(14px);
+  animation: welcomeGlowSpin 7s linear infinite;
+}
+
+.welcome-mark-core {
+  position: relative;
+  z-index: 1;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  font-size: 1.35rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18) 0%, transparent 50%),
+    rgba(10, 14, 28, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 28px rgba(129, 140, 248, 0.25);
+}
+
+@keyframes welcomeGlowSpin {
+  to { transform: rotate(360deg); }
+}
+
+.welcome-title-rainbow {
+  background: linear-gradient(135deg, #5eead4 0%, #818cf8 35%, #a78bfa 58%, #e879f9 82%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  filter: drop-shadow(0 0 18px rgba(129, 140, 248, 0.35));
+}
+
+.welcome-sub {
+  margin: 0.35rem 0 0.85rem;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(167, 139, 250, 0.75);
+}
+
+.welcome-block-compact {
+  padding: 2rem 1.5rem 2.25rem !important;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.08) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 0%, rgba(129, 140, 248, 0.12) 0%, transparent 58%),
+    rgba(8, 12, 26, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  margin: 1rem auto !important;
+  max-width: 28rem;
+}
+
+/* Image frame — same size rendering + finished */
+.chat-image-frame.is-rendering,
+.chat-image-frame.is-sharp {
+  min-width: min(100%, 20rem) !important;
+  min-height: unset !important;
+  padding: 1rem !important;
+}
+
+.chat-image-frame.is-rendering .chat-image-canvas,
+.chat-image-frame.is-sharp .chat-image-canvas {
+  width: 100% !important;
+  max-width: 18rem !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Rainbow from start during render */
+.chat-image-wrap.is-render-active::before {
+  opacity: calc(0.14 + var(--rp, 0) * 0.5) !important;
+  filter: blur(calc(14px + var(--rp, 0) * 22px)) !important;
+  animation: imageRainbowGlow 6s ease-in-out infinite;
+}
+
+.chat-image-wrap.is-render-active::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: calc(var(--radius-md) + 10px);
+  background: conic-gradient(from 0deg, #5eead4, #818cf8, #a78bfa, #e879f9, #60a5fa, #5eead4);
+  opacity: calc(0.08 + var(--rp, 0) * 0.18);
+  filter: blur(10px);
+  z-index: -2;
+  pointer-events: none;
+  animation: imageRainbowSpin 10s linear infinite;
+}
+
+.chat-image-frame.is-rendering {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.14) 0%, transparent 44%),
+    linear-gradient(315deg, rgba(129, 140, 248, 0.12) 0%, transparent 52%),
+    linear-gradient(200deg, rgba(94, 234, 212, 0.09) 0%, transparent 40%),
+    rgba(8, 12, 26, 0.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 56px rgba(129, 140, 248, 0.08),
+    0 0 24px rgba(129, 140, 248, 0.1),
+    0 14px 36px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* All finished images keep rainbow */
+.chat-image-wrap.is-render-highlight .chat-image-frame.is-sharp {
+  animation: imageLockIn 0.75s var(--ease-out);
+}
+
+.chat-render-status-below {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+    rgba(8, 12, 26, 0.32) !important;
+}
+
+.render-status-text {
+  text-shadow: 0 0 14px rgba(167, 139, 250, 0.25);
+}

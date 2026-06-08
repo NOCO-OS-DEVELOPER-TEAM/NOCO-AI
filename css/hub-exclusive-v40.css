@@ -1,0 +1,391 @@
+/* v4.0 — AI logo, render lock, shortcuts clean, dialogs, typewriter */
+
+/* ── Rotating square logo (top-left + avatars) ── */
+.logo-sq-spin {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  box-shadow: 0 0 12px rgba(129, 140, 248, 0.55);
+  animation: logoSqSpin 5s linear infinite;
+  z-index: 2;
+}
+
+.logo-mark-sm .logo-sq-spin {
+  width: 13px;
+  height: 13px;
+  top: 50%;
+  left: 50%;
+  margin: -6.5px 0 0 -6.5px;
+}
+
+.logo-mark-sm .logo-letters {
+  opacity: 0.35;
+  transform: scale(0.82);
+}
+
+@keyframes logoSqSpin {
+  0% { transform: rotate(18deg); }
+  100% { transform: rotate(378deg); }
+}
+
+/* ── Chat AI avatar ── */
+.message-avatar-ai {
+  position: relative;
+  overflow: visible !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 0 !important;
+}
+
+.message-avatar-ai .avatar-rainbow-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 14px;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.55) 0%, rgba(94, 234, 212, 0.25) 50%, transparent 72%);
+  filter: blur(8px);
+  opacity: 0.75;
+}
+
+.message-avatar-ai .avatar-logo-core {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+    rgba(8, 12, 26, 0.45);
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.message-avatar-ai .avatar-logo-sq {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+  animation: logoSqSpin 4.5s linear infinite;
+}
+
+.message-avatar-render .avatar-logo-sq,
+.message-avatar-render .render-avatar-core {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  font-size: 0 !important;
+  background: linear-gradient(135deg, #a78bfa, #e879f9, #60a5fa);
+  animation: logoSqSpin 3.8s linear infinite;
+  display: block;
+  box-shadow: 0 0 12px rgba(167, 139, 250, 0.55);
+}
+
+.message.user .message-avatar {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(8, 12, 26, 0.4)) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.04em;
+}
+
+.message.system .message-avatar {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.15), rgba(129, 140, 248, 0.12)) !important;
+}
+
+/* ── Cleaner typewriter ── */
+.message-bubble.message-writing {
+  border-color: rgba(167, 139, 250, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(129, 140, 248, 0.08);
+  animation: writePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes writePulse {
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 16px rgba(129, 140, 248, 0.06); }
+  50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 22px rgba(129, 140, 248, 0.12); }
+}
+
+.write-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.95em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: linear-gradient(180deg, #5eead4, #818cf8);
+  border-radius: 1px;
+  animation: writeCaret 0.85s ease-in-out infinite;
+}
+
+@keyframes writeCaret {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.message-bubble.typing-cursor::after {
+  display: none;
+}
+
+/* ── Shortcuts — no visible border bars, soft marquee wash ── */
+.input-shortcuts-clean.input-shortcuts-rainbow {
+  border: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 28px rgba(0, 0, 0, 0.18) !important;
+  background:
+    linear-gradient(90deg, rgba(8, 12, 26, 0.55) 0%, rgba(8, 12, 26, 0.32) 50%, rgba(8, 12, 26, 0.55) 100%),
+    linear-gradient(168deg, rgba(129, 140, 248, 0.08) 0%, transparent 45%) !important;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+  overflow: hidden;
+}
+
+.input-shortcuts-clean.input-shortcuts-rainbow::before,
+.input-shortcuts-clean.input-shortcuts-rainbow::after {
+  display: none !important;
+}
+
+.input-shortcuts-clean .input-shortcut-chip {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.input-shortcuts-clean .isc-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* shortcut track removed in v4.1 — see hub-exclusive-v41.css */
+
+/* ── Render lock — nothing until done ── */
+body.is-chat-render-locked .chat-input,
+body.is-chat-render-locked .input-shortcuts,
+body.is-chat-render-locked .chat-tool-pill,
+body.is-chat-render-locked .input-suggestion-chip {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+body.is-chat-render-locked .send-btn {
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.render-lock-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0.65rem 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  background:
+    linear-gradient(90deg, rgba(94, 234, 212, 0.1), rgba(129, 140, 248, 0.12), rgba(232, 121, 249, 0.08)),
+    rgba(8, 12, 26, 0.5);
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: rgba(255, 255, 255, 0.88);
+  animation: renderLockIn 0.45s var(--ease-out);
+}
+
+.render-lock-strip[hidden] { display: none !important; }
+
+.render-lock-sq {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  animation: logoSqSpin 2.5s linear infinite;
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.45);
+}
+
+@keyframes renderLockIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Top system buttons (rechts) ── */
+.top-sys-cluster {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.top-sys-cluster .icon-btn {
+  border-color: rgba(167, 139, 250, 0.16);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(8, 12, 26, 0.35));
+}
+
+.top-sys-cluster .icon-btn:hover {
+  border-color: rgba(167, 139, 250, 0.38);
+  box-shadow: 0 0 18px rgba(129, 140, 248, 0.2);
+}
+
+.top-sys-cluster .icon-btn svg {
+  opacity: 0.9;
+}
+
+/* ── Nav Mehr — cleaner labels ── */
+.nav-more-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-more-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+/* ── Settings + Exclusive redesign ── */
+.settings-dialog.st3-dialog[open],
+.exclusive-dialog.ex3-dialog[open] {
+  border: 1px solid rgba(167, 139, 250, 0.28) !important;
+  background:
+    linear-gradient(165deg, rgba(94, 234, 212, 0.06) 0%, rgba(129, 140, 248, 0.08) 40%, rgba(232, 121, 249, 0.05) 100%),
+    rgba(8, 12, 26, 0.92) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 48px rgba(129, 140, 248, 0.18),
+    0 28px 64px rgba(0, 0, 0, 0.55) !important;
+}
+
+.st3-glow,
+.ex3-glow {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.12), rgba(129, 140, 248, 0.15), rgba(232, 121, 249, 0.1)) !important;
+  opacity: 0.65 !important;
+  animation: none !important;
+}
+
+.st3-mark,
+.ex3-mark {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 11px !important;
+  font-size: 0 !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(8, 12, 26, 0.5)) !important;
+  border: 1px solid rgba(167, 139, 250, 0.3) !important;
+  position: relative;
+  display: grid !important;
+  place-items: center;
+}
+
+.st3-mark::after,
+.ex3-mark::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.45);
+  animation: logoSqSpin 5s linear infinite;
+}
+
+.st3-head h2,
+.ex3-head h2 {
+  background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.85) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.st3-section,
+.ex3-benefit,
+.ex3-plan,
+.st3-plan,
+.ex3-banner,
+.ex3-speed,
+.ex3-stats {
+  border-color: rgba(167, 139, 250, 0.16) !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, transparent 48%),
+    rgba(8, 12, 26, 0.38) !important;
+}
+
+.exclusive-dialog.is-purchasing {
+  animation: exPurchasePulse 0.55s var(--ease-out);
+}
+
+@keyframes exPurchasePulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.02); filter: brightness(1.08); }
+  100% { transform: scale(1); }
+}
+
+.exclusive-dialog.is-closing {
+  animation: exDialogOut 0.38s var(--ease-out) forwards;
+}
+
+@keyframes exDialogOut {
+  to { opacity: 0; transform: scale(0.97); }
+}
+
+/* ── Lens result — rainbow, clean text ── */
+.lens-detect-report {
+  border-color: rgba(94, 234, 212, 0.28) !important;
+  background:
+    linear-gradient(135deg, rgba(94, 234, 212, 0.14) 0%, rgba(129, 140, 248, 0.12) 45%, rgba(232, 121, 249, 0.08) 100%),
+    rgba(8, 12, 26, 0.35) !important;
+  box-shadow: 0 0 28px rgba(129, 140, 248, 0.12);
+}
+
+.lens-detect-report .detect-engine-tag {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  margin-bottom: 0.45rem;
+  border-radius: 99px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, rgba(94, 234, 212, 0.2), rgba(129, 140, 248, 0.2));
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.detect-metric-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.detect-metric-val {
+  color: rgba(94, 234, 212, 0.95);
+  font-weight: 600;
+}
+
+/* ── Softer boot handoff ── */
+.boot-handoff-flash {
+  animation: bootHandoffFlashSoft 1.4s var(--ease-out) forwards !important;
+}
+
+@keyframes bootHandoffFlashSoft {
+  0% { opacity: 0; }
+  20% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+.boot-screen.is-handoff {
+  opacity: 0.08 !important;
+}
+
+/* ── Stronger rainbow ambient ── */
+.ambient::after {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(94, 234, 212, 0.09) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 15%, rgba(129, 140, 248, 0.1) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 95%, rgba(232, 121, 249, 0.08) 0%, transparent 52%),
+    radial-gradient(ellipse at 75% 70%, rgba(96, 165, 250, 0.06) 0%, transparent 44%) !important;
+}

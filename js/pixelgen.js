@@ -3693,7 +3693,7 @@
 
     if (best.score < MIN_MOTIF_MATCH_SCORE) {
       if (opts.allowFallback !== false && (subject || search)) {
-        best.motif = ALL_MOTIFS[hashStr(search || norm) % MOTIF_COUNT];
+        best.motif = ALL_MOTIFS[hashStr((search || norm) + "|" + (opts.uniqueId || "")) % MOTIF_COUNT];
         best.score = MIN_MOTIF_MATCH_SCORE;
         best.fallback = true;
       } else {
@@ -3740,11 +3740,15 @@
     } else if (opts.motifIndex != null && ALL_MOTIFS[opts.motifIndex]) {
       motif = ALL_MOTIFS[opts.motifIndex];
     } else {
-      resolved = matchMotifDetailed(prompt || "", { allowFallback: opts.allowFallback !== false });
+      resolved = matchMotifDetailed(prompt || "", {
+        allowFallback: opts.allowFallback !== false,
+        uniqueId: opts.uniqueId
+      });
       if (!resolved.motif) return null;
       motif = resolved.motif;
     }
     var seedBase = normalize(prompt || "") + "|" + styleKey + "|" + motif.index;
+    if (opts.uniqueId != null) seedBase += "|" + opts.uniqueId;
     var seed = opts.seed != null ? opts.seed : hashStr(seedBase);
     var palette = buildPalette(motif.hue, styleKey, seed);
     var pixels = [];
@@ -3881,6 +3885,12 @@
     "Ausgabe finalisiert"
   ];
 
+  var RENDER_PIXEL_MS = 15000;
+
+  function getCommandPhaseMs(durationMs) {
+    return Math.max(5000, durationMs - RENDER_PIXEL_MS);
+  }
+
   function getRenderInterrupt(raw) {
     var total = RENDER_INTERRUPTS.length;
     var idx = Math.min(total - 1, Math.floor(Math.max(0, raw) * total));
@@ -3892,19 +3902,33 @@
     };
   }
 
+  function getRenderInterruptAtElapsed(elapsedMs, durationMs) {
+    var total = RENDER_INTERRUPTS.length;
+    var commandMs = durationMs >= 30000 ? durationMs * 0.94 : Math.max(8000, durationMs * 0.88);
+    var t = Math.min(0.999999, Math.max(0, elapsedMs / commandMs));
+    var idx = Math.min(total - 1, Math.floor(t * total));
+    return {
+      index: idx,
+      text: RENDER_INTERRUPTS[idx],
+      total: total,
+      step: idx + 1
+    };
+  }
+
   function drawGlassPlate(ctx, cw, ch, raw) {
+    var fade = Math.max(0.12, 1 - raw * 0.88);
     var cx = cw / 2;
     var cy = ch / 2;
     var r = Math.max(cw, ch) * 0.72;
     var grd = ctx.createRadialGradient(cx, cy, r * 0.1, cx, cy, r);
-    grd.addColorStop(0, "rgba(14, 18, 34, 0.92)");
-    grd.addColorStop(0.55, "rgba(8, 12, 26, 0.96)");
-    grd.addColorStop(1, "rgba(4, 6, 14, 0.99)");
+    grd.addColorStop(0, "rgba(14, 18, 34, " + (0.78 * fade) + ")");
+    grd.addColorStop(0.55, "rgba(8, 12, 26, " + (0.86 * fade) + ")");
+    grd.addColorStop(1, "rgba(4, 6, 14, " + (0.94 * fade) + ")");
+    ctx.save();
+    ctx.globalAlpha = fade;
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, cw, ch);
-
-    ctx.save();
-    ctx.strokeStyle = "rgba(255, 255, 255, " + (0.04 + raw * 0.06) + ")";
+    ctx.strokeStyle = "rgba(255, 255, 255, " + (0.03 + raw * 0.05) + ")";
     ctx.lineWidth = 1;
     ctx.strokeRect(8.5, 8.5, cw - 17, ch - 17);
     ctx.restore();
@@ -3922,10 +3946,12 @@
     ctx.restore();
   }
 
-  function drawBlockForge(ctx, img, ox, oy, w, h, p, seed) {
-    var cols = 10, rows = 10, total = cols * rows;
-    var revealed = Math.floor(easeOutCubic(Math.min(1, p * 1.08)) * total);
-    var order = [], i, bi, bx, by, ci, ri, sw, sh, idx, rank;
+  function drawBlockForge(ctx, img, ox, oy, w, h, p, seed, cols, rows) {
+    cols = cols || 16;
+    rows = rows || 16;
+    var total = cols * rows;
+    var revealed = Math.floor(easeOutCubic(Math.min(1, p)) * total);
+    var order = [], i, bi, ci, ri, sw, sh, idx, rank;
     for (i = 0; i < total; i++) order.push(i);
     order.sort(function (a, b) {
       return detHash(a, seed, b, "blk") - detHash(b, seed, a, "blk");
@@ -3938,74 +3964,399 @@
       ri = Math.floor(idx / cols);
       rank = bi / total;
       ctx.save();
-      ctx.globalAlpha = 0.55 + rank * 0.45;
+      ctx.globalAlpha = 0.72 + rank * 0.28;
+      ctx.filter = "saturate(" + (0.85 + rank * 0.35) + ") contrast(" + (0.92 + rank * 0.12) + ")";
       ctx.drawImage(img, ci * (img.width / cols), ri * (img.height / rows), img.width / cols, img.height / rows,
-        ox + ci * sw, oy + ri * sh, sw, sh);
+        ox + ci * sw, oy + ri * sh, sw + 0.5, sh + 0.5);
       ctx.restore();
     }
   }
 
-  function animateFill(canvas, result, scale, durationMs, onProgress, onDone) {
+  function getRenderPhaseStart(durationMs) {
+    return getCommandPhaseMs(durationMs) / durationMs;
+  }
+
+  function getRenderPhaseRaw(raw, durationMs) {
+    var start = getRenderPhaseStart(durationMs);
+    if (raw < start) return -1;
+    return (raw - start) / (1 - start);
+  }
+
+  function getPixelRevealProgress(raw, durationMs) {
+    durationMs = durationMs || 35000;
+    var pixelStart = getRenderPhaseStart(durationMs);
+    if (raw < pixelStart) return 0;
+    var local = (raw - pixelStart) / (1 - pixelStart);
+    return easeOutCubic(Math.min(1, local));
+  }
+
+  function drawCommandPlate(ctx, cw, ch, interrupt, pulse) {
+    var cx = cw / 2;
+    var cy = ch / 2;
+    var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(cw, ch) * 0.65);
+    grd.addColorStop(0, "rgba(18, 22, 40, " + (0.55 + pulse * 0.08) + ")");
+    grd.addColorStop(1, "rgba(4, 6, 14, 0.96)");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, cw, ch);
+    ctx.save();
+    ctx.strokeStyle = "rgba(129, 140, 248, " + (0.08 + pulse * 0.1) + ")";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(10, 10, cw - 20, ch - 20);
+    ctx.restore();
+  }
+
+  function getPageZoom() {
+    var htmlZoom = parseFloat(getComputedStyle(document.documentElement).zoom || "1");
+    if (htmlZoom > 0 && isFinite(htmlZoom)) return htmlZoom;
+    if (window.visualViewport && window.visualViewport.scale) return window.visualViewport.scale;
+    return 1;
+  }
+
+  function drawLiquidGlassBg(ctx, w, h, bright) {
+    bright = bright || 0;
+    ctx.clearRect(0, 0, w, h);
+    var grd = ctx.createLinearGradient(0, 0, w, h);
+    grd.addColorStop(0, "rgba(255, 255, 255, " + (0.14 + bright * 0.1) + ")");
+    grd.addColorStop(0.32, "rgba(129, 140, 248, " + (0.12 + bright * 0.12) + ")");
+    grd.addColorStop(0.58, "rgba(94, 234, 212, " + (0.1 + bright * 0.11) + ")");
+    grd.addColorStop(0.82, "rgba(167, 139, 250, " + (0.11 + bright * 0.12) + ")");
+    grd.addColorStop(1, "rgba(232, 121, 249, " + (0.08 + bright * 0.1) + ")");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, w, h);
+    var cx = w / 2;
+    var cy = h / 2;
+    var shine = ctx.createRadialGradient(cx, cy * 0.35, 0, cx, cy, Math.max(w, h) * 0.72);
+    shine.addColorStop(0, "rgba(255, 255, 255, " + (0.2 + bright * 0.16) + ")");
+    shine.addColorStop(0.45, "rgba(129, 140, 248, " + (0.1 + bright * 0.12) + ")");
+    shine.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = shine;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = "rgba(255, 255, 255, " + (0.12 + bright * 0.1) + ")";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0.5, 0.5, w - 1, h - 1);
+  }
+
+  function rgbToLedHue(r, g, b) {
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    if (max === min) return (r * 0.7 + g * 0.2 + b * 0.1) % 360;
+    var h = 0;
+    var d = max - min;
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+    else if (max === g) h = ((b - r) / d + 2) * 60;
+    else h = ((r - g) / d + 4) * 60;
+    return h;
+  }
+
+  function pushUICorners(out, el) {
+    if (!el) return;
+    var r = el.getBoundingClientRect();
+    if (r.width < 2 && r.height < 2) return;
+    out.push({ x: r.left, y: r.top });
+    out.push({ x: r.right, y: r.top });
+    out.push({ x: r.left, y: r.bottom });
+    out.push({ x: r.right, y: r.bottom });
+  }
+
+  function pickEdgeSpawn(idx, seed) {
+    var vw = window.innerWidth || 800;
+    var vh = window.innerHeight || 600;
+    var bleed = 72 + (detHash(idx, seed, 9, "bl") % 88);
+    var t = (detHash(idx, seed, 8, "t") & 255) / 255;
+    var margin = 0.06 + (detHash(idx, seed, 13, "mg") % 12) / 100;
+    var dir = idx % 8;
+    if (detHash(idx, seed, 7, "edg") % 5 === 0) {
+      dir = detHash(idx, seed, 7, "edg2") % 8;
+    }
+    switch (dir) {
+      case 0: return { x: (margin + t * (1 - margin * 2)) * vw, y: -bleed, dir: dir };
+      case 1: return { x: vw + bleed, y: (margin + t * (1 - margin * 2)) * vh, dir: dir };
+      case 2: return { x: (margin + t * (1 - margin * 2)) * vw, y: vh + bleed, dir: dir };
+      case 3: return { x: -bleed, y: (margin + t * (1 - margin * 2)) * vh, dir: dir };
+      case 4: return { x: -bleed, y: -bleed, dir: dir };
+      case 5: return { x: vw + bleed, y: -bleed, dir: dir };
+      case 6: return { x: -bleed, y: vh + bleed, dir: dir };
+      default: return { x: vw + bleed, y: vh + bleed, dir: dir };
+    }
+  }
+
+  function pickExitVector(blk, seed) {
+    var angleDeg = (blk.idx * 53 + (blk.spawnDir != null ? blk.spawnDir * 41 : 0) + (seed & 511)) % 360;
+    var angle = angleDeg * Math.PI / 180;
+    var spread = 0.78 + (detHash(blk.idx, seed, 14, "sp") % 28) / 100;
+    var swirl = ((detHash(blk.idx, seed, 7, "sw") % 20) - 10) / 100;
+    return {
+      x: Math.cos(angle) * spread + swirl * 0.35,
+      y: Math.sin(angle) * spread - swirl * 0.2,
+      swirl: swirl
+    };
+  }
+
+  function sampleBlockColor(imgData, sw, bx, by, blockPx, scale) {
+    if (!imgData) return { r: 140, g: 120, b: 255 };
+    var r = 0;
+    var g = 0;
+    var b = 0;
+    var n = 0;
+    var dx;
+    var dy;
+    var si;
+    for (dy = 0; dy < blockPx; dy++) {
+      for (dx = 0; dx < blockPx; dx++) {
+        si = (((by * blockPx + dy) * scale) * sw + ((bx * blockPx + dx) * scale)) * 4;
+        r += imgData[si];
+        g += imgData[si + 1];
+        b += imgData[si + 2];
+        n++;
+      }
+    }
+    return { r: (r / n) | 0, g: (g / n) | 0, b: (b / n) | 0 };
+  }
+
+  function buildPuzzlePlan(size, scale, seed, durationMs, sharpCanvas, blockPx) {
+    blockPx = blockPx || 4;
+    var cols = Math.ceil(size / blockPx);
+    var rows = Math.ceil(size / blockPx);
+    var imgW = size * scale;
+    var imgH = size * scale;
+    var cellW = imgW / cols;
+    var cellH = imgH / rows;
+    var sctx = sharpCanvas.getContext("2d");
+    var imgData = sctx ? sctx.getImageData(0, 0, sharpCanvas.width, sharpCanvas.height).data : null;
+    var blocks = [];
+    var i;
+    var bx;
+    var by;
+    for (by = 0; by < rows; by++) {
+      for (bx = 0; bx < cols; bx++) {
+        blocks.push({ bx: bx, by: by, px: bx, py: by });
+      }
+    }
+    blocks.sort(function (a, b) {
+      return detHash(a.bx, a.by, seed, "ord") - detHash(b.bx, b.by, seed, "ord");
+    });
+    var total = blocks.length;
+    var plan = [];
+    var rotSteps = [0, 30, 45, 60, -30, -45, 15, -15];
+    for (i = 0; i < total; i++) {
+      var t = (i + 0.5) / total;
+      var landMs = 180 + easeOutCubic(t) * (durationMs - 360) + (detHash(i, seed, 2, "lt") % 220);
+      landMs = Math.min(durationMs - 60, Math.max(120, landMs));
+      var flightMs = 1150 + (detHash(i, seed, 3, "fl") % 850);
+      var startMs = Math.max(0, landMs - flightMs);
+      var blk = blocks[i];
+      var sample = sampleBlockColor(imgData, sharpCanvas.width, blk.bx, blk.by, blockPx, scale);
+      plan.push({
+        bx: blk.bx,
+        by: blk.by,
+        idx: i,
+        landMs: landMs,
+        startMs: startMs,
+        flightMs: flightMs,
+        destX: blk.bx * cellW,
+        destY: blk.by * cellH,
+        cellW: cellW,
+        cellH: cellH,
+        blockPx: blockPx,
+        spawnX: 0,
+        spawnY: 0,
+        spawnSet: false,
+        rotDeg: rotSteps[detHash(i, seed, 6, "rot") % rotSteps.length],
+        shapeId: detHash(i, seed, 15, "shp") % 4,
+        color: sample,
+        hue: rgbToLedHue(sample.r, sample.g, sample.b),
+        landed: false,
+        destScreenX: 0,
+        destScreenY: 0,
+        spawnDir: 0,
+        exitVec: null
+      });
+    }
+    return { plan: plan, cols: cols, rows: rows, total: total, blockPx: blockPx, imgW: imgW, imgH: imgH };
+  }
+
+  function traceShardShape(octx, w, h, shapeId) {
+    octx.beginPath();
+    if (shapeId === 1) {
+      octx.moveTo(-w * 0.44, -h * 0.12);
+      octx.lineTo(w * 0.38, -h * 0.46);
+      octx.lineTo(w * 0.5, h * 0.18);
+      octx.lineTo(-w * 0.08, h * 0.48);
+      octx.lineTo(-w * 0.48, h * 0.22);
+      octx.closePath();
+    } else if (shapeId === 2) {
+      octx.moveTo(-w * 0.35, -h * 0.45);
+      octx.lineTo(w * 0.42, -h * 0.3);
+      octx.lineTo(w * 0.46, h * 0.35);
+      octx.lineTo(-w * 0.4, h * 0.4);
+      octx.closePath();
+    } else if (shapeId === 3) {
+      octx.moveTo(-w * 0.5, -h * 0.05);
+      octx.lineTo(w * 0.15, -h * 0.5);
+      octx.lineTo(w * 0.48, h * 0.05);
+      octx.lineTo(w * 0.1, h * 0.46);
+      octx.lineTo(-w * 0.42, h * 0.28);
+      octx.closePath();
+    } else {
+      octx.moveTo(-w * 0.46, -h * 0.28);
+      octx.lineTo(w * 0.4, -h * 0.5);
+      octx.lineTo(w * 0.48, h * 0.22);
+      octx.lineTo(w * 0.08, h * 0.46);
+      octx.lineTo(-w * 0.42, h * 0.34);
+      octx.lineTo(-w * 0.5, -h * 0.05);
+      octx.closePath();
+    }
+  }
+
+  function drawGlassShard(octx, sx, sy, size, rotDeg, color, hue, intensity, shapeId, alpha) {
+    shapeId = shapeId || 0;
+    alpha = alpha == null ? 0.96 : alpha;
+    var w = size * (0.92 + (detHash(hue | 0, size | 0, rotDeg, "sw") % 18) / 100);
+    var h = size * (0.82 + (detHash(hue | 0, size | 0, rotDeg, "sh") % 14) / 100);
+    octx.save();
+    octx.translate(sx, sy);
+    octx.rotate(rotDeg * Math.PI / 180);
+    octx.globalAlpha = alpha;
+    octx.shadowColor = "hsla(" + hue + ", 100%, 78%, " + (1 * intensity) + ")";
+    octx.shadowBlur = 16 + intensity * 42;
+    var g = octx.createLinearGradient(-w * 0.5, -h * 0.5, w * 0.5, h * 0.5);
+    g.addColorStop(0, "hsla(" + hue + ", 100%, 90%, " + (0.98 * intensity) + ")");
+    g.addColorStop(0.35, "rgba(" + color.r + "," + color.g + "," + color.b + ",0.95)");
+    g.addColorStop(0.72, "hsla(" + ((hue + 55) % 360) + ", 96%, 66%, " + (0.92 * intensity) + ")");
+    g.addColorStop(1, "hsla(" + ((hue + 120) % 360) + ", 90%, 54%, " + (0.85 * intensity) + ")");
+    octx.fillStyle = g;
+    traceShardShape(octx, w, h, shapeId);
+    octx.fill();
+    octx.shadowBlur = 6 + intensity * 10;
+    octx.strokeStyle = "rgba(255, 255, 255, " + (0.92 * intensity) + ")";
+    octx.lineWidth = 1.55;
+    octx.stroke();
+    octx.strokeStyle = "hsla(" + hue + ", 100%, 82%, " + (0.45 * intensity) + ")";
+    octx.lineWidth = 0.65;
+    octx.stroke();
+    octx.shadowBlur = 0;
+    octx.fillStyle = "rgba(255, 255, 255, " + (0.68 * intensity) + ")";
+    octx.beginPath();
+    octx.moveTo(-w * 0.18, -h * 0.14);
+    octx.lineTo(w * 0.1, -h * 0.22);
+    octx.lineTo(w * 0.04, h * 0.04);
+    octx.lineTo(-w * 0.12, h * 0.1);
+    octx.closePath();
+    octx.fill();
+    octx.restore();
+  }
+
+  function drawLandFlash(ctx, blk, elapsed, sharpCanvas, scale) {
+    var flashT = (elapsed - blk.landMs) / 160;
+    if (flashT >= 1) return false;
+    var pulse = 1 - flashT;
+    ctx.save();
+    ctx.shadowColor = "hsla(" + blk.hue + ", 100%, 72%, " + (0.95 * pulse) + ")";
+    ctx.shadowBlur = 8 + pulse * 18;
+    ctx.globalAlpha = 0.85 + pulse * 0.15;
+    ctx.drawImage(
+      sharpCanvas,
+      blk.bx * blk.blockPx * scale,
+      blk.by * blk.blockPx * scale,
+      blk.blockPx * scale,
+      blk.blockPx * scale,
+      blk.destX,
+      blk.destY,
+      blk.cellW,
+      blk.cellH
+    );
+    ctx.fillStyle = "hsla(" + blk.hue + ", 100%, 78%, " + (0.45 * pulse) + ")";
+    ctx.fillRect(blk.destX, blk.destY, blk.cellW, blk.cellH);
+    ctx.restore();
+    return true;
+  }
+
+  function createShardOverlay() {
+    var overlay = document.createElement("canvas");
+    overlay.className = "chat-render-shard-overlay";
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.appendChild(overlay);
+    return overlay;
+  }
+
+  function ensureShardOverlayCtx(overlay) {
+    var dpr = window.devicePixelRatio || 1;
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    if (overlay._lw !== w || overlay._lh !== h) {
+      overlay.width = Math.floor(w * dpr);
+      overlay.height = Math.floor(h * dpr);
+      overlay.style.width = w + "px";
+      overlay.style.height = h + "px";
+      overlay._lw = w;
+      overlay._lh = h;
+    }
+    var octx = overlay.getContext("2d");
+    if (octx) octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return octx;
+  }
+
+  function canvasToScreen(canvas, lx, ly) {
+    var r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) return { x: lx, y: ly };
+    return {
+      x: r.left + (lx / canvas.width) * r.width,
+      y: r.top + (ly / canvas.height) * r.height
+    };
+  }
+
+  function drawLandedBlock(lctx, sharpCanvas, blk, scale) {
+    lctx.drawImage(
+      sharpCanvas,
+      blk.bx * blk.blockPx * scale,
+      blk.by * blk.blockPx * scale,
+      blk.blockPx * scale,
+      blk.blockPx * scale,
+      blk.destX,
+      blk.destY,
+      blk.cellW,
+      blk.cellH
+    );
+  }
+
+  function animateFillSimple(canvas, result, scale, durationMs, onProgress, onDone) {
     scale = scale || 12;
     var size = result.size;
     var ctx = canvas.getContext("2d");
-    if (!ctx) { if (onDone) onDone(); return; }
-
-    canvas.width = size * scale;
-    canvas.height = size * scale;
+    if (!ctx) {
+      if (onDone) onDone();
+      return function () {};
+    }
+    var imgW = size * scale;
+    var imgH = size * scale;
+    canvas.width = imgW;
+    canvas.height = imgH;
     var sharpCanvas = renderSharpCanvas(result, scale);
     var start = performance.now();
-    var maxBlur = 14;
     var animId = null;
     var seed = result.seed || 0;
-    var lastInterruptIdx = -1;
+    var gridCols = Math.min(24, Math.max(12, Math.floor(size / 2)));
 
     function frame(now) {
-      var raw = Math.min(1, (now - start) / durationMs);
+      var elapsed = now - start;
+      var raw = Math.min(1, elapsed / durationMs);
       var p = easeOutCubic(raw);
-      var blur = maxBlur * Math.pow(1 - p, 1.35);
-      var zoom = 1.03 - p * 0.03;
-      var w = canvas.width * zoom;
-      var h = canvas.height * zoom;
-      var ox = (canvas.width - w) / 2;
-      var oy = (canvas.height - h) / 2;
-      var interrupt = getRenderInterrupt(raw);
-      var revealP = easeOutExpo(Math.min(1, Math.max(0, (raw - 0.12) / 0.88)));
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawGlassPlate(ctx, canvas.width, canvas.height, raw);
-
-      if (revealP > 0.08) {
-        drawBlockForge(ctx, sharpCanvas, ox, oy, w, h, revealP, seed);
-      }
-
-      ctx.save();
-      ctx.filter = blur > 0.35 ? "blur(" + blur + "px) saturate(1.05)" : "none";
-      ctx.globalAlpha = 0.22 + p * 0.78;
-      ctx.drawImage(sharpCanvas, ox, oy, w, h);
-      ctx.restore();
-
-      if (p > 0.55) {
+      var pixelP = getPixelRevealProgress(raw, durationMs);
+      var interrupt = getRenderInterruptAtElapsed(elapsed, durationMs);
+      ctx.clearRect(0, 0, imgW, imgH);
+      drawLiquidGlassBg(ctx, imgW, imgH, pixelP * 0.65);
+      drawBlockForge(ctx, sharpCanvas, 0, 0, imgW, imgH, pixelP, seed, gridCols, gridCols);
+      if (pixelP > 0.8) {
         ctx.save();
-        ctx.filter = "none";
-        ctx.globalAlpha = Math.min(1, (p - 0.55) / 0.45);
-        ctx.beginPath();
-        ctx.rect(0, 0, canvas.width, canvas.height * easeOutCubic(p));
-        ctx.clip();
+        ctx.globalAlpha = Math.min(1, (pixelP - 0.8) / 0.2);
         ctx.drawImage(sharpCanvas, 0, 0);
         ctx.restore();
       }
-
-      if (raw > 0.08 && raw < 0.95) drawPrismEdge(ctx, canvas.width, canvas.height, raw);
-
-      if (interrupt.index !== lastInterruptIdx) lastInterruptIdx = interrupt.index;
       if (onProgress) onProgress(p, "render", interrupt);
       if (raw < 1) {
         animId = requestAnimationFrame(frame);
       } else {
-        ctx.filter = "none";
         ctx.globalAlpha = 1;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(sharpCanvas, 0, 0);
         canvas.setAttribute("data-render-locked", "1");
         if (onDone) onDone();
@@ -4017,6 +4368,201 @@
     return function cancel() {
       if (animId) cancelAnimationFrame(animId);
     };
+  }
+
+  function animateFillChat(canvas, result, scale, durationMs, onProgress, onDone) {
+    scale = scale || 12;
+    var size = result.size;
+    var ctx = canvas.getContext("2d");
+    if (!ctx) {
+      if (onDone) onDone();
+      return function () {};
+    }
+
+    var imgW = size * scale;
+    var imgH = size * scale;
+    canvas.width = imgW;
+    canvas.height = imgH;
+    canvas.style.width = "";
+    canvas.style.height = "";
+
+    var sharpCanvas;
+    var puzzle;
+    var overlay;
+    var landedLayer;
+    var lctx;
+    var start = performance.now();
+    var animId = null;
+    var seed = (result.seed || 0) ^ (result.motifIndex || 0) ^ (Date.now() & 4095);
+    var blockPx = size >= 48 ? 4 : 3;
+    var landedCount = 0;
+    var exitPhase = false;
+    var exitStart = 0;
+    var EXIT_MS = 2800;
+
+    try {
+      sharpCanvas = renderSharpCanvas(result, scale);
+      puzzle = buildPuzzlePlan(size, scale, seed, durationMs, sharpCanvas, blockPx);
+      overlay = createShardOverlay();
+      landedLayer = document.createElement("canvas");
+      landedLayer.width = imgW;
+      landedLayer.height = imgH;
+      lctx = landedLayer.getContext("2d");
+    } catch (err) {
+      if (onDone) onDone();
+      return function () {};
+    }
+
+    function cleanup() {
+      if (animId) cancelAnimationFrame(animId);
+      animId = null;
+      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }
+
+    function prepareBlockScreens(blk) {
+      var destLocal = { x: blk.destX + blk.cellW * 0.5, y: blk.destY + blk.cellH * 0.5 };
+      var destScreen = canvasToScreen(canvas, destLocal.x, destLocal.y);
+      blk.destScreenX = destScreen.x;
+      blk.destScreenY = destScreen.y;
+      if (!blk.exitVec) blk.exitVec = pickExitVector(blk, seed);
+    }
+
+    function frame(now) {
+      try {
+        var elapsed = now - start;
+        var raw = Math.min(1, elapsed / durationMs);
+        var p = easeOutCubic(raw);
+        var interrupt = getRenderInterruptAtElapsed(elapsed, durationMs);
+        var fillP = 0;
+        var i;
+        var blk;
+        var flyT;
+        var octx = ensureShardOverlayCtx(overlay);
+        var canvasRect = canvas.getBoundingClientRect();
+        var shardScreen = Math.max(11, Math.min(26, (canvasRect.width / puzzle.cols) * 1.48));
+
+        if (octx) octx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        if (exitPhase) {
+          var exitElapsed = now - exitStart;
+          var exitRaw = Math.min(1, exitElapsed / EXIT_MS);
+          var exitEase = 1 - Math.pow(1 - exitRaw, 4);
+          drawLiquidGlassBg(ctx, imgW, imgH, 1);
+          if (exitRaw > 0.5) {
+            ctx.globalAlpha = Math.min(1, (exitRaw - 0.5) / 0.38);
+            ctx.drawImage(sharpCanvas, 0, 0);
+            ctx.globalAlpha = 1;
+          }
+          for (i = 0; i < puzzle.plan.length; i++) {
+            blk = puzzle.plan[i];
+            prepareBlockScreens(blk);
+            var ev = blk.exitVec;
+            var dist = 55 + exitEase * (520 + (blk.idx % 9) * 48);
+            var swirlAmt = Math.sin(exitRaw * Math.PI) * 36 * (ev.swirl || 0.5);
+            var perpX = -ev.y;
+            var perpY = ev.x;
+            var sx = blk.destScreenX + ev.x * dist + perpX * swirlAmt;
+            var sy = blk.destScreenY + ev.y * dist + perpY * swirlAmt;
+            var lift = Math.sin(exitEase * Math.PI) * 22 * (blk.idx % 3 === 0 ? 1 : -0.6);
+            sy -= lift;
+            var led = (1 - exitEase) * 1.1;
+            var alpha = Math.max(0, 1 - Math.pow(exitEase, 0.95));
+            var spin = blk.rotDeg + exitEase * (140 + (blk.idx % 5) * 22);
+            drawGlassShard(octx, sx, sy, shardScreen * (1 + exitEase * 0.08), spin, blk.color, blk.hue, led, blk.shapeId, alpha);
+            if (exitEase < 0.68) {
+              var sx2 = sx + ev.x * 12 + perpX * 8;
+              var sy2 = sy + ev.y * 12 + perpY * 8 - lift * 0.4;
+              drawGlassShard(octx, sx2, sy2, shardScreen * 0.48, spin + 38, blk.color, blk.hue, led * 0.6, (blk.shapeId + 1) % 4, alpha * 0.52);
+            }
+          }
+          if (exitRaw < 1) {
+            animId = requestAnimationFrame(frame);
+          } else {
+            cleanup();
+            ctx.filter = "none";
+            ctx.globalAlpha = 1;
+            ctx.clearRect(0, 0, imgW, imgH);
+            ctx.drawImage(sharpCanvas, 0, 0);
+            canvas.setAttribute("data-render-locked", "1");
+            if (onDone) onDone();
+          }
+          return;
+        }
+
+        landedCount = 0;
+        for (i = 0; i < puzzle.plan.length; i++) {
+          blk = puzzle.plan[i];
+          if (elapsed >= blk.landMs) {
+            landedCount++;
+            if (!blk.landed && lctx) {
+              blk.landed = true;
+              drawLandedBlock(lctx, sharpCanvas, blk, scale);
+            }
+            prepareBlockScreens(blk);
+          } else if (elapsed >= blk.startMs && octx) {
+            if (!blk.spawnSet) {
+              var sp = pickEdgeSpawn(blk.idx, seed);
+              blk.spawnX = sp.x;
+              blk.spawnY = sp.y;
+              blk.spawnDir = sp.dir;
+              blk.spawnSet = true;
+            }
+            flyT = Math.min(1, (elapsed - blk.startMs) / blk.flightMs);
+            flyT = easeOutCubic(flyT);
+            prepareBlockScreens(blk);
+            var sx = blk.spawnX + (blk.destScreenX - blk.spawnX) * flyT;
+            var sy = blk.spawnY + (blk.destScreenY - blk.spawnY) * flyT;
+            var spin = blk.rotDeg * (1 - flyT * 0.85);
+            var led = 0.88 + (1 - flyT) * 0.82;
+            drawGlassShard(octx, sx, sy, shardScreen, spin, blk.color, blk.hue, led, blk.shapeId, 0.97);
+          }
+        }
+
+        fillP = landedCount / puzzle.total;
+        drawLiquidGlassBg(ctx, imgW, imgH, fillP);
+        if (lctx) ctx.drawImage(landedLayer, 0, 0);
+
+        for (i = 0; i < puzzle.plan.length; i++) {
+          blk = puzzle.plan[i];
+          if (elapsed >= blk.landMs && elapsed < blk.landMs + 180) {
+            drawLandFlash(ctx, blk, elapsed, sharpCanvas, scale);
+          }
+        }
+
+        if (onProgress) {
+          var fillInterrupt = getRenderInterrupt(Math.min(0.999, fillP));
+          onProgress(Math.max(p, fillP), "render", fillInterrupt);
+        }
+
+        if (raw < 1) {
+          animId = requestAnimationFrame(frame);
+        } else if (!exitPhase) {
+          exitPhase = true;
+          exitStart = now;
+          animId = requestAnimationFrame(frame);
+        }
+      } catch (frameErr) {
+        cleanup();
+        ctx.drawImage(sharpCanvas, 0, 0);
+        canvas.setAttribute("data-render-locked", "1");
+        if (onDone) onDone();
+      }
+    }
+
+    canvas.removeAttribute("data-render-locked");
+    drawLiquidGlassBg(ctx, imgW, imgH, 0);
+    animId = requestAnimationFrame(frame);
+    return function cancel() {
+      cleanup();
+    };
+  }
+
+  function animateFill(canvas, result, scale, durationMs, onProgress, onDone, opts) {
+    opts = opts || {};
+    if (opts.mode === "chat") {
+      return animateFillChat(canvas, result, scale, durationMs, onProgress, onDone);
+    }
+    return animateFillSimple(canvas, result, scale, durationMs, onProgress, onDone);
   }
 
   function getStyles() {
@@ -4406,6 +4952,11 @@
     drawToCanvas: drawToCanvas,
     animateFill: animateFill,
     getRenderInterrupt: getRenderInterrupt,
+    getRenderInterruptAtElapsed: getRenderInterruptAtElapsed,
+    getCommandPhaseMs: getCommandPhaseMs,
+    getRenderPhaseRaw: getRenderPhaseRaw,
+    getRenderPhaseStart: getRenderPhaseStart,
+    getPixelRevealProgress: getPixelRevealProgress,
     getRenderInterrupts: function () { return RENDER_INTERRUPTS.slice(); },
     isImageRequest: isImageRequest,
     matchMotif: matchMotif,
