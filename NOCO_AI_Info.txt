@@ -1,0 +1,182 @@
+NOCO AI — Vollständige Feature- & Systemübersicht
+Stand: 07.06.2026
+===============================================
+
+WICHTIG: NOCO AI nutzt eine SIMULIERTE KI
+-----------------------------------------
+NOCO AI ist KEIN echtes Sprachmodell (kein ChatGPT, kein Cloud-LLM).
+Es handelt sich um eine lokale, regelbasierte Wissens-Engine im Browser.
+Die KI durchsucht Keywords und gibt passende Antworten aus einer Wissensdatenbank.
+Sie läuft komplett offline/lokal — schnell, privat und stabil.
+
+
+1. Was ist NOCO AI?
+-------------------
+NOCO AI ist eine eigenständige Chat-Webseite im NOCO-Universum.
+Sie nutzt Liquid Glass Design und fühlt sich wie eine native NOCO-App an.
+Zweck: Fragen zu NOCO OS, dem Design und Smalltalk beantworten.
+
+
+2. Chat-Funktionen
+------------------
+• Nachrichten senden (Enter = Senden, Shift+Enter = neue Zeile)
+• Mehrere Chats parallel (Sidebar → Chats-Liste)
+• Neuer Chat (+ Button oben rechts oder in Sidebar)
+• Chat-Titel wird automatisch aus der ersten Frage gesetzt
+• Chats werden lokal im Browser gespeichert (localStorage)
+• Chats exportieren als .json (Einstellungen)
+• Alle Chats löschen (Einstellungen)
+
+
+3. Nachrichten-Aktionen (bei KI-Antworten)
+-------------------------------------------
+Jede KI-Antwort hat drei Buttons:
+
+📋 KOPIEREN
+   Kopiert die Antwort in die Zwischenablage.
+
+🔄 NEU GENERIEREN
+   Erzeugt eine alternative Antwort auf dieselbe Frage.
+   Mehrere Varianten pro Frage möglich (markiert als #2, #3, …).
+
+💬 FEEDBACK
+   Öffnet ein Mini-Menü mit:
+   👍 Daumen hoch — positive Bewertung
+   👎 Daumen runter — negative Bewertung
+   Hinweis: "Simulierte KI" — macht transparent, dass es kein echtes LLM ist.
+   Feedback wird lokal gespeichert.
+
+
+4. Navigation (oben)
+--------------------
+• Chat — Hauptansicht mit Chatbot
+• Features — Übersicht aller Funktionen
+• Über uns — Info über NOCO AI und simulierte KI
+
+
+5. Einstellungen (Zahnrad, zentriertes Liquid-Glass-Fenster)
+------------------------------------------------------------
+Darstellung:
+  - Animationen ein/aus
+  - Liquid Glass Intensität (Niedrig / Normal / Hoch)
+  - Kompakte Nachrichten
+
+Chat:
+  - Schreib-Effekt (Typewriter) ein/aus
+  - Antwort-Geschwindigkeit (Schnell / Normal / Langsam)
+  - Sound bei Kopieren
+
+Daten:
+  - Chats exportieren (.json)
+  - Alle Chats löschen
+
+
+6. NOCO OS Wissen (was die KI beantworten kann)
+-----------------------------------------------
+Die KI kennt das gesamte NOCO-Universum aus der Gesamtübersicht:
+
+GRUNDLAGEN:
+  - Was ist NOCO OS?
+  - Workspace (Desktop/HTML-Version) vs Mobile PWA (iPhone)
+  - FirstLight Einrichtung
+  - Liquid Glass Design (NOCO OS 1.5)
+
+SYSTEME:
+  - NOCO Keycard (Backup, Login, Sync)
+  - Update-System (1.2, 1.3, 1.4, 1.5)
+  - NOCO Forge (App Store)
+  - NOCO Security (Virenscan, Fake-Virus)
+  - NOCO Pay (Fake-Zahlungen)
+  - NOCO Exclusive (Premium, 12€/Monat)
+  - NOCO Explorer / NOCO Web (simulierter Browser)
+
+MENÜS & MODI:
+  - NOCO Nexus (Workspace Schnellmenü)
+  - NOCO Focus (Fokusmodi)
+  - NOCO Hub (Mobile Schnellmenü)
+  - NOCO Sync (Keycard-Sync zwischen Geräten)
+
+APPS & FEATURES:
+  - Widgets (Desktop & Mobile)
+  - Bearbeitungsmodus
+  - Einstellungen (ShieldGate, DevForge, etc.)
+  - Desktop, Fenster, Taskleiste
+
+MOBILE PWA:
+  - Installation auf iPhone (GitHub Pages → Home-Bildschirm)
+  - Swipe-Gesten, Code/Passkey-Sicherheit
+  - Keycard-Kompatibilität mit Workspace
+
+SMALLTALK:
+  - Begrüßungen, Witze, "Wie geht's?", allgemeine Gespräche
+
+
+7. NOCO OS Workspace — Kurzüberblick
+-------------------------------------
+Die große Desktop-/HTML-Version für PC & Laptop.
+• FirstLight → Desktop → Apps → Keycard
+• Fenster-System, Taskleiste, obere Systemleiste
+• NOCO Nexus, NOCO Focus, NOCO Forge, NOCO Core
+• NOCO Security, NOCO Explorer, NOCO Exclusive
+• Widgets, Bearbeitungsmodus, Ordner
+• Updates bis NOCO OS 1.5 (Liquid Glass)
+
+
+8. NOCO OS Mobile PWA — Kurzüberblick
+--------------------------------------
+Die iPhone-Version als Progressive Web App.
+• GitHub Pages Hosting
+• Zum Home-Bildschirm hinzufügen (kein App Store nötig)
+• Homescreen, Desktop, Swipe-Gesten
+• Fullscreen-Apps, NOCO Hub
+• Code/Passkey-Sicherheit
+• Keycard Import/Export (kompatibel mit Workspace)
+• Liquid Glass Design, iPhone 13 Pro optimiert
+
+
+9. Technische Details
+---------------------
+Dateien:
+  index.html     — Hauptseite
+  css/main.css   — Liquid Glass Design System
+  js/app.js      — UI, Chat, Multi-Chat, Aktionen
+  js/brain.js    — Lokale Wissens-Engine
+  NOCO_AI_Info.txt — Diese Datei
+
+Speicherung:
+  localStorage: Chats, Einstellungen, Feedback
+  Kein Server, kein Backend, keine Cloud
+
+Design:
+  Liquid Glass mit Blur, Sheen, Noise, Orbs, Canvas-Blobs
+  Iridescent Gradients (Teal → Violet → Pink)
+  Responsive für Desktop und Mobile
+
+
+10. Ehrlichkeit über die KI
+---------------------------
+NOCO AI ist bewusst transparent:
+• Badge unten: "Simulierte KI"
+• Feedback-Hinweis: "Simulierte KI"
+• Über-uns-Seite erklärt den Unterschied
+• Kein Anspruch auf echte KI-Intelligenz
+• Stark bei NOCO-OS-Wissen, ehrlich bei Grenzen
+
+Für echte KI-Anbindung (OpenAI, etc.) ist die Architektur vorbereitet:
+brain.js kann später durch eine API ersetzt oder erweitert werden.
+
+
+11. Schnellfragen (Sidebar)
+---------------------------
+• Was ist NOCO OS?
+• Workspace & PWA
+• NOCO Keycard
+• Deine Fähigkeiten
+
+Plus Willkommens-Chips: Hallo!, Was ist NOCO OS?, Hilfe
+
+
+12. Version
+-----------
+NOCO AI v1.1
+Liquid Glass UI · Multi-Chat · Feedback · Regenerate · NOCO OS Wissen
