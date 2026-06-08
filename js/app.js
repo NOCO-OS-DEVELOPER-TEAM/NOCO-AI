@@ -4908,7 +4908,13 @@
 
   /* ── Init ── */
 
+  var NOCO_BUILD = "4.1.2";
+
   function initApp() {
+    document.documentElement.setAttribute("data-noco-build", NOCO_BUILD);
+    if (typeof NocoBootFX === "undefined") {
+      console.warn("NOCO: boot-fx.js fehlt — Boot-Shard-Animation deaktiviert. Datei mit hochladen.");
+    }
     if (typeof NocoBrain === "undefined") {
       if (bootStatus) bootStatus.textContent = "Fehler: brain.js konnte nicht geladen werden.";
       showToast("brain.js Fehler — bitte Seite neu laden");

@@ -1,5 +1,34 @@
 NOCO AI — Vollständige Feature- & Systemübersicht
-Stand: 07.06.2026
+Stand: 07.06.2026 · Build v4.1.2
+===============================================
+
+GITHUB / WEBSEITE DEPLOY — WICHTIG
+----------------------------------
+Wenn nach dem Upload alte Animationen / altes Design erscheinen:
+
+1. ALLE Dateien hochladen (nicht nur index.html):
+   index.html
+   favicon.svg
+   css/main.css
+   css/noco-theme.css          ← NEU: gebündeltes Theme (Pflicht!)
+   js/app.js
+   js/brain.js
+   js/pixelgen.js
+   js/imgdetect.js
+   js/boot-fx.js               ← Pflicht für Boot-Shard-Animation
+   (hub-exclusive-v*.css nur lokal — auf GitHub reicht noco-theme.css)
+
+2. Vor Upload: rebuild-theme.ps1 ausführen (erzeugt css/noco-theme.css)
+
+3. Cache: In index.html ?v=4.1.2 erhöhen (z.B. ?v=4.1.3) bei jedem Deploy
+
+4. Browser: Strg+Shift+R (Hard Reload) oder Inkognito testen
+
+5. Prüfen: Oben rechts sollte v4.1.2 stehen. In DevTools → Network:
+   boot-fx.js und noco-theme.css müssen Status 200 haben (nicht 404).
+
+6. GitHub Pages: index.html muss im Root des Repos liegen (oder Pages-Ordner).
+
 ===============================================
 
 WICHTIG: NOCO AI nutzt eine SIMULIERTE KI
