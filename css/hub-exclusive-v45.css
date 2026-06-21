@@ -1,0 +1,188 @@
+/* v4.5 — Pro 1.0, Summary, rainbow polish, exclusive fix */
+
+/* More rainbow accents */
+.input-shortcuts-rainbow {
+  border-color: rgba(167, 139, 250, 0.22) !important;
+  box-shadow: 0 0 28px rgba(129, 140, 248, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.chat-status-strip {
+  border-color: rgba(94, 234, 212, 0.18) !important;
+  background:
+    linear-gradient(90deg, rgba(94, 234, 212, 0.06), rgba(129, 140, 248, 0.08), rgba(232, 121, 249, 0.06)),
+    rgba(8, 12, 26, 0.55) !important;
+}
+
+body.is-agent-mode .input-glass,
+body.is-summary-mode .input-glass,
+body.is-pro-armed .input-glass {
+  border-color: rgba(232, 121, 249, 0.35) !important;
+  box-shadow: 0 0 32px rgba(167, 139, 250, 0.14) !important;
+}
+
+body.is-agent-mode .input-glass::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(94, 234, 212, 0.15), rgba(129, 140, 248, 0.2), rgba(232, 121, 249, 0.15));
+  opacity: 0.55;
+  z-index: 0;
+}
+
+body.is-agent-mode .chat-agent-btn.is-active {
+  animation: agentBtnGlow 2s ease-in-out infinite;
+}
+
+@keyframes agentBtnGlow {
+  0%, 100% { box-shadow: 0 0 18px rgba(167, 139, 250, 0.3); }
+  50% { box-shadow: 0 0 28px rgba(232, 121, 249, 0.45); }
+}
+
+.input-shortcut-summary.is-active,
+.input-shortcut-agent.is-active {
+  border-color: rgba(232, 121, 249, 0.45) !important;
+  background: linear-gradient(135deg, rgba(232, 121, 249, 0.14), rgba(129, 140, 248, 0.12)) !important;
+}
+
+.input-shortcut-summary {
+  --isc-accent: #5eead4;
+}
+
+/* Pro 1.0 button — bottom right in input */
+.pro-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  flex-shrink: 0;
+  padding: 0.28rem 0.4rem;
+  min-width: 2.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(8, 12, 26, 0.45);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.22s var(--ease-out);
+  position: relative;
+  z-index: 2;
+}
+
+.pro-mode-btn:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(129, 140, 248, 0.12);
+}
+
+.pro-mode-btn.is-active {
+  border-color: rgba(94, 234, 212, 0.55);
+  background: linear-gradient(145deg, rgba(94, 234, 212, 0.18), rgba(129, 140, 248, 0.16));
+  box-shadow: 0 0 22px rgba(94, 234, 212, 0.28);
+  animation: proPulse 1.4s ease-in-out infinite;
+}
+
+.pro-mode-btn.is-locked {
+  opacity: 0.55;
+}
+
+@keyframes proPulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(94, 234, 212, 0.2); }
+  50% { box-shadow: 0 0 26px rgba(232, 121, 249, 0.35); }
+}
+
+.pro-mode-logo {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.2), rgba(129, 140, 248, 0.2));
+  border: 1px solid rgba(167, 139, 250, 0.35);
+}
+
+.pro-mode-sq {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #5eead4, #818cf8, #e879f9);
+  animation: logoSqSpin 3s linear infinite;
+}
+
+.pro-mode-btn.is-active .pro-mode-sq {
+  animation-duration: 1.2s;
+}
+
+.pro-mode-label {
+  font-size: 0.46rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1;
+}
+
+.pro-mode-btn.is-active .pro-mode-label {
+  background: linear-gradient(90deg, #5eead4, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.input-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0.35rem 0;
+  min-height: 1rem;
+}
+
+.input-model-hint {
+  font-size: 0.56rem;
+  font-family: var(--font-mono);
+  color: rgba(167, 139, 250, 0.85);
+  letter-spacing: 0.03em;
+}
+
+body.is-pro-armed .input-model-hint {
+  color: rgba(94, 234, 212, 0.95);
+}
+
+.typing-label.is-pro {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* Exclusive dialog fix — free users */
+.exclusive-dialog.ex3-dialog:not(.is-exclusive-user) .ex3-scroll {
+  max-height: min(72vh, 640px);
+  overflow-y: auto;
+  padding-bottom: 0.75rem;
+}
+
+.exclusive-dialog.ex3-dialog:not(.is-exclusive-user) .ex3-plans {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.45rem;
+}
+
+.exclusive-dialog.ex3-dialog:not(.is-exclusive-user) .exclusive-speed-hero {
+  margin-top: 0.35rem;
+}
+
+.exclusive-dialog.ex3-dialog .ex3-head {
+  flex-shrink: 0;
+}
+
+.ex3-benefit-pro {
+  border-color: rgba(94, 234, 212, 0.28) !important;
+  background: linear-gradient(145deg, rgba(94, 234, 212, 0.1), rgba(129, 140, 248, 0.08)) !important;
+}
+
+@media (max-width: 480px) {
+  .exclusive-dialog.ex3-dialog:not(.is-exclusive-user) .ex3-plans {
+    grid-template-columns: 1fr;
+  }
+  .pro-mode-label { display: none; }
+  .pro-mode-btn { min-width: 2.2rem; }
+}

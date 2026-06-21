@@ -191,13 +191,26 @@
       if (!allDone || elapsed < duration) {
         animId = requestAnimationFrame(frame);
       } else {
+        clearTimeout(safety);
         if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
         if (onDone) onDone();
       }
     }
 
     animId = requestAnimationFrame(frame);
+
+    var safety = setTimeout(function () {
+      if (animId) cancelAnimationFrame(animId);
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      if (!handoffFired) {
+        handoffFired = true;
+        if (opts.onHandoff) opts.onHandoff();
+      }
+      if (onDone) onDone();
+    }, duration + 900);
+
     return function cancel() {
+      clearTimeout(safety);
       if (animId) cancelAnimationFrame(animId);
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };

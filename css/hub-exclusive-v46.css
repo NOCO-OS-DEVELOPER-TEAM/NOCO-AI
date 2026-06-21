@@ -1,0 +1,157 @@
+/* v4.6 — NOCO Insight mode */
+
+.input-shortcut-insight {
+  --isc-accent: #38bdf8;
+}
+
+.chat-insight-btn.is-active {
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  background: linear-gradient(145deg, rgba(56, 189, 248, 0.16), rgba(129, 140, 248, 0.14)) !important;
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.3) !important;
+}
+
+body.is-insight-mode .input-glass {
+  border-color: rgba(56, 189, 248, 0.32) !important;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.12) !important;
+}
+
+.insight-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.07), rgba(129, 140, 248, 0.08), rgba(232, 121, 249, 0.05)),
+    rgba(6, 10, 22, 0.72);
+}
+
+body.is-insight-mode .insight-panel {
+  display: flex;
+  animation: insightPanelIn 0.4s var(--ease-out);
+}
+
+@keyframes insightPanelIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.insight-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.insight-panel-title {
+  font-size: 0.62rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #38bdf8, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.insight-file-badge {
+  font-size: 0.52rem;
+  font-family: var(--font-mono);
+  color: rgba(94, 234, 212, 0.9);
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.insight-file-badge[hidden] { display: none !important; }
+
+.insight-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.insight-cat-btn {
+  padding: 0.28rem 0.5rem;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: inherit;
+  font-size: 0.56rem;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.insight-cat-btn:hover,
+.insight-cat-btn.is-active {
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.12);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+.insight-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.insight-voice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: 99px;
+  border: 1px solid rgba(232, 121, 249, 0.28);
+  background: rgba(232, 121, 249, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.56rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.insight-voice-btn.is-recording {
+  border-color: rgba(248, 113, 113, 0.5);
+  background: rgba(248, 113, 113, 0.15);
+  animation: voiceRecPulse 1s ease-in-out infinite;
+}
+
+@keyframes voiceRecPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(248, 113, 113, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(248, 113, 113, 0.45); }
+}
+
+.insight-hint {
+  font-size: 0.52rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+.chat-insight-file-btn {
+  order: -1;
+}
+
+.message.insight-result .message-bubble {
+  border-color: rgba(56, 189, 248, 0.22);
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.06), rgba(129, 140, 248, 0.05)),
+    rgba(8, 12, 26, 0.45) !important;
+}
+
+.insight-badge {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.18));
+  border: 1px solid rgba(56, 189, 248, 0.28);
+}

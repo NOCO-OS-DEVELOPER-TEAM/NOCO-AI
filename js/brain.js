@@ -9,6 +9,7 @@
   /* NOCO Style — offizielle Modell- & Funktionsnamen */
   var NOCO_BRAND = {
     models: {
+      pro:   { name: "NOCO AI Pro 1.0", tagline: "Ultra Rush · Smartest · Exclusive only" },
       flux:  { name: "NOCO Flux",  tagline: "Rush-Engine · Unbegrenzt · Immer Prism+" },
       prism: { name: "NOCO Prism", tagline: "Voll-Vault · 520+ Themen" },
       spark: { name: "NOCO Spark", tagline: "Kompakt-Antworten · Schnell & kurz" }
@@ -16,19 +17,29 @@
     features: {
       vault:  { name: "NOCO Vault",  desc: "Lokale Wissens-Engine (520+ Themen)" },
       echo:   { name: "NOCO Echo",   desc: "Chat-Verlauf & Zusammenfassung" },
-      render: { name: "NOCO Render", desc: "Bilder im Chat · 3600 Motive · 1 zur Zeit" },
-      lensDetect: { name: "NOCO Lens Detect", desc: "KI-Bild erkennen — eigene NOCO Pixel pruefen" },
-      lens:   { name: "NOCO Lens",   desc: "Blaue Begriffe anklicken" },
-      rush:   { name: "NOCO Rush",   desc: "Priority-Antworten ~90 ms" },
-      access: { name: "NOCO Access", desc: "Plan & Modell live sichtbar" },
-      sparks: { name: "NOCO Sparks", desc: "Schnellfragen nach Kategorie" },
-      sheen:  { name: "NOCO Sheen",  desc: "Blur-Reveal Pixel-Animation" },
-      brief:  { name: "NOCO Brief",  desc: "Strukturierte Recherche-Briefings aus der Vault" },
-      glow:   { name: "NOCO Glow",   desc: "Live-Intent-Prism beim Tippen" }
+      summary:{ name: "NOCO Summary", desc: "Fasst lange Texte in 5 klare Stichpunkte zusammen" },
+      insight: { name: "NOCO Inside", desc: "Analysiert Dateien & Texte — Dokument, Code, Kernpunkte, Bild" },
+      motion: { name: "NOCO Motion", desc: "4s Epic Video · 8 Keyframes · Live-Pose-Interpolation · 3600 Motive" },
+      buildCreate: { name: "NOCO Create", desc: "Zeichnet Pixel-Bilder im Chat aus der 3600er Motiv-Bank" },
+      agent:  { name: "NOCO Agent",  desc: "Fuehrt komplexe Auftraege automatisiert mit Live-Aktionsplan aus" },
+      render: { name: "NOCO Render", desc: "Offline-Pixel-Engine — Bilder direkt im Chat generieren" },
+      lensDetect: { name: "NOCO Lens", desc: "Erkennt KI-Bilder & NOCO-Pixel-Signaturen per Upload" },
+      lens:   { name: "NOCO Lens",   desc: "Blaue Begriffe antippen fuer Vault-Erklaerungen" },
+      rush:   { name: "NOCO Rush",   desc: "Priority-Antworten ~90 ms (Exclusive)" },
+      access: { name: "NOCO Access", desc: "Zeigt Plan, Modell & Tageslimit live" },
+      sparks: { name: "NOCO Sparks", desc: "Zufalls-Fragen aus 520+ Vault-Themen" },
+      sheen:  { name: "NOCO Sheen",  desc: "Blur-Reveal beim Bild-Render — wird scharf" },
+      brief:  { name: "NOCO Brief",  desc: "Strukturiertes Recherche-Briefing zu jedem Thema" },
+      wiki:   { name: "Wiki-API 1.1", desc: "Live-Wikipedia-Kurztexte (Abstracts) von de.wikipedia.org" },
+      automation: { name: "Nexus-Auto", desc: "Pill oben — intelligente Wahl zwischen Offline-Wissen und Wikipedia" },
+      glow:   { name: "NOCO Glow",   desc: "Live-Vorschau waehrend du tippst — Intent & Related-Chips" },
+      hub:    { name: "NOCO Hub",    desc: "Zentrale — Bild, Motion, Inside, Agent per Chat-Buttons" },
+      create: { name: "NOCO Create", desc: "Bild-Modus — frei formulieren oder Motiv waehlen" },
+      file:   { name: "Datei",       desc: "Laedt Text, Code oder Bild fuer NOCO Inside hoch" }
     },
     plans: {
-      free:      { name: "NOCO Access Free", short: "Access Free" },
-      exclusive: { name: "NOCO Exclusive",   short: "Exclusive" }
+      free:      { name: "NOCO Free",      short: "NOCO Free" },
+      exclusive: { name: "NOCO Exclusive", short: "Exclusive" }
     }
   };
 
@@ -356,6 +367,27 @@
         "Wer das Geraet nutzt, sieht die Chats — wie bei Notizen auf dem PC. Sonst niemand.",
         "Export nur wenn DU auf Export klickst. Loeschen jederzeit moeglich.",
         "Simulierte KI = auch keine Daten an OpenAI oder aehnliches."
+      ]
+    },
+    {
+      keys: ["automation modus", "automation mode", "noco automation", "noco fusion", "noco nexus", "nexus modus", "fusion modus", "automatik modus", "auto modus wissen", "wie funktioniert automation", "wie funktioniert fusion", "wie funktioniert nexus"],
+      answers: [
+        "**Nexus-Auto** (oben: dritte Pill) ist der Automation-Modus: NOCO analysiert jede Frage und leitet **fast alles** an **Wiki-API 1.1** (Wikipedia) weiter.",
+        "**Nur bei klarem Vault-Fall** → **NOCO-Wissen**: Smalltalk, **NOCO OS / Exclusive**, Bilder/Render, Faehigkeiten, Brief, Chat-Rueckfragen. Keine schwachen Vault-Zufallstreffer mehr.",
+        "**Fakten, Woerter, Listen** (*Hund, Katze, Maus*) → Wikipedia. NOCO sucht **Hund**, **Einstein** usw., nicht den ganzen Satz. Mehrdeutig (*Maus*) → Begriffsklaerung.",
+        "**Follow-ups** und Wiki-Kontext → Wikipedia. Exclusive noetig.",
+        "Manuell: **Offline** = Vault. **Wiki** = immer Wikipedia. **Nexus-Auto** = intelligent gemischt (empfohlen).",
+        "NOCO formuliert Wiki-Suchen um: *Was ist ein Haus?* wird zu **Haus** — keine Zufallstreffer wie Songtitel bei *hey*."
+      ]
+    },
+    {
+      keys: ["wiki api", "wiki-api", "wikipedia modus", "wissensquelle", "noco wissen vs wiki"],
+      answers: [
+        "**Wissensquellen** (oben in der Leiste):\n• **Offline** — lokale Vault, offline, NOCO OS + Alltag\n• **Wiki** — Live de.wikipedia.org\n• **Nexus-Auto** — intelligente Auto-Wahl",
+        "Wiki-API liefert Wikipedia-Kurztexte mit CC BY-SA Hinweis. NOCO-Wissen ist besser fuer NOCO OS, Smalltalk und Vault-Themen.",
+        "Automation: *Was ist ein Hund?* → Wiki sucht **Hund**, nicht den ganzen Satz. Kein *Hey Jude* bei *hey* — das bleibt Smalltalk im Vault.",
+        "Erstes Mal Wiki/Automation: Rechtshinweis bestaetigen. Internet noetig fuer Wikipedia.",
+        "Exclusive = Flux + Rush + Wiki + Automation + Render."
       ]
     },
     {
@@ -941,11 +973,391 @@
     {
       keys: ["neue funktionen", "neu in noco", "was ist neu", "features v2", "grosse features", "flagship", "coolste funktion", "beste feature"],
       answers: [
-        "**NOCO Flagship-Stack:**\n1. **NOCO Echo** — Chat-Verlauf & Zusammenfassung\n2. **NOCO Render** + **NOCO Sheen** — 3600 Motive, einfache Woerter\n3. **NOCO Access** — Plan & Modell (Prism/Spark/Flux) live\n4. **NOCO Vault** — 520+ Themen-Wissens-Engine",
-        "**Exclusive:** **NOCO Flux**, **NOCO Rush**, **NOCO Lens**, **NOCO Render** unbegrenzt.\n**Access Free:** 20/Tag, Echo + Vault, Prism dann Spark.",
-        "Schau **Features-Tab** oben — Hero-Karten zeigen die grossen Features. **System-Tab** = Stats & Slash-Befehle.",
-        "Frag *Was kann ich dich fragen?* fuer die komplette Themenliste mit Kategorien.",
+        "**NOCO Flagship-Stack:**\n1. **NOCO Motion** — 4s Epic Video · 8 Keyframes · Pixel-Morph-Loop\n2. **NOCO Create / Render** — Bilder im Chat · 3600 Motive\n3. **NOCO Inside** — Datei-Analyse, Kernpunkte, Code Review\n4. **NOCO Agent** — automatisierte Mehrschritt-Auftraege\n5. **NOCO Summary** — 5 Stichpunkte aus langen Texten\n6. **NOCO Echo** — Chat-Verlauf & Zusammenfassung",
+        "**Shortcuts:** Hub · Bild · Summary · Brief · Glow · Lens · Motion · Inside · Agent — jeweils mit Hover-Tipp im Chat.",
+        "Frag z. B.: *Wie erstelle ich ein Bild?* · *Wie erstelle ich ein Video?* · *Was ist NOCO Motion?*",
         "Alles **offline** nach dem ersten Laden — kein Server, kein Tracking."
+      ]
+    },
+    {
+      keys: ["noco motion", "was ist motion", "was ist noco motion", "locomotion", "localotion", "pseudo video", "video erstellen", "wie erstelle ich ein video", "wie erstelle ich video", "mach mir ein video", "mach ein video", "video von", "film erstellen", "animation erstellen", "wie funktioniert motion"],
+      answers: [
+        "**NOCO Motion** = **Epic 4s-Video** aus der **3600er Motiv-Bank**. **20 FPS Playback** — **8 echte Keyframes** + **Pixel-Morph** zwischen jedem Frame = flüssiger Loop im Chat.",
+        "**So gehts:** Schreib *Erstelle ein Video von einem Apfel* · *Mach mir ein Video von einer Katze* — oder **Motion**-Button / `/motion [Motiv]`. NOCO mappt freie Woerter auf die naechste Motiv-Bank.",
+        "**Animationen sind kontextuell:** Apfel faellt vom Baum · Mensch geht links→rechts · Auto faehrt durchs Bild · Vogel fliegt — je nach Motiv-Typ.",
+        "**Exclusive/Flux** noetig wie bei Bildern. Pro-Modus = schnellerer Render. Ergebnis erscheint als Loop im Chat.",
+        "Beispiele: *Video von einem Drachen* · *Animiere einen Apfel* · *Motion: Birne*"
+      ]
+    },
+    {
+      keys: ["noco agent", "was ist agent", "was ist noco agent", "wie funktioniert agent", "agent modus", "agent auftrag"],
+      answers: [
+        "**NOCO Agent** fuehrt **komplexe Auftraege automatisiert** aus — mit Live-Aktionsplan, Fortschritt und Ergebnis im Chat.",
+        "**So gehts:** **Agent**-Button aktivieren oder `/agent [Auftrag]` — z. B. *Erstelle einen 4-Wochen Lernplan fuer Spanisch*.",
+        "Der Agent zeigt **Aktionsbloecke** (Plan → Recherche → Struktur → Ergebnis), Stop/Skip/Plan-Buttons.",
+        "Ideal fuer: Lernplaene, Fitness-Routinen, Projektstrukturen, Recherche-Aufgaben.",
+        "Unterschied zu normalem Chat: Agent arbeitet **mehrstufig** mit sichtbarem Fortschritt."
+      ]
+    },
+    {
+      keys: ["noco inside", "was ist inside", "was ist noco inside", "insight", "inside analyse", "datei analyse", "was ist datei", "kernpunkte", "inside kernpunkte"],
+      answers: [
+        "**NOCO Inside** analysiert **Texte & Dateien** lokal — Pipeline: `SCAN→TOKEN→CLASSIFY→KEYPOINTS→REPORT`.",
+        "**Kategorien:** Dokument · **Kernpunkte** (Top-Saetze mit Confidence %) · Summary · Textpruefung · Code Review · Bildanalyse · Frag die Datei.",
+        "**Datei-Button (📂):** TXT, MD, PDF, Code, Bilder hochladen — oder Text direkt einfuegen.",
+        "**Kernpunkte:** Wichtigste Saetze mit Score — nicht abgehackt, vollstaendige Saetze.",
+        "Shortcut **Inside** oder `/inside` — Inside-Modus aktivieren."
+      ]
+    },
+    {
+      keys: ["noco create", "was ist create", "bild erstellen", "wie erstelle ich ein bild", "wie erstelle ich bild", "mach mir ein bild", "stell mir ein bild", "zeichne mir", "noco render erklaert", "was ist pixel", "was ist noco render", "pixel studio", "bild generieren wie"],
+      answers: [
+        "**NOCO Create** (= **NOCO Render**) zeichnet **Pixel-Bilder im Chat** aus **3600 Motiven** — offline, 6 Styles, NOCO Sheen.",
+        "**So gehts:** *Mach ein Bild von einer Katze* · *Stell mir ein Bild von einem Apfel dar* — oder **Create**-Button / Shortcut **Bild** / `/pixel`.",
+        "NOCO mappt freie Formulierungen (z. B. *Apfel* → naechstes Motiv in der Bank). Bei unsicherem Match fragt NOCO im Chat nach.",
+        "**Exclusive/Flux** fuer Render. **1 Bild zur Zeit** — Sheen-Blur wird scharf. Kopieren & Speichern in der Nachricht.",
+        "Unterschied zu Motion: **Create** = einzelnes Bild · **Motion** = 4s animierter Clip."
+      ]
+    },
+    {
+      keys: ["noco summary", "was ist summary", "summary modus", "zusammenfassung text", "text zusammenfassen", "5 stichpunkte"],
+      answers: [
+        "**NOCO Summary** fasst **lange Texte in 5 klare Stichpunkte** — vollstaendige Saetze, nichts Abgehacktes.",
+        "**So gehts:** **Summary**-Shortcut aktivieren → langen Text einfuegen → Enter. Oder Inside-Kategorie Summary.",
+        "Erkennt Aufbau (Fliesstext, Listen, Bullets) und waehlt die wichtigsten Saetze per Score.",
+        "Unterschied zu **NOCO Echo**: Summary = beliebiger Text · Echo = Chat-Verlauf dieses Chats.",
+        "Shortcut **Summary** in der Leiste unter dem Eingabefeld."
+      ]
+    },
+    {
+      keys: ["noco hub", "was ist hub", "noco hub erklaert"],
+      answers: [
+        "**NOCO Hub** = zentrale Uebersicht **direkt im Chat** — Buttons fuer Create, Motion, Inside, Agent.",
+        "Shortcut **Hub** oder Sidebar-Button ◎ — kein externes Menue, alles per Chat-Buttons & Texteingabe.",
+        "Ideal wenn du nicht weisst, womit du starten sollst."
+      ]
+    },
+    {
+      keys: ["wie nutze ich noco", "was kann ich alles", "hilfe features", "feature uebersicht", "alle funktionen"],
+      answers: [
+        "**NOCO AI Feature-Guide:**\n• **Agent** — komplexe Auftraege automatisiert\n• **Create** — Pixel-Bilder im Chat\n• **Inside** — Datei/Text-Analyse & Kernpunkte\n• **Motion** — 4s Epic Video mit Keyframe-Animation\n• **Summary** — 5 Stichpunkte\n• **Brief** — Recherche-Briefing\n• **Glow** — Live-Intent beim Tippen\n• **Lens** — KI-Bild erkennen\n• **Echo** — Chat zusammenfassen",
+        "**Bild:** *Mach ein Bild von …* · **Video:** *Erstelle ein Video von …* · **Analyse:** Inside + Datei · **Agent:** Auftrag beschreiben",
+        "Hover ueber Shortcuts & Build-Buttons fuer Kurz-Tipps. `/help` fuer alle Befehle."
+      ]
+    },
+    {
+      keys: ["philosophie", "was ist philosophie", "sinn des lebens", "ethik moral", "moral ethik", "stoizismus leben"],
+      answers: [
+        "**Philosophie** fragt nach Sinn, Wissen, Ethik und dem guten Leben — von Platon bis heute.",
+        "**Ethik:** Was ist richtig? Utilitarismus (groesster Nutzen) vs. Deontologie (Pflichten) vs. Tugendethik.",
+        "**Sinn des Lebens** ist persoenlich — viele finden ihn in Beziehungen, Wachstum, Beitrag oder Neugier.",
+        "Frag auch: *Was ist Psychologie?* · *Was ist Achtsamkeit?* · *Was ist Stoizismus?*"
+      ]
+    },
+    {
+      keys: ["liebe", "beziehung", "partnerschaft", "freundschaft", "was ist liebe", "was ist freundschaft"],
+      answers: [
+        "**Liebe & Beziehungen** = Vertrauen, Naehe, Kommunikation und gegenseitiger Respekt.",
+        "Gesunde Partnerschaft: ehrlich reden, Grenzen respektieren, gemeinsame Zeit und Eigenstaendigkeit.",
+        "**Freundschaft** braucht Regelmaessigkeit, Zuhoeren und Ehrlichkeit — Qualitaet vor Quantitaet.",
+        "Konflikte sind normal — wichtig ist, wie man sie konstruktiv loest."
+      ]
+    },
+    {
+      keys: ["arbeit", "karriere", "beruf", "bewerbung", "job", "was ist karriere", "arbeit welt"],
+      answers: [
+        "**Arbeit & Karriere** — Skills, Netzwerk, Erfahrung und Passung zwischen Mensch und Rolle.",
+        "**Bewerbung:** Lebenslauf klar, Anschreiben spezifisch, Recherche ueber Firma, authentisch bleiben.",
+        "Soft Skills (Kommunikation, Teamwork) sind oft so wichtig wie Hard Skills.",
+        "Frag auch: *Was ist Homeoffice?* · *Was ist Burnout?* · *Zeitmanagement*"
+      ]
+    },
+    {
+      keys: ["studium", "uni", "universitaet", "schule bildung", "abi abitur", "was ist studium"],
+      answers: [
+        "**Studium** = vertieftes Lernen an Hochschule — Forschung, Fachwissen, Selbstorganisation.",
+        "**Abitur** oeffnet Wege zu Uni/FH — Fachabi, Ausbildung und Quereinstieg sind auch valide.",
+        "Lerntipps: Vorlesungen skippen nicht, Zusammenfassungen, Lerngruppen, Pausen einplanen.",
+        "Frag auch: *Tipps zum Lernen* · *Was ist Erasmus?* · *Was ist Informatik?*"
+      ]
+    },
+    {
+      keys: ["universum", "astronomie", "galaxie", "schwarzes loch", "big bang", "was ist universum"],
+      answers: [
+        "**Universum** — alles was existiert: Galaxien, Sterne, Planeten, Dunkle Materie/Energie.",
+        "**Big Bang** ~13,8 Mrd. Jahre her — Expansion, Kosmische Hintergrundstrahlung als Beleg.",
+        "**Schwarze Loecher** = so starke Gravitation, dass nicht mal Licht entkommt.",
+        "Frag auch: *Was ist die ISS?* · *Was ist ein Exoplanet?* · *Was ist Relativitaet?*"
+      ]
+    },
+    {
+      keys: ["ernaehrung", "essen gesund", "diaet", "vegan vegetarisch", "was isst man gesund", "nutrition"],
+      answers: [
+        "**Ernaehrung:** Vielfalt, Gemuese, Vollkorn, Proteine, wenig Zucker — kein Wundermittel noetig.",
+        "**Vegan/Vegetarisch:** pflanzlich moeglich mit B12, Eisen, Protein bewusst planen.",
+        "Trinken nicht vergessen — Wasser ist Basis. Portionen & Rhythmus helfen.",
+        "NOCO AI ersetzt keine Ernaehrungsberatung bei Krankheiten."
+      ]
+    },
+    {
+      keys: ["reisen", "urlaub", "backpacking", "was ist reisen", "fernweh", "tourismus"],
+      answers: [
+        "**Reisen** erweitert Horizont — Kulturen, Sprachen, Perspektiven.",
+        "Planung: Budget, Dokumente, Versicherung, lokale Regeln respektieren.",
+        "**Nachhaltig reisen:** laengere Aufenthalte, oeffentliche Verkehrsmittel, weniger Flug.",
+        "Frag auch: *Was ist Van Life?* · Laender & Geographie in der Vault."
+      ]
+    },
+    {
+      keys: ["geld", "finanzen", "sparen", "investieren", "was ist geld", "budget haushalt"],
+      answers: [
+        "**Geld & Finanzen** — Einnahmen, Ausgaben, Sparen, optional Investieren.",
+        "Basics: Notgroschen (3–6 Monatskosten), Schulden vermeiden, Budget fuehren.",
+        "**Investieren** = langfristig, diversifiziert, Risiko verstehen — kein Alltags-Tipp.",
+        "Frag auch: *Was ist Inflation?* · *Was ist Blockchain?* · *Was ist Buergergeld?*"
+      ]
+    },
+    {
+      keys: ["glueck", "glück", "zufriedenheit", "was ist glueck", "wohlbefinden"],
+      answers: [
+        "**Glueck** ist oft Mischung aus Zufriedenheit, Sinn, Beziehungen und kleinen Momenten.",
+        "Forschung: Dankbarkeit, Sozialkontakte, Bewegung und Schlaf foerdern Wohlbefinden.",
+        "Vergleich mit anderen frisst Glueck — eigene Fortschritte zaehlen.",
+        "Frag auch: *Psychologie* · *Achtsamkeit* · *Stress*"
+      ]
+    },
+    {
+      keys: ["angst", "depression", "mental health", "psyche", "was ist depression", "was hilft bei angst"],
+      answers: [
+        "**Angst** ist normaler Schutz — wird problematisch wenn sie Alltag blockiert.",
+        "**Depression** = anhaltende Niedergeschlagenheit, Energielosigkeit — ernst nehmen, Hilfe suchen.",
+        "Hilft oft: Gespraech (Therapie), Bewegung, Struktur, soziale Kontakte — kein Ersatz fuer Behandlung.",
+        "**Wichtig:** Bei akuter Krise Telefonseelsorge **0800 111 0 111** (DE). NOCO AI ersetzt keine Therapie."
+      ]
+    },
+    {
+      keys: ["kunst", "literatur", "kultur", "museum", "was ist kunst", "was ist literatur"],
+      answers: [
+        "**Kunst** drueckt Ideen, Emotionen, Kultur aus — Malerei, Musik, Film, Literatur, Tanz.",
+        "**Literatur** erzaehlt, bildet, provoziert — von Antike bis Gegenwartsliteratur.",
+        "Kunst verstehen: Kontext (Epoche, Kuenstler, Gesellschaft) hilft enorm.",
+        "Frag auch: *Was ist Film?* · *Klassische Musik* · *Street Art*"
+      ]
+    },
+    {
+      keys: ["wetter", "wettervorhersage", "klima wetter", "regen sonne", "was ist wetter"],
+      answers: [
+        "**Wetter** = kurzfristig (Stunden/Tage): Temperatur, Wind, Niederschlag, Wolken.",
+        "**Klima** = langfristiges Muster (Jahrzehnte) — nicht mit einzelnem Schneetag verwechseln.",
+        "Wetter entsteht durch Luftdruck, Feuchtigkeit, Jetstream und lokale Geographie.",
+        "Frag auch: *Klimawandel* · *Erneuerbare Energie* · *Jahreszeiten*"
+      ]
+    },
+    {
+      keys: ["allgemeine frage", "irgendein thema", "beliebiges thema", "frag mich was", "ueber alles", "alltag fragen"],
+      answers: [
+        "Ich beantworte **allgemeine Fragen** aus der **NOCO Vault** — 800+ Themen: Wissenschaft, Tech, Geschichte, Gesundheit, Alltag, NOCO Features.",
+        "**So fragst du am besten:** *Was ist …?* · *Erklaer mir …* · *Ich hab ne Frage zu …* · *Tipps zum Lernen* — oder nur *KI*, *Schlaf*, *Politik*.",
+        "**Auch locker:** *Hey, was ist Yoga?* · *Wieso ist Schlaf wichtig?* · *Kannst du mir was über Blockchain sagen?*",
+        "Unklar? **Hilfe** · *Was kann ich dich fragen?* · **NOCO Sparks** links."
+      ]
+    },
+    {
+      keys: ["erklaer mir", "erklaere mir", "kannst du erklaeren", "ich verstehe nicht", "was meinst du mit"],
+      answers: [
+        "Klar — schreib einfach **das Thema** oder **die Frage**. Ich formuliere es intern um und suche in der Vault.",
+        "Beispiele: *Erklaer mir Quantenphysik* · *Was ist Demokratie?* · *Wie funktioniert das Internet?*",
+        "Kurze Stichworte reichen: *Genetik*, *Blockchain*, *Schlaf*, *NOCO Motion*.",
+        "Zu NOCO-Funktionen: *Wie erstelle ich ein Bild?* · *Was ist Agent?*"
+      ]
+    },
+    {
+      keys: ["zeitmanagement", "produktivitaet", "zeit einteilen", "to do", "todo liste", "prioritaeten", "was ist zeitmanagement"],
+      answers: [
+        "**Zeitmanagement** = Aufgaben sinnvoll planen — wichtig vor dringend.",
+        "Methoden: **Pomodoro** (25 Min Fokus), **Eisenhower-Matrix** (wichtig/dringend), To-do-Listen.",
+        "Tipp: Große Aufgaben in kleine Schritte teilen — weniger Ueberforderung.",
+        "Frag auch: *Prokrastination* · *Lernen* · *Burnout* · *Pomodoro*"
+      ]
+    },
+    {
+      keys: ["fitness", "training", "muskelaufbau", "krafttraining", "joggen", "laufen sport", "was ist fitness"],
+      answers: [
+        "**Fitness** = regelmaessige Bewegung fuer Kraft, Ausdauer, Gesundheit.",
+        "Basics: 150 Min moderate Bewegung/Woche (WHO-Empfehlung), Kraft 2x/Woche.",
+        "Muskelaufbau: Progressive Belastung + Protein + Schlaf.",
+        "Anfaenger: langsam steigern — Verletzungen vermeiden. NOCO AI ersetzt keinen Trainer."
+      ]
+    },
+    {
+      keys: ["yoga", "meditation", "achtsamkeit", "entspannung", "mindfulness", "was ist yoga"],
+      answers: [
+        "**Yoga** verbindet Koerperhaltungen, Atmung, Entspannung — Ursprung Indien.",
+        "**Meditation/Achtsamkeit** = Aufmerksamkeit trainieren, Gedanken beobachten ohne zu bewerten.",
+        "Hilft vielen bei Stress — 5–10 Min taeglich reichen zum Start.",
+        "Frag auch: *Psychologie* · *Schlaf* · *Burnout* · *Stoizismus*"
+      ]
+    },
+    {
+      keys: ["auto", "verkehr", "fuehrerschein", "fahrzeug", "benzin diesel", "was ist e auto", "e-auto"],
+      answers: [
+        "**Auto & Verkehr** — Mobilitaet, Sicherheit, Regeln, Technik.",
+        "**E-Auto:** Elektromotor, Akku, weniger lokale Emissionen — Ladeinfrastruktur beachten.",
+        "Sicher fahren: Abstand, Geschwindigkeit, kein Handy am Steuer.",
+        "Frag auch: *E-Mobilitaet* · *Klimawandel* · *Verkehr*"
+      ]
+    },
+    {
+      keys: ["politik deutschland", "bundestag", "wahl", "demokratie deutschland", "regierung", "kanzler", "was ist politik"],
+      answers: [
+        "**Politik in Deutschland** — Demokratie, Wahlen, Parteien, Bundestag, Grundgesetz.",
+        "**Bundestag** = Parlament, Gesetze, Kontrolle der Regierung.",
+        "Wahlen: alle 4 Jahre Bundestag — jede Stimme zaehlt.",
+        "Frag auch: *Demokratie* · *EU* · *Grundgesetz* · *Fake News*"
+      ]
+    },
+    {
+      keys: ["religion", "glaube", "christentum", "islam", "judentum", "buddhismus", "was ist religion"],
+      answers: [
+        "**Religion** = Glaube, Rituale, Gemeinschaft, Sinnfragen — weltweit Milliarden Anhaenger.",
+        "Grosse Religionen: Christentum, Islam, Hinduismus, Buddhismus, Judentum.",
+        "Respektvoller Umgang: Fragen stellen, zuhören, nicht verallgemeinern.",
+        "Frag auch: *Philosophie* · *Ethik* · *Kultur*"
+      ]
+    },
+    {
+      keys: ["haustier", "haustiere", "tier halten", "hund katze tier", "was ist haustier"],
+      answers: [
+        "**Haustiere** (Hund, Katze, Vogel …) bringen Freude — brauchen Zeit, Geld, Verantwortung.",
+        "Vor dem Kauf: Kosten, Allergien, Wohnung (Mietvertrag), Auslauf/Pflege planen.",
+        "Tierschutz: Adoptieren statt Massenzucht wo moeglich.",
+        "Frag auch: *Hund* · *Katze* · *Tierschutz*"
+      ]
+    },
+    {
+      keys: ["wohnen", "miete", "wohnung", "eigenheim", "haus kaufen", "was ist miete"],
+      answers: [
+        "**Wohnen** — Miete, Nebenkosten, Vertrag, Nachbarschaft, Lage.",
+        "**Miete:** Kaltmiete + Nebenkosten (Strom, Heizung oft extra). Kaution ueblich.",
+        "Eigenheim vs. Miete: Flexibilitaet vs. Eigentum — persoenliche Entscheidung.",
+        "Frag auch: *Geld* · *Finanzen* · *Mietpreisbremse*"
+      ]
+    },
+    {
+      keys: ["erkaeltung", "grippaler infekt", "husten", "schnupfen", "fieber erkaltung", "was hilft erkaeltung"],
+      answers: [
+        "**Erkaeltung** = Virus, oft Hals, Nase, Husten — meist harmlos, 7–10 Tage.",
+        "Hilft: Ruhe, viel trinken, feuchte Luft, Schmerzmittel bei Bedarf.",
+        "Zum Arzt wenn: hohes Fieber, Atemnot, laenger als 2 Wochen.",
+        "NOCO AI ersetzt keine medizinische Beratung."
+      ]
+    },
+    {
+      keys: ["nachhaltigkeit alltag", "umwelt alltag", "muelltrennung", "plastik vermeiden", "oeko tipps", "was kann ich fuer umwelt tun"],
+      answers: [
+        "**Nachhaltigkeit im Alltag** — kleine Schritte summieren sich.",
+        "Tipps: Muelltrennung, weniger Plastik, OPNV/Fahrrad, lokal kaufen, Reparieren statt Wegwerfen.",
+        "Energie sparen: LED, Stand-by aus, kuerzer duschen.",
+        "Frag auch: *Klimawandel* · *Recycling* · *E-Mobilitaet*"
+      ]
+    },
+    {
+      keys: ["mode", "fashion", "kleidung", "stil tipps", "was anziehen", "was ist mode"],
+      answers: [
+        "**Mode** = Kleidung, Stil, Trends, Selbstausdruck.",
+        "Basics: Passform wichtiger als Trend, Qualitaet vor Menge, Second-Hand nachhaltig.",
+        "Capsule Wardrobe = wenige Kombi-Teile — weniger Stress.",
+        "Frag auch: *Nachhaltigkeit* · *Kunst*"
+      ]
+    },
+    {
+      keys: ["natur", "wald natur", "outdoor", "camping", "was ist natur"],
+      answers: [
+        "**Natur** — Waelder, Berge, Meere, Tiere, Oekosysteme.",
+        "**Outdoor:** Wandern, Camping — Wetter checken, Muell mitnehmen, Respekt vor Wildtieren.",
+        "Natur entlastet den Kopf — **Shinrin-yoku** (Wald baden) aus Japan.",
+        "Frag auch: *Wandern* · *Klimawandel* · *Tiere*"
+      ]
+    },
+    {
+      keys: ["kochen", "rezepte", "kueche", "kochen lernen", "was koche ich", "tipps kochen"],
+      answers: [
+        "**Kochen** — Zutaten, Technik, Geschmack, Sicherheit (durchgaren, Hygiene).",
+        "Anfaenger: einfache Rezepte (Nudeln, Eier, Gemuese), wenige Zutaten, Mise en place.",
+        "Spices & Basics: Salz, Pfeffer, Oel, Knoblauch — vielseitig.",
+        "Frag auch: *Ernaehrung* · *Food* · *Pizza* · *Vegan*"
+      ]
+    },
+    {
+      keys: ["hobby", "freizeit", "was kann man machen", "langweilig was tun", "zeitvertreib"],
+      answers: [
+        "**Hobbies** geben Struktur und Freude — Sport, Musik, Lesen, Gaming, Handwerk, Natur.",
+        "Bei Langeweile: kurz rausgehen, 15 Min lesen, etwas Neues ausprobieren.",
+        "Gute Hobbies: etwas Lernen + etwas Entspannung mischen.",
+        "Frag auch: *Gaming* · *Musik* · *Wandern* · *Zeichnen*"
+      ]
+    },
+    {
+      keys: ["eltern", "kinder", "erziehung", "familie", "was ist erziehung", "eltern sein"],
+      answers: [
+        "**Eltern & Kinder** — Liebe, Grenzen, Vorbild, Geduld.",
+        "Erziehung: klar kommunizieren, Konsequenzen, Zuneigung — kein Perfektionismus.",
+        "Konflikte mit Kindern: ruhig bleiben, Namen nennen, kurz erklaeren warum.",
+        "Frag auch: *Psychologie* · *Schule* · *Lernen*"
+      ]
+    },
+    {
+      keys: ["streaming", "netflix", "youtube", "spotify", "was ist streaming", "serien schauen"],
+      answers: [
+        "**Streaming** = Video/Musik ueber Internet — Netflix, YouTube, Spotify, Twitch.",
+        "YouTube: Tutorials, News, Unterhaltung. Spotify: Musik & Podcasts.",
+        "Tipp: Bildschirmzeit im Blick — Pausen, Offline-Zeit einplanen.",
+        "Frag auch: *Podcast* · *Gaming* · *TikTok*"
+      ]
+    },
+    {
+      keys: ["konflikt", "streit", "argument", "wie loese ich konflikt", "kommunikation konflikt"],
+      answers: [
+        "**Konflikte** sind normal — entscheidend ist der Umgang.",
+        "Hilft: Zuhoeren, Ich-Botschaften (*Ich fuehle…* statt *Du immer…*), Pause wenn es eskaliert.",
+        "Nicht im Affekt entscheiden — oft hilft: spaeter nochmal reden.",
+        "Frag auch: *Psychologie* · *Freundschaft* · *Verhandlung*"
+      ]
+    },
+    {
+      keys: ["traum", "traeume", "traeumen", "albtraum", "was bedeuten traume", "schlaftraum"],
+      answers: [
+        "**Traeume** entstehen im REM-Schlaf — Verarbeitung, Emotionen, Erinnerungen.",
+        "Wissenschaft: kein festes Traumwoerterbuch — persoenliche Symbole variieren.",
+        "Albtraeume: oft Stress — Schlafhygiene, Entspannung vor dem Schlafen.",
+        "Frag auch: *Schlaf* · *Psychologie*"
+      ]
+    },
+    {
+      keys: ["handy tipps", "smartphone tipps", "handy nutzen", "akku sparen", "was kann mein handy"],
+      answers: [
+        "**Handy-Tipps:** Updates installieren, starke PIN/Face-ID, Backup aktivieren.",
+        "Akku: Helligkeit runter, Hintergrund-Apps begrenzen, WLAN statt Mobile wenn moeglich.",
+        "Sicherheit: keine unbekannten Links, Apps nur aus offiziellen Stores.",
+        "Frag auch: *Cybersecurity* · *Apps* · *WLAN*"
+      ]
+    },
+    {
+      keys: ["einkaufen", "supermarkt", "budget einkauf", "sparen einkaufen", "was einkaufen"],
+      answers: [
+        "**Einkaufen & Budget** — Liste schreiben, nicht hungrig einkaufen, Angebote vergleichen.",
+        "Sparen: Eigenmarken, Saisonprodukte, Mengen bewusst waehlen.",
+        "Nachhaltig: weniger Verpackung, regional wenn moeglich.",
+        "Frag auch: *Finanzen* · *Ernaehrung* · *Nachhaltigkeit*"
+      ]
+    },
+    {
+      keys: ["sommer", "sommer freizeit", "urlaub sommer", "hitze sommer", "was macht man im sommer"],
+      answers: [
+        "**Sommer** — Sonne, Hitze, Ferien, Outdoor.",
+        "Ideen: Schwimmen, Grillen, Festivals, Radfahren, Reisen — Sonnenschutz nicht vergessen.",
+        "Bei Hitze: viel trinken, Mittagssonne meiden, leichte Kleidung.",
+        "Frag auch: *Reisen* · *Strand* · *Eis*"
       ]
     },
     {
@@ -4607,6 +5019,1780 @@
       ]
     },
     {
+      keys: ["umzug", "wohnungswechsel", "umziehen tipps", "mietwohnung umzug"],
+      answers: [
+        "**Umzug** = planen, packen, Kündigung/Mietvertrag, Adressänderung, Strom/Internet ummelden.",
+        "Checkliste: Kisten labeln, wichtige Dokumente separat, Übergabeprotokoll bei Auszug.",
+        "Frag: Mietrecht, Wohnen, Nachhaltigkeit (Entrümpeln)."
+      ]
+    },
+    {
+      keys: ["scheidung", "trennung", "beziehung beenden", "ehe scheidung"],
+      answers: [
+        "**Scheidung/Trennung** = rechtlich & emotional belastend — Anwalt, Mediation, Kinder im Fokus.",
+        "Trennung ≠ automatisch Scheidung; Unterhalt, Sorgerecht, Vermögen klären.",
+        "Frag: Familie, Konflikt, Psychologie — bei Gewalt: Hilfsangebote nutzen."
+      ]
+    },
+    {
+      keys: ["heirat", "hochzeit", "standesamt", "ehe schliessen"],
+      answers: [
+        "**Heirat** = rechtliche Ehe vor dem Standesamt — Ehefähigkeitszeugnis, Termin, Zeugen.",
+        "Kirchliche Trauung optional; Ehevertrag bei Vermögen/Unternehmen sinnvoll.",
+        "Frag: Familie, Finanzen, Versicherung."
+      ]
+    },
+    {
+      keys: ["stromausfall", "blackout", "strom weg", "kein strom"],
+      answers: [
+        "**Stromausfall** = Sicherungen prüfen, Nachbarn fragen (Netz vs. Wohnung), Kerze statt offenes Feuer.",
+        "Kühlschrank zu lassen, Handy sparsam, wichtige Nummern offline notieren.",
+        "Frag: Smart Home, Nachhaltigkeit (Strom sparen)."
+      ]
+    },
+    {
+      keys: ["haushalt", "putzen", "reinigen wohnung", "ordnung haushalt"],
+      answers: [
+        "**Haushalt** = regelmäßige Routinen schlagen Marathon-Putz — 15-Min-Zonen, Checklisten.",
+        "Weniger Zeug = weniger Aufwand; Mikrofasertücher, Essig+Wasser für viele Flächen.",
+        "Frag: Nachhaltigkeit, Zeitmanagement, Wohnen."
+      ]
+    },
+    {
+      keys: ["versicherung", "haftpflicht", "versicherungen grundlagen", "was versichern"],
+      answers: [
+        "**Versicherungen (DE):** Haftpflicht fast Pflicht · Kfz bei Auto · Hausrat optional · BU bei Beruf.",
+        "Nicht alles doppelt (Handy oft über Hausrat); jährlich vergleichen, nicht blind kündigen.",
+        "Frag: Finanzen, Auto, Wohnen, Gesundheit."
+      ]
+    },
+    {
+      keys: ["flughafen", "fliegen tipps", "flug reise", "flugzeug reisen"],
+      answers: [
+        "**Fliegen:** Online einchecken, Flüssigkeiten 100 ml, Akkus im Handgepäck, Ausweis bereit.",
+        "Jetlag: Licht & Schlaf an Zielzeit anpassen; Trinken, wenig Alkohol in der Kabine.",
+        "Frag: Reisen, Urlaub, Versicherung (Reise)."
+      ]
+    },
+    {
+      keys: ["trinkgeld", "restaurant trinkgeld", "service trinkgeld", "wie viel trinkgeld"],
+      answers: [
+        "**Trinkgeld (DE):** Restaurant oft 5-10 % oder aufrunden; Lieferdienst 1-2 €; Friseur 5-10 %.",
+        "Kein Rechtsanspruch — Kultur, nicht Pflicht; bar oder „Stimmt so“.",
+        "Frag: Finanzen, Gastronomie, Reisen."
+      ]
+    },
+    {
+      keys: ["deutschland ticket", "deutschlandticket", "oepnv ticket", "monatskarte bahn"],
+      answers: [
+        "**Deutschland-Ticket** = bundesweites ÖPNV-Abo (ca. 49 €/Monat) — Bus, Bahn, Regionalverkehr.",
+        "Nicht ICE/IC ohne Zuschlag; Jobticket oft günstiger über Arbeitgeber.",
+        "Frag: Fahrrad, ÖPNV, Nachhaltigkeit."
+      ]
+    },
+    {
+      keys: ["tattoo", "piercing", "taetowierung", "tattoo pflege"],
+      answers: [
+        "**Tattoo/Piercing:** Studio mit Hygiene-Zertifikat, Einmalnadeln, Nachsorge (Feuchtigkeit, keine Sonne).",
+        "Tattoo dauerhaft — Motiv & Stelle überlegen; Piercing: Metallallergie beachten.",
+        "Frag: Gesundheit, Mode."
+      ]
+    },
+    {
+      keys: ["brille", "sehstaerke", "sehtest", "kontaktlinsen"],
+      answers: [
+        "**Sehhilfen:** Sehtest alle 1-2 Jahre · Brille vs. Kontaktlinsen (Komfort, Hygiene).",
+        "Bildschirmarbeit: Blaulichtfilter optional — Pausen wichtiger (20-20-20-Regel).",
+        "Frag: Gesundheit, Handy-Tipps."
+      ]
+    },
+    {
+      keys: ["grippe", "grippe erkaeltung", "influenza", "unterschied grippe erkaeltung"],
+      answers: [
+        "**Grippe vs. Erkältung:** Grippe = plötzlich, Fieber, Gliederschmerz, länger · Erkältung = langsamer, laufende Nase.",
+        "Bei Risikogruppen Impfung sinnvoll; Ruhe, Flüssigkeit, Arzt bei Atemnot.",
+        "Frag: Erkältung, Immunsystem, Impfung."
+      ]
+    },
+    {
+      keys: ["stalking", "belaestigung online", "cyberstalking", "verfolgung internet"],
+      answers: [
+        "**Stalking/Cyberstalking** = wiederholte Verfolgung — dokumentieren, blockieren, Anzeige erwägen.",
+        "Keine Privatdetails posten; 2FA, neue Accounts nur mit Vorsicht.",
+        "Frag: Cybermobbing, Datenschutz, Konflikt."
+      ]
+    },
+    {
+      keys: ["nachbarn", "nachbarschaft", "nachbar konflikt", "nachbarschaftshilfe"],
+      answers: [
+        "**Nachbarschaft:** Lärmzeiten beachten, kurz vorher Bescheid, gemeinsame Treppen pflegen.",
+        "Konflikt: sachlich ansprechen, Schlichtung vor Eskalation; Hausordnung lesen.",
+        "Frag: Konflikt, Wohnen, Mietrecht."
+      ]
+    },
+    {
+      keys: ["zeitumstellung", "sommerzeit winterzeit", "uhr umstellen", "dst daylight"],
+      answers: [
+        "**Zeitumstellung:** EU wechselt März (Sommerzeit) & Oktober (Winterzeit) — Uhren anpassen.",
+        "Schlaf kann kurz leiden; Licht am Morgen hilft Umstellung.",
+        "Frag: Zeitzonen, Schlaf, Wetter."
+      ]
+    },
+    {
+      keys: ["lohnsteuer", "steuerklasse", "lohnabrechnung", "netto brutto"],
+      answers: [
+        "**Lohnsteuer:** Brutto − Sozialabgaben − Steuer = Netto · Steuerklasse beeinflusst Abzug.",
+        "Steuererklärung oft Erstattung; ELSTER online, Belege sammeln.",
+        "Frag: Finanzen, Arbeit, Mindestlohn."
+      ]
+    },
+    {
+      keys: ["kita", "kindergarten", "kinderbetreuung", "hort betreuung"],
+      answers: [
+        "**Kinderbetreuung:** Kita ab ~1 Jahr, Hort nach Schule — Wartelisten früh anmelden.",
+        "Qualität: Gruppengröße, Konzept, Nähe; Elternzeit & Elterngeld kombinierbar.",
+        "Frag: Elternzeit, Familie, Bildung."
+      ]
+    },
+    {
+      keys: ["lotto", "gluecksspiel", "gluecksspielsucht", "casino spielbank"],
+      answers: [
+        "**Glücksspiel:** Hohes Verlustrisiko — nur Geld, das du verlieren kannst; Hausvorteil beim Casino.",
+        "Lotto = extrem geringe Gewinnchance; Sucht: OASIS-Sperre, Beratung.",
+        "Frag: Finanzen, Psychologie."
+      ]
+    },
+    {
+      keys: ["horoskop", "astrologie", "sternzeichen", "tierkreis"],
+      answers: [
+        "**Astrologie** = Sternzeichen & Geburtshoroskop — **keine Wissenschaft**, eher Unterhaltung.",
+        "Barnum-Effekt: vage Texte wirken persönlich; für Entscheidungen nicht nutzen.",
+        "Frag: Astronomie (echte Sterne), Psychologie."
+      ]
+    },
+    {
+      keys: ["impfpass", "impfausweis", "impfungen uebersicht", "digitaler impfpass"],
+      answers: [
+        "**Impfpass** = Dokumentation aller Impfungen — aufbewahren, digitaler Nachweis möglich.",
+        "Auffrischungen (Tetanus, COVID je nach Empfehlung) im Blick; Reisen: Gelbfieber etc.",
+        "Frag: Impfung, Immunsystem, Reisen."
+      ]
+    },
+    {
+      keys: ["strom sparen", "energie sparen haushalt", "stromkosten senken", "standby verbrauch"],
+      answers: [
+        "**Strom sparen:** Standby aus · LED · Kühlschrank nicht neben Herd · Wäsche kalt wenn möglich.",
+        "Dynamische Tarife + Verbrauch messen; Wärmepumpe vs. Nachtspeicher langfristig.",
+        "Frag: Nachhaltigkeit, Wärmepumpe, Finanzen."
+      ]
+    },
+    {
+      keys: ["wasser sparen", "wasserverbrauch senken", "trinkwasser sparen"],
+      answers: [
+        "**Wasser sparen:** Kurz duschen, Voll beladen (Spülmaschine/Wäsche), tropfende Hähne fixen.",
+        "Regenwasser für Garten; Bewusstsein: Heißwasser kostet Energie + Wasser.",
+        "Frag: Nachhaltigkeit, Garten, Haushalt."
+      ]
+    },
+    {
+      keys: ["hausaufgaben", "hausaufgaben tipps", "schulaufgaben", "lernen hausaufgaben"],
+      answers: [
+        "**Hausaufgaben:** Feste Zeit, Handy weg, große Aufgaben in Häppchen (Pomodoro).",
+        "Verstehen vor Auswendiglernen; bei Blockade kurz Pause, dann Lehrer/Eltern fragen.",
+        "Frag: Lernen, Schule, Zeitmanagement."
+      ]
+    },
+    {
+      keys: ["mietkaution", "kaution wohnung", "kautionsrueckzahlung", "mietkaution zurueck"],
+      answers: [
+        "**Mietkaution** = meist 3 Nettokaltmieten als Sicherheit — auf separates Konto, nicht auf Vermieter-Privatkonto.",
+        "Rückzahlung nach Auszug + Abrechnung; Schäden abziehbar — Übergabeprotokoll mit Fotos!",
+        "Frag: Mietrecht, Umzug, Wohnen."
+      ]
+    },
+    {
+      keys: ["nebenkosten", "nebenkostenabrechnung", "betriebskosten", "heizkosten abrechnung"],
+      answers: [
+        "**Nebenkosten** = Heizung, Wasser, Müll, Hausmeister etc. — jährliche Abrechnung mit Belegen.",
+        "Nachzahlung oder Erstattung; Widerspruchsfrist beachten, Verbrauch prüfen.",
+        "Frag: Mietrecht, Wohnen, Strom sparen."
+      ]
+    },
+    {
+      keys: ["schimmel", "schimmel wohnung", "schimmelpilz", "feuchtigkeit wohnung"],
+      answers: [
+        "**Schimmel** = Gesundheitsrisiko — Ursache: Feuchtigkeit (lüften, heizen, undicht).",
+        "Kleine Flächen: reinigen & trocknen; großflächig: Vermieter/Profis, nicht nur überstreichen.",
+        "Frag: Wohnen, Mietrecht, Gesundheit."
+      ]
+    },
+    {
+      keys: ["kuendigung arbeit", "arbeitsvertrag kuendigung", "job kuendigen", "kuendigungsfrist"],
+      answers: [
+        "**Kündigung Arbeit:** Schriftlich, Frist aus Vertrag/Tarif/§622 BGB — Probezeit oft 2 Wochen.",
+        "Ordentlich vs. außerordentlich; Arbeitszeugnis, Resturlaub, Abfindung nur in Sonderfällen.",
+        "Frag: Bewerbung, Arbeit, Gewerkschaft."
+      ]
+    },
+    {
+      keys: ["vorstellungsgespraech", "vorstellungsgespräch", "job interview", "bewerbungsgespraech"],
+      answers: [
+        "**Vorstellungsgespräch:** Recherchiere Firma, STAR-Methode für Beispiele, Fragen vorbereiten.",
+        "Pünktlich, ehrlich, konkret — Gehaltswunsch realistisch, Probezeit klären.",
+        "Frag: Bewerbung, Lebenslauf, Karriere."
+      ]
+    },
+    {
+      keys: ["lebenslauf", "cv", "bewerbung lebenslauf", "lebenslauf tipps"],
+      answers: [
+        "**Lebenslauf:** Klar strukturiert, 1-2 Seiten, Lücken erklären, keine Lügen.",
+        "Chronologisch oder Skills-first; Foto in DE oft üblich; PDF, angepasst pro Stelle.",
+        "Frag: Bewerbung, Vorstellungsgespräch, Karriere."
+      ]
+    },
+    {
+      keys: ["gehaltsverhandlung", "gehalt verhandeln", "lohn verhandeln", "gehaltswunsch"],
+      answers: [
+        "**Gehaltsverhandlung:** Marktwert recherchieren, eigene Leistung belegen, Range nennen.",
+        "Nicht nur Geld: Urlaub, Homeoffice, Weiterbildung — schriftlich bestätigen lassen.",
+        "Frag: Karriere, Arbeit, Finanzen."
+      ]
+    },
+    {
+      keys: ["homoeopathie", "homöopathie", "globuli", "alternative medizin homoeopathie"],
+      answers: [
+        "**Homöopathie** = Verdünnungsprinzip — **wissenschaftlich nicht belegt** für Wirksamkeit über Placebo.",
+        "Schwere Erkrankungen nicht damit allein behandeln; offen mit Ärzten sprechen.",
+        "Frag: Placebo, Medizin, Impfung."
+      ]
+    },
+    {
+      keys: ["intermittierendes fasten", "fasten 16 8", "intervallfasten", "fasten diaet"],
+      answers: [
+        "**Intervallfasten (16:8 etc.):** Essensfenster begrenzen — für manche hilfreich, nicht für alle.",
+        "Nicht bei Essstörungen/Schwangerschaft; Qualität der Mahlzeiten zählt mehr als Timing.",
+        "Frag: Ernährung, Gesundheit, Abnehmen."
+      ]
+    },
+    {
+      keys: ["keto", "ketogene diaet", "low carb keto", "ketose"],
+      answers: [
+        "**Keto** = sehr wenig Kohlenhydrate, viel Fett — Körper nutzt Ketone.",
+        "Kurzfristig Gewicht möglich; langfristig schwer durchzuhalten — Arzt bei Vorerkrankungen.",
+        "Frag: Ernährung, Veganismus, Diabetes."
+      ]
+    },
+    {
+      keys: ["sperrmuell", "sperrmüll", "entsorgung muell", "muellabfuhr"],
+      answers: [
+        "**Sperrmüll** = große Abholung über Gemeinde — Termin buchen, was erlaubt ist prüfen.",
+        "Recyclinghof für Elektro (Elektroschrott), Sondermüll getrennt — illegaler Wildmüll = Bußgeld.",
+        "Frag: Mülltrennung, Nachhaltigkeit, Elektroschrott."
+      ]
+    },
+    {
+      keys: ["geschenke", "geschenkideen", "was schenken", "geschenke tipps"],
+      answers: [
+        "**Geschenke:** Person & Budget beachten — Erlebnisse oft wertvoller als Zeug.",
+        "Wunschliste fragen, personalisiert, nicht zu teuer; Gutscheine okay wenn passend.",
+        "Frag: Weihnachten, Geburtstag, Nachhaltigkeit."
+      ]
+    },
+    {
+      keys: ["selbstvertrauen", "selbstbewusstsein", "mehr selbstvertrauen", "selbstsicherheit"],
+      answers: [
+        "**Selbstvertrauen** wächst durch kleine Erfolge, Übung, realistische Selbstgespräche.",
+        "Vergleiche mit anderen reduzieren; Kompetenz aufbauen statt nur „positiv denken“.",
+        "Frag: Psychologie, Motivation, Rhetorik."
+      ]
+    },
+    {
+      keys: ["motivation", "motiviert bleiben", "antrieb", "keine motivation"],
+      answers: [
+        "**Motivation:** Ziele klein schneiden, Routinen > Willenskraft, Umgebung gestalten.",
+        "„Warum“ klar halten; Pausen & Schlaf; Perfektionismus bremsen oft Motivation.",
+        "Frag: Prokrastination, Zeitmanagement, Lernen."
+      ]
+    },
+    {
+      keys: ["perfektionismus", "alles perfekt", "perfekt sein muessen", "hoher anspruch"],
+      answers: [
+        "**Perfektionismus** = hohe Standards, oft mit Angst vor Fehlern — blockiert Start & Freude.",
+        "„Gut genug“ bewusst üben; Feedback nutzen statt endlos polieren.",
+        "Frag: Prokrastination, Psychologie, Stress."
+      ]
+    },
+    {
+      keys: ["entscheidungen", "entscheidung treffen", "wahl treffen", "pro contra liste"],
+      answers: [
+        "**Entscheidungen:** Pro/Contra-Liste, reversibel vs. irreversibel unterscheiden.",
+        "70%-Regel: genug Info, dann handeln; große Entscheidungen Zeit geben, nicht überstürzen.",
+        "Frag: Kritisches Denken, Stoizismus, Psychologie."
+      ]
+    },
+    {
+      keys: ["hoeflichkeit", "höflichkeit", "umgangston", "respektvoll kommunizieren"],
+      answers: [
+        "**Höflichkeit:** Bitte/Danke, zuhören, nicht unterbrechen — Kultur & Kontext beachten.",
+        "Kritik sachlich („Ich-Messages“); online: gleiche Regeln wie offline.",
+        "Frag: Konflikt, Smalltalk, Kommunikation."
+      ]
+    },
+    {
+      keys: ["weihnachten", "weihnachten tradition", "weihnachtsfeier", "advent"],
+      answers: [
+        "**Weihnachten:** Christlicher Festkreis + familiäre Traditionen — Geschenke, Essen, Ruhe.",
+        "Kommerziell stark; Alternativen: Zeit schenken, Spenden, weniger Konsum.",
+        "Frag: Geschenke, Religion, Nachhaltigkeit."
+      ]
+    },
+    {
+      keys: ["silvester", "neujahr", "feuerwerk silvester", "silvester tipps"],
+      answers: [
+        "**Silvester:** Jahreswechsel, Feuerwerk (Regeln je Bundesland!), Nachbarschaft & Tiere beachten.",
+        "Vorsätze realistisch halten; Alkohol moderat, sichere Heimweg-Planung.",
+        "Frag: Feuerwerk, Geschenke, Motivation."
+      ]
+    },
+    {
+      keys: ["arbeitszeugnis", "zeugnis arbeit", "zwischenzeugnis", "qualifiziertes arbeitszeugnis"],
+      answers: [
+        "**Arbeitszeugnis:** Formulierungen codiert („stets zur Zufriedenheit“ = gut).",
+        "Anspruch bei Austritt; Zwischenzeugnis bei längerer Anstellung möglich; Korrektur verlangen.",
+        "Frag: Kündigung, Bewerbung, Arbeit."
+      ]
+    },
+    {
+      keys: ["handwerker", "handwerker finden", "renovierung", "reparatur wohnung"],
+      answers: [
+        "**Handwerker:** Mehrere Angebote, schriftlich, Teilzahlungen statt alles vorab.",
+        "Referenzen, Meisterbetrieb, Versicherung; Mängel protokollieren.",
+        "Frag: Wohnen, Schimmel, Nachhaltigkeit (Sanierung)."
+      ]
+    },
+    {
+      keys: ["parken", "parkverbot", "parkplatz", "halten verboten"],
+      answers: [
+        "**Parken:** Schilder & Markierung beachten — Halteverbot ≠ Parkverbot.",
+        "Bewohnerparken, Parkscheibe, E-Auto-Ladeparkplätze; Bußgelder & Abschleppen teuer.",
+        "Frag: Auto, Verkehr, Bußgeld."
+      ]
+    },
+    {
+      keys: ["mahnung", "inkasso", "rechnung nicht bezahlt", "schulden mahnbescheid"],
+      answers: [
+        "**Mahnung/Inkasso:** Fristen prüfen, nicht ignorieren — bei Berechtigung zahlen oder widersprechen.",
+        "Inkasso-Gebühren prüfen; Verbraucherzentrale bei Unklarheit; Schuldenplan statt Kredit-Kette.",
+        "Frag: Finanzen, Verbraucherrecht, Versicherung."
+      ]
+    },
+    {
+      keys: ["pfand", "pfandflasche", "pfand system", "mehrweg einweg"],
+      answers: [
+        "**Pfand (DE):** Einweg 0,25 € · Mehrweg oft 0,08–0,15 € — Flaschen/Dosen zurückgeben.",
+        "Automaten in Supermärkten; Pfand gehört zum Preis — nicht wegwerfen.",
+        "Frag: Nachhaltigkeit, Mülltrennung, Einkaufen."
+      ]
+    },
+    {
+      keys: ["mieterhoehung", "miete erhoehen", "mieterhoehung wohnung", "indexmiete"],
+      answers: [
+        "**Mieterhöhung:** Nur mit Begründung (Mietspiegel, Modernisierung, Indexmiete) — Fristen & Form beachten.",
+        "Widerspruch möglich; Kappungsgrenze in vielen Städten; Mietverein/Verbraucherzentrale bei Unklarheit.",
+        "Frag: Mietrecht, Nebenkosten, Wohnen."
+      ]
+    },
+    {
+      keys: ["meldebescheinigung", "anmeldung wohnsitz", "ummeldung", "buergeramt anmeldung"],
+      answers: [
+        "**Anmeldung:** Innerhalb 14 Tagen nach Einzug beim Bürgeramt — Wohnungsgeberbestätigung mitbringen.",
+        "Meldebescheinigung für Bank, Kindergeld, Führerschein; Abmeldung beim Auszug.",
+        "Frag: Umzug, Bürgeramt, Personalausweis."
+      ]
+    },
+    {
+      keys: ["personalausweis", "reisepass", "ausweis beantragen", "pass beantragen"],
+      answers: [
+        "**Ausweis/Reisepass:** Bürgeramt — biometrisches Foto, Gebühr, alten Ausweis mitbringen.",
+        "Reisepass für Nicht-EU-Reisen; Gültigkeit prüfen (6 Monate Rest bei manchen Ländern).",
+        "Frag: Visum, Reisen, Meldebescheinigung."
+      ]
+    },
+    {
+      keys: ["schufa", "bonitaet", "bonitaetsauskunft", "kredit ohne schufa"],
+      answers: [
+        "**SCHUFA** = Bonitätsauskunft in DE — Kredite, Verträge, Zahlungsverhalten.",
+        "Kostenlose Selbstauskunft 1×/Jahr; Score ≠ Geheimformel — pünktlich zahlen hilft.",
+        "Frag: Ratenkredit, Dispo, Finanzen."
+      ]
+    },
+    {
+      keys: ["dispo", "dispokredit", "ueberziehungskredit", "konto ueberziehen"],
+      answers: [
+        "**Dispo** = kurzer Überziehungskredit — **sehr hohe Zinsen**, nur kurzfristig nutzen.",
+        "Limit verhandeln; Dispo durch günstigeren Ratenkredit ersetzen wenn länger nötig.",
+        "Frag: SCHUFA, Finanzen, Mindestlohn."
+      ]
+    },
+    {
+      keys: ["ratenkredit", "kredit aufnehmen", "privatkredit", "kredit vergleich"],
+      answers: [
+        "**Ratenkredit:** Zinsen vergleichen (effektiver Jahreszins), Laufzeit & Rate realistisch.",
+        "Kleine Druckstellen im Vertrag prüfen; Sondertilgung; nicht mehr leihen als nötig.",
+        "Frag: SCHUFA, Dispo, Finanzen."
+      ]
+    },
+    {
+      keys: ["baufinanzierung", "hypothek", "immobilienkredit", "haus finanzieren"],
+      answers: [
+        "**Baufinanzierung:** Eigenkapital (oft 20 %+), Zinsbindung, Tilgung, Nebenkosten (Grunderwerbsteuer, Notar).",
+        "Mehrere Angebote; Sondertilgung; Zins bei steigenden/fallenden Phasen absichern.",
+        "Frag: Eigenheim, Mietkaution, Finanzen."
+      ]
+    },
+    {
+      keys: ["nachsendeauftrag", "post nachsenden", "post ummelden", "deutsche post nachsende"],
+      answers: [
+        "**Nachsendeauftrag:** Post leitet 6–24 Monate weiter — online/dritte Postfiliale beantragen.",
+        "Nicht alle Absender (Pakete teils separat); Adresse überall parallel ummelden.",
+        "Frag: Umzug, Meldebescheinigung."
+      ]
+    },
+    {
+      keys: ["batterie entsorgung", "akkus entsorgen", "batterien recycling", "sondermuell batterie"],
+      answers: [
+        "**Batterien/Akkus:** Nie in Hausmüll — Sammelboxen im Handel oder Recyclinghof.",
+        "Lithium-Akkus brandgefährlich bei Beschädigung; Geräte-Akkus oft beim Händler.",
+        "Frag: Elektroschrott, Mülltrennung, Nachhaltigkeit."
+      ]
+    },
+    {
+      keys: ["pflegegrad", "pflegeversicherung", "pflege grad 1", "pflegeantrag"],
+      answers: [
+        "**Pflegegrad 1–5** = MDK-Begutachtung — Entlastung, Pflegegeld, Sachleistungen.",
+        "Antrag bei Pflegekasse; Beratung Pflegestützpunkt; Angehörigenpflege möglich.",
+        "Frag: Pflegeberuf, Gesundheit, Rentenversicherung."
+      ]
+    },
+    {
+      keys: ["visum", "aufenthaltstitel", "einreise deutschland", "visum beantragen"],
+      answers: [
+        "**Visum/Aufenthaltstitel:** Je nach Staatsangehörigkeit & Zweck — Botschaft/Konsulat oder Ausländerbehörde.",
+        "EU-Bürger: Freizügigkeit; Drittstaaten: Arbeit, Studium, Familie — Fristen & Dokumente.",
+        "Frag: Reisepass, Integration, Studium."
+      ]
+    },
+    {
+      keys: ["fuehrungszeugnis", "fuehrungszeugnis beantragen", "polizeiliches fuehrungszeugnis", "erweitertes fuehrungszeugnis"],
+      answers: [
+        "**Führungszeugnis:** Bürgeramt/online — Standard vs. erweitert (für Kinder/Jugendliche Arbeit).",
+        "Arbeitgeber darf nur bei sensiblen Jobs verlangen; Datenschutz beachten.",
+        "Frag: Bewerbung, Bürgeramt."
+      ]
+    },
+    {
+      keys: ["buergeramt", "einwohnermeldeamt", "buergerbuero", "termin buergeramt"],
+      answers: [
+        "**Bürgeramt:** Anmeldung, Ausweis, Führungszeugnis, Geburtsurkunde — oft Termin nötig.",
+        "Online-Termin buchen; Unterlagen mitbringen; Wartezeiten je nach Stadt.",
+        "Frag: Meldebescheinigung, Personalausweis, Umzug."
+      ]
+    },
+    {
+      keys: ["minijob", "midijob", "geringfuegige beschaeftigung", "450 euro job"],
+      answers: [
+        "**Minijob:** Verdienstgrenze (ca. 556 €/Monat 2024) — pauschale Abgaben, oft Rentenversicherung.",
+        "**Midijob (Gleitzone):** Höherer Verdienst, reduzierte Sozialabgaben — Steuer kann anfallen.",
+        "Frag: Arbeit, Lohnsteuer, Bewerbung."
+      ]
+    },
+    {
+      keys: ["praktikum", "praktikum finden", "pflichtpraktikum", "volontariat"],
+      answers: [
+        "**Praktikum:** Lernen & Netzwerk — Pflichtpraktika oft unbezahlt, trotzdem Rechte (Arbeitszeitgesetz).",
+        "Vertrag, Versicherung, Tätigkeitsbeschreibung; danach Referenz im Lebenslauf.",
+        "Frag: Bewerbung, Studium, Karriere."
+      ]
+    },
+    {
+      keys: ["werkstudent", "werkstudentenjob", "student job", "nebenjob studium"],
+      answers: [
+        "**Werkstudent:** Bis 20 h/Woche in Vorlesungszeit — geringere Sozialabgaben, Steuerfreibetrag.",
+        "Immatrikulationsbescheinigung vorlegen; nicht mit Minijob-Regeln verwechseln.",
+        "Frag: Studium, Minijob, Finanzen."
+      ]
+    },
+    {
+      keys: ["winterreifen", "winterreifenpflicht", "sommerreifen winter", "reifen wechseln"],
+      answers: [
+        "**Winterreifen (DE):** Bei Glatteis/Schnee/Matsch Pflicht — M+S/3PMSF-Symbol.",
+        "O bis O (Okt–Ostern) empfohlen; Profiltiefe min. 1,6 mm; Allwetterreifen möglich.",
+        "Frag: Auto, Verkehr, Bußgeld."
+      ]
+    },
+    {
+      keys: ["bussgeld", "verkehrsbussgeld", "blitzer", "knöllchen"],
+      answers: [
+        "**Bußgeld:** Verkehrsverstöße, Parken, Handy am Steuer — Einspruch innerhalb Frist möglich.",
+        "Punkte in Flensburg bei schweren Verstößen; Anhörungsbogen ernst nehmen.",
+        "Frag: Parken, Winterreifen, Punkte Flensburg."
+      ]
+    },
+    {
+      keys: ["punkte flensburg", "fahreignungsregister", "punkte verkehr", "fahrverbot"],
+      answers: [
+        "**Punkte (Flensburg):** Verkehrsverstöße sammeln Punkte — ab 8 oft Entzug, MPU möglich.",
+        "Tilgung nach Frist; Fahranfänger strenger; vorsorglich Fahrstil anpassen.",
+        "Frag: Bußgeld, Auto, Führerschein."
+      ]
+    },
+    {
+      keys: ["schulzeugnis", "zeugnis schule", "noten zeugnis", "abschlusszeugnis"],
+      answers: [
+        "**Schulzeugnis:** Noten + Verhalten — für Wechsel, Ausbildung, Studium wichtig.",
+        "Halbjahres-/Jahreszeugnis; Fehler prüfen lassen; Zeugnis der Klasse 10 = Abschluss.",
+        "Frag: Abitur, Bewerbung, Praktikum."
+      ]
+    },
+    {
+      keys: ["mietschulden", "miete nicht bezahlt", "raeumungsklage", "mietrueckstand"],
+      answers: [
+        "**Mietschulden:** Sofort mit Vermieter sprechen — Ratenzahlung, Beratung (Mieterverein).",
+        "Räumungsklage droht bei anhaltendem Rückstand; Wohngeld/Bürgergeld prüfen.",
+        "Frag: Mietrecht, Wohngeld, Mahnung."
+      ]
+    },
+    {
+      keys: ["widerruf", "widerrufsrecht", "online kaufen widerruf", "14 tage widerruf"],
+      answers: [
+        "**Widerruf (Online):** 14 Tage ab Erhalt — ohne Begründung (Ausnahmen: personalisiert, verderblich).",
+        "Schriftlich/E-Mail reicht; Rücksendekosten oft Käufer; Frist dokumentieren.",
+        "Frag: Gewährleistung, Online-Shopping, Verbraucherrecht."
+      ]
+    },
+    {
+      keys: ["gewaehrleistung", "garantie", "reklamation", "mangel ware", "umtausch"],
+      answers: [
+        "**Gewährleistung:** 2 Jahre bei Neuware (DE) — Mängel melden, Nacherfüllung (Reparatur/Tausch).",
+        "Garantie = freiwillig extra; Belege aufbewahren; Verbraucherzentrale bei Streit.",
+        "Frag: Widerruf, Reklamation, Verbraucherzentrale."
+      ]
+    },
+    {
+      keys: ["paypal", "klarna", "lastschrift", "sepa lastschrift", "zahlungsmethoden online"],
+      answers: [
+        "**Zahlungsarten:** PayPal = Zwischenkonto · Klarna = oft Raten/Kauf auf Rechnung · Lastschrift = Kontoabbuchung.",
+        "Käuferschutz prüfen; Rückbuchung bei Betrug schnell; keine PIN an Fremde.",
+        "Frag: Online-Shopping, Phishing, Finanzen."
+      ]
+    },
+    {
+      keys: ["girokonto", "kontowechsel", "girokonto wechseln", "bankkonto eroeffnen"],
+      answers: [
+        "**Girokonto:** Gehalt, Lastschrift, Karte — Gebühren vergleichen (Studenten oft gratis).",
+        "Kontowechselservice hilft Umzug; altes Konto erst nach Umstellung schließen.",
+        "Frag: Dispo, SCHUFA, Finanzen."
+      ]
+    },
+    {
+      keys: ["sparkonto", "tagesgeld", "festgeld", "geld anlegen sicher"],
+      answers: [
+        "**Sparen:** Tagesgeld = flexibel, Zinsen variabel · Festgeld = gebunden, oft höherer Zins.",
+        "Einlagensicherung bis 100.000 € pro Bank; Inflation schmälert realen Gewinn.",
+        "Frag: Inflation, ETF, Finanzen."
+      ]
+    },
+    {
+      keys: ["urlaubsanspruch", "urlaubstage", "urlaub arbeit", "resturlaub"],
+      answers: [
+        "**Urlaub (DE):** Mind. 20 Tage bei 5-Tage-Woche (ab 6 Monate Beschäftigung) — oft mehr im Vertrag.",
+        "Krankheit zählt nicht als Urlaub; Resturlaub bei Kündigung oft auszahlen/Planung.",
+        "Frag: Kündigung, Krankmeldung, Arbeit."
+      ]
+    },
+    {
+      keys: ["krankmeldung", "krankschreibung", "au arbeitsunfaehigkeit", "krankmelden arbeit"],
+      answers: [
+        "**Krankmeldung:** Arbeitgeber sofort informieren — AU (eAU) ab Tag 1 digital, Papier optional.",
+        "3 Tage oft ohne Attest (je Vertrag); länger = Arzt; Lohnfortzahlung 6 Wochen.",
+        "Frag: Urlaub, Arbeit, Gesundheit."
+      ]
+    },
+    {
+      keys: ["kindergeld", "kindergeld antrag", "kindergeld hoehe", "familienkasse"],
+      answers: [
+        "**Kindergeld:** Für jedes Kind (Höhe je nach Alter) — Antrag Familienkasse, steuerlich prüfen.",
+        "Kindergeld vs. Kinderfreibetrag im Steuerfall günstigeren wählen lassen.",
+        "Frag: Elterngeld, Elternzeit, Finanzen."
+      ]
+    },
+    {
+      keys: ["schwangerschaft", "schwanger", "schwangerschaft tipps", "trimester"],
+      answers: [
+        "**Schwangerschaft:** Vorsorge beim Frauenarzt/Hebamme — Ernährung, Bewegung, keine Selbstmedikation.",
+        "3 Trimester; Mutterschutz, Elternzeit & Elterngeld planen; Rauch/Alkohol meiden.",
+        "Frag: Elternzeit, Stillen, Gesundheit."
+      ]
+    },
+    {
+      keys: ["sonnenbrand", "hitzschlag", "dehydrierung", "sonne schutz"],
+      answers: [
+        "**Sonne/Hitze:** SPF 30+, Schatten 11–15 Uhr, trinken — Sonnenbrand kühlen, nicht aufkratzen.",
+        "Hitzschlag = Notfall (Verwirrung, hohe Temperatur) — 112; Dehydrierung: Kopfschmerz, dunkler Urin.",
+        "Frag: Erste Hilfe, Sommer, Gesundheit."
+      ]
+    },
+    {
+      keys: ["zeckenbiss", "zecken", "fsme impfung", "borreliose zecken"],
+      answers: [
+        "**Zecken:** Nach Aufenthalt suchen — langsam entfernen (Zeckenkarte), nicht drehen/ölen.",
+        "Rotes Wanderröte = Arzt (Borreliose); FSME-Impfung in Risikogebieten sinnvoll.",
+        "Frag: Impfung, Natur, Gesundheit."
+      ]
+    },
+    {
+      keys: ["vertrag kuendigen", "stromvertrag kuendigen", "handyvertrag kuendigen", "gasvertrag kuendigen"],
+      answers: [
+        "**Vertrag kündigen:** Schriftlich, Frist beachten (oft 1–3 Monate) — Sonderkündigungsrecht bei Umzug/Preiserhöhung.",
+        "Handy: Vertragsende oder Frist; Strom/Gas vergleichen (Wechsel lohnt); Bestätigung aufbewahren.",
+        "Frag: Umzug, Finanzen, Widerruf."
+      ]
+    },
+    {
+      keys: ["online shopping", "online einkaufen", "amazon shopping", "bestellen internet tipps"],
+      answers: [
+        "**Online-Shopping:** Bewertungen & Impressum prüfen, sichere Zahlung, Widerrufsrecht nutzen.",
+        "Zu guter Preis = Vorsicht; Originalverpackung bei Rückgabe; Phishing-Mails ignorieren.",
+        "Frag: Widerruf, PayPal, Gewährleistung."
+      ]
+    },
+    {
+      keys: ["steuererklaerung", "steuererklärung", "elster steuer", "steuer zurueck"],
+      answers: [
+        "**Steuererklärung:** Oft Pflicht bei Nebenjob/Zweitjob — ELSTER kostenlos, Frist 31.7. (ggf. verlängert).",
+        "Werbungskosten, Homeoffice-Pauschale, Sonderausgaben — Erstattung häufig bei Arbeitnehmern.",
+        "Frag: Lohnsteuer, Finanzen, Minijob."
+      ]
+    },
+    {
+      keys: ["mietminderung", "miete senken maengel", "mietrecht maengel", "miete reduzieren"],
+      answers: [
+        "**Mietminderung:** Bei erheblichen Mängeln (Heizung, Schimmel) — Mängel dokumentieren, Vermieter setzen.",
+        "Höhe angemessen; Miete nicht einfach kürzen ohne Grund; Mieterverein beraten.",
+        "Frag: Mietrecht, Schimmel, Mietschulden."
+      ]
+    },
+    {
+      keys: ["verbraucherzentrale", "verbraucherschutz", "verbraucher beratung", "verbraucherrecht"],
+      answers: [
+        "**Verbraucherzentrale:** Beratung zu Verträgen, Reklamation, Abzocke — oft kostenlos/günstig.",
+        "Musterbriefe online; gemeinsam mit Stiftung Warentest stark bei Kaufverträgen.",
+        "Frag: Gewährleistung, Mahnung, Online-Shopping."
+      ]
+    },
+    {
+      keys: ["elterngeld", "elterngeld antrag", "elterngeld plus", "basiselterngeld"],
+      answers: [
+        "**Elterngeld:** Bis 14 Monate (Kombi Eltern) — Basiselterngeld ca. 65 % Netto (Min/Max-Grenzen).",
+        "ElterngeldPlus für Teilzeit; Antrag nach Geburt, rückwirkend begrenzt.",
+        "Frag: Elternzeit, Kindergeld, Familie."
+      ]
+    },
+    {
+      keys: ["stillen", "stillzeit", "babynahrung", "beikost"],
+      answers: [
+        "**Stillen:** WHO empfiehlt ~6 Monate — Hebamme/Stillberatung bei Schmerzen.",
+        "Beikost ab ~5–7 Monate je Entwicklung; Allergene nicht pauschal meiden.",
+        "Frag: Schwangerschaft, Kindergeld, Gesundheit."
+      ]
+    },
+    {
+      keys: ["rentenversicherung", "rente deutschland", "rentenpunkte", "gesetzliche rente"],
+      answers: [
+        "**Rentenversicherung:** Pflicht in Arbeit — Entgeltpunkte sammeln, Renteninfo ab 27.",
+        "Frührente mit Abschlägen; private/berufliche Altersvorsorge zusätzlich sinnvoll.",
+        "Frag: Altersvorsorge, Arbeit, Finanzen."
+      ]
+    },
+    {
+      keys: ["arbeitslosengeld", "alg1", "arbeitslos melden", "agentur fuer arbeit"],
+      answers: [
+        "**ALG I:** Nach Anwartschaft (mind. 12 Mon. versichert) — Meldung **sofort** bei Jobverlust.",
+        "Höhe abhängig vom letzten Netto; Bewerbungen nachweisen; Nebenjob melden.",
+        "Frag: Kündigung, Bürgergeld, Bewerbung."
+      ]
+    },
+    {
+      keys: ["gehaltserhoehung", "gehalt erhoehen", "lohnerhoehung", "mehr gehalt"],
+      answers: [
+        "**Gehaltserhöhung:** Leistung + Markt vergleichen — Gespräch vorbereiten, konkrete Beispiele.",
+        "Nicht nur bei Kündigungsandrohung; Zwischenzeugnis, Weiterbildung als Argument.",
+        "Frag: Gehaltsverhandlung, Arbeitszeugnis, Karriere."
+      ]
+    },
+    {
+      keys: ["second hand", "flohmarkt", "kleinanzeigen", "vinted", "gebraucht kaufen"],
+      answers: [
+        "**Second Hand:** Günstiger & nachhaltig — Kleinanzeigen, Vinted, Flohmärkte, Tauschbörsen.",
+        "Bei Abholung sicher treffen; Zustand prüfen; Betrug: kein Vorkasse ohne Schutz.",
+        "Frag: Nachhaltigkeit, Online-Shopping, Finanzen."
+      ]
+    },
+    {
+      keys: ["passwort manager", "passwortmanager", "passwoerter sicher", "1password bitwarden"],
+      answers: [
+        "**Passwort-Manager:** Ein Master-Passwort, alle Logins verschlüsselt — einzigartige Passwörter pro Seite.",
+        "Bitwarden/1Password etc.; 2FA zusätzlich; niemals Passwörter wiederverwenden.",
+        "Frag: Cybersecurity, Phishing, 2FA."
+      ]
+    },
+    {
+      keys: ["zwei faktor", "2fa", "zwei faktor authentifizierung", "mfa sicherheit"],
+      answers: [
+        "**2FA** = Passwort + zweiter Faktor (App-Code, SMS, Hardware-Key) — Account-Schutz massiv besser.",
+        "Authenticator-App > SMS; Backup-Codes sicher aufbewahren.",
+        "Frag: Passwort-Manager, Phishing, Datenschutz."
+      ]
+    },
+    {
+      keys: ["cloud speicher", "google drive", "dropbox", "icloud backup", "daten sichern cloud"],
+      answers: [
+        "**Cloud-Speicher:** Dateien online syncen — Google Drive, Dropbox, iCloud; AGB & Verschlüsselung lesen.",
+        "Wichtiges zusätzlich lokal/extern sichern; sensible Daten ggf. verschlüsseln.",
+        "Frag: Backup, Datenschutz, Passwort-Manager."
+      ]
+    },
+    {
+      keys: ["esim", "prepaid", "roaming", "sim karte", "handyvertrag prepaid"],
+      answers: [
+        "**SIM/eSIM:** Prepaid = flexibel ohne Vertrag · eSIM digital aktivieren · Roaming in EU oft inklusive.",
+        "Vertrag vs. Prepaid vergleichen; Datenflat für Navigation; Auslandstarife prüfen.",
+        "Frag: Vertrag kündigen, Handy-Tipps, Reisen."
+      ]
+    },
+    {
+      keys: ["glasfaser", "dsl", "internet zuhause", "internetanbieter wechseln"],
+      answers: [
+        "**Internet zuhause:** Glasfaser = schnell & stabil · DSL über Telefonleitung · Kabel via TV-Netz.",
+        "Verfügbarkeit am Standort prüfen; Router/Mesh für große Wohnung; Mindestlaufzeit beachten.",
+        "Frag: WLAN, Vertrag kündigen, Smart Home."
+      ]
+    },
+    {
+      keys: ["mesh wlan", "wlan zuhause", "wifi verstaerker", "router einrichten"],
+      answers: [
+        "**WLAN zuhause:** Router zentral, 5 GHz für Speed, 2,4 GHz für Reichweite — Mesh bei großen Wohnungen.",
+        "WPA3/WPA2, eigenes Passwort; Firmware-Updates; Repeater nur als Notlösung.",
+        "Frag: Glasfaser, Cybersecurity, Smart Home."
+      ]
+    },
+    {
+      keys: ["pc langsam", "computer langsam", "windows langsam", "laptop beschleunigen"],
+      answers: [
+        "**PC langsam:** Autostart aufräumen, Speicher frei (SSD!), Updates, Malware-Scan.",
+        "RAM-Volllast prüfen; Browser-Tabs reduzieren; Neuinstallation nur als letzte Option.",
+        "Frag: Malware, Windows, Cybersecurity."
+      ]
+    },
+    {
+      keys: ["notgroschen", "finanzielle reserve", "notfall geld", "ruecklage haushalt"],
+      answers: [
+        "**Notgroschen:** 3–6 Monatsausgaben auf Tagesgeldkonto — für Jobverlust, Auto, Reparaturen.",
+        "Vor Investitionen aufbauen; nicht mit Dispo verwechseln; klein anfangen.",
+        "Frag: Sparkonto, Finanzen, Budget."
+      ]
+    },
+    {
+      keys: ["haushaltsbudget", "budget planen", "geldplan haushalt", "finanzplan monat"],
+      answers: [
+        "**Haushaltsbudget:** Einnahmen − Fixkosten − Sparziel = verfügbar — App oder Tabelle.",
+        "50/30/20-Regel als Start; Abos prüfen; realistisch tracken, nicht perfektionieren.",
+        "Frag: Notgroschen, Finanzen, Sparen."
+      ]
+    },
+    {
+      keys: ["depot", "etf depot", "broker wählen", "aktien depot eroeffnen"],
+      answers: [
+        "**Depot/ETF:** Broker vergleichen (Gebühren, Sparplan) — breit gestreute ETFs für Langfrist.",
+        "Nur Geld, das langfristig fehlen kann; Diversifikation; nicht auf Einzelaktien-Hype.",
+        "Frag: ETF, Inflation, Finanzen."
+      ]
+    },
+    {
+      keys: ["nachhilfe", "nachhilfe finden", "tutor schueler", "lernhilfe schule"],
+      answers: [
+        "**Nachhilfe:** Fachlich passend, klare Ziele, regelmäßige Termine — Schule/Uni-Listen, Plattformen.",
+        "Selbst erklären üben (Feynman); nicht nur Lösungen abschreiben.",
+        "Frag: Lernen, Hausaufgaben, Prüfungsangst."
+      ]
+    },
+    {
+      keys: ["pruefungsangst", "prüfungsangst", "pruefungsstress", "angst vor pruefung"],
+      answers: [
+        "**Prüfungsangst:** Vorbereitung + Schlaf + Atemübungen — Blackout normal, nicht alles auf eine Karte.",
+        "Probeklausuren, Lerngruppe; bei starker Angst Beratung/Stelle der Uni/Schule.",
+        "Frag: Lernen, Prüfung, Psychologie."
+      ]
+    },
+    {
+      keys: ["einsamkeit", "einsam fuehlen", "allein sein", "soziale isolation"],
+      answers: [
+        "**Einsamkeit:** Häufig & behandelbar — kleine Schritte: Hobby-Gruppe, Nachbar, regelmäßiger Kontakt.",
+        "Einsamkeit ≠ allein sein wollen; bei Depression Hilfe holen; Telefonseelsorge 0800 111 0 111.",
+        "Frag: Freundschaft, Psychologie, Soziale Angst."
+      ]
+    },
+    {
+      keys: ["freunde finden", "neue freunde", "freundschaft knuepfen", "anfreunden erwachsene"],
+      answers: [
+        "**Freunde finden:** Gemeinsame Aktivitäten (Sport, Verein, Kurs) > Smalltalk — regelmäßigkeit zählt.",
+        "Offen sein, zuhören, nicht sofort tiefe Erwartung; online auch OK, sicher treffen.",
+        "Frag: Einsamkeit, Konflikt, Hobby."
+      ]
+    },
+    {
+      keys: ["soziale angst", "sozialphobie", "angst vor menschen", "scheu vor gruppen"],
+      answers: [
+        "**Soziale Angst:** Angst vor Bewertung in Situationen — häufig, behandelbar (Therapie, Übung).",
+        "Kleine Expositionen; Atmung; nicht mit Introversion verwechseln.",
+        "Frag: Angst, Psychologie, Selbstvertrauen."
+      ]
+    },
+    {
+      keys: ["hund erziehung", "hundetraining", "welpenerziehung", "hund kommandos"],
+      answers: [
+        "**Hundeerziehung:** Konsequenz + positive Verstärkung — kurze Sessions, Geduld.",
+        "Sozialisierung früh; Hundeschule bei Problemen; Auslastung (Spaziergang, Kopfarbeit).",
+        "Frag: Haustier, Hund, Verantwortung."
+      ]
+    },
+    {
+      keys: ["zimmerpflanzen", "pflanzen pflege", "zimmerpflanze giessen", "pflanzen tipps"],
+      answers: [
+        "**Zimmerpflanzen:** Weniger gießen oft besser — Lichtbedarf beachten, Drainage, Staunässe vermeiden.",
+        "Finger-Test Erde; Staubsauger-Blätter; Umtopfen im Frühjahr.",
+        "Frag: Garten, Nachhaltigkeit, Wohnen."
+      ]
+    },
+    {
+      keys: ["friseur", "haarschnitt tipps", "haare schneiden", "frisur wahl"],
+      answers: [
+        "**Friseur/Haare:** Referenzfoto mitbringen, Gesichtsform & Pflege beachten — Schnitt alle 4–8 Wochen.",
+        "Selbst schneiden nur mit gutem Werkzeug; Pflegeprodukte nicht überladen.",
+        "Frag: Mode, Selbstvertrauen."
+      ]
+    },
+    {
+      keys: ["phishing email", "betrug email", "spam erkennen", "gefälschte mail"],
+      answers: [
+        "**Phishing-Mail:** Absender prüfen, Links nicht klicken, Anhänge misstrauen — Bank fragt nie per Mail nach PIN.",
+        "Direkt über offizielle Website/Nummer klären; melden & löschen.",
+        "Frag: Cybersecurity, Passwort-Manager, 2FA."
+      ]
+    },
+    {
+      keys: ["rueckenschmerz", "rückenschmerz", "nackenschmerz", "ruecken schmerzen", "verspannung ruecken"],
+      answers: [
+        "**Rücken/Nacken:** Oft Bewegungsmangel + Stress — kurz bewegen, wärmen, nicht lange steif liegen.",
+        "Rotes Flag: Taubheit, Unfall, Fieber → Arzt; ergonomischer Arbeitsplatz, Core-Training.",
+        "Frag: Fitness, Stress, Ergonomie."
+      ]
+    },
+    {
+      keys: ["muskelkater", "dehnen", "aufwaermen", "sport verletzung vorbeugen"],
+      answers: [
+        "**Muskelkater:** Mikrorisse nach ungewohnter Belastung — leichte Bewegung, Wärme, Zeit.",
+        "Aufwärmen vor Sport; Dehnen nach dem Training; kein „No pain no gain“ bei akuten Schmerzen.",
+        "Frag: Fitness, Rückenschmerz, Erste Hilfe."
+      ]
+    },
+    {
+      keys: ["einschlafen", "einschlaf stoerung", "schlafstoerung", "insomnie tipps"],
+      answers: [
+        "**Einschlafen:** Feste Schlafzeit, Bildschirm weg, kühles dunkles Zimmer — kein Grübeln forcieren.",
+        "Koffein nach 14 Uhr meiden; 20-Min-Regel: aufstehen wenn nicht müde.",
+        "Frag: Schlaf, Stress, Kaffee."
+      ]
+    },
+    {
+      keys: ["schnarchen", "schlafapnoe", "apnoe schlaf", "schnarchgeraete"],
+      answers: [
+        "**Schnarchen/Apnoe:** Atemaussetzer = Risiko — Schlafmedizin abklären, nicht ignorieren.",
+        "Gewicht, Alkohol, Rückenlage beeinflussen; Partner beobachten lassen.",
+        "Frag: Schlaf, Gesundheit, Rauchen aufhören."
+      ]
+    },
+    {
+      keys: ["abnehmen", "gesund abnehmen", "gewicht reduzieren", "uebergewicht"],
+      answers: [
+        "**Abnehmen:** Kalorien-Defizit langsam — mehr Protein, Bewegung, Schlaf; Crash-Diäten scheitern.",
+        "BMI nur grober Hinweis; Arzt bei starkem Übergewicht; Muskeln erhalten.",
+        "Frag: Ernährung, Fitness, Keto."
+      ]
+    },
+    {
+      keys: ["bmi", "body mass index", "uebergewicht untergewicht", "normalgewicht"],
+      answers: [
+        "**BMI** = Gewicht (kg) / Größe² (m) — grober Richtwert, ignoriert Muskelmasse.",
+        "18,5–24,9 oft „Normal“; allein nicht diagnostisch; Bauchumfang zusätzlich sinnvoll.",
+        "Frag: Abnehmen, Ernährung, Gesundheit."
+      ]
+    },
+    {
+      keys: ["laktoseintoleranz", "laktose", "milch vertragen", "laktosefrei"],
+      answers: [
+        "**Laktoseintoleranz:** Milchzucker nicht verdaut — Blähungen, Bauchschmerz; Laktose reduzieren/testen.",
+        "Hartkäse/Joghurt oft besser; lactase-Tabletten möglich; nicht mit Milchallergie verwechseln.",
+        "Frag: Ernährung, Gluten, Allergie."
+      ]
+    },
+    {
+      keys: ["nussallergie", "erdnussallergie", "nuss allergie", "anaphylaxie nuss"],
+      answers: [
+        "**Nussallergie:** Kann schwer sein — Notfall-Set (Adrenalin) bei Risiko; Etiketten lesen.",
+        "Kreuzkontamination in Küche/Restaurant; ärztliche Diagnose wichtig.",
+        "Frag: Allergie, Erste Hilfe, Ernährung."
+      ]
+    },
+    {
+      keys: ["insektenstich", "bienenstich", "wespenstich", "stich behandeln"],
+      answers: [
+        "**Insektenstich:** Stachel raus (nicht kneifen), kühlen, beobachten — Atemnot/ Schwellung groß → 112.",
+        "Allergie gegen Gift bekannt? Notfallplan; Mückenstiche jucken: kühlen, nicht kratzen.",
+        "Frag: Allergie, Erste Hilfe, Zeckenbiss."
+      ]
+    },
+    {
+      keys: ["sonnencreme", "hautpflege", "uv schutz", "lichtschutzfaktor"],
+      answers: [
+        "**Sonnenschutz:** SPF 30+ großzügig auftragen, erneuern — UVA+UVB, auch im Schatten.",
+        "Hautpflege: mild reinigen, Feuchtigkeit; Akne nicht ausdrücken.",
+        "Frag: Sonnenbrand, Akne, Gesundheit."
+      ]
+    },
+    {
+      keys: ["akne", "pickel", "hautunreinheiten", "mitesser"],
+      answers: [
+        "**Akne:** Talg + Bakterien + Hormone — sanfte Reinigung, nicht kneten; Sonne/Stress beeinflussen.",
+        "Bei starken Formen Dermatologe; keine Wundercremes ohne Rezept erhoffen.",
+        "Frag: Hautpflege, Ernährung, Stress."
+      ]
+    },
+    {
+      keys: ["schlaganfall", "schlaganfall erkennen", "fast test schlaganfall", "stroke"],
+      answers: [
+        "**Schlaganfall (FAST):** Face hängt? Arm schwach? Speech slurred? → **sofort 112**, Zeit ist Gehirn.",
+        "Keine Selbstmedikation; Ursachen: Bluthochdruck, Vorhofflimmern.",
+        "Frag: Herzinfarkt, Erste Hilfe, Gesundheit."
+      ]
+    },
+    {
+      keys: ["herzinfarkt", "herzinfarkt erkennen", "brustschmerz notfall", "herzschmerz"],
+      answers: [
+        "**Herzinfarkt:** Brustdruck, Ausstrahlung Arm/Kiefer, Übelkeit, Kaltschweiß → **112**, nicht fahren lassen.",
+        "Jede Minute zählt; Risikofaktoren: Rauchen, Blutdruck, Stress.",
+        "Frag: Schlaganfall, Erste Hilfe, Fitness."
+      ]
+    },
+    {
+      keys: ["zahnspange", "kieferorthopaedie", "zaehne richten", "aligner"],
+      answers: [
+        "**Zahnspange/Aligner:** Kieferorthopädie korrigiert Stellung — Jahre, Hygiene wichtig.",
+        "Kosten je nach Befund/Kasse; Retainer nach Behandlung tragen.",
+        "Frag: Zahnpflege, Gesundheit."
+      ]
+    },
+    {
+      keys: ["bruxismus", "zaeheneknirschen", "knirschschiene", "nachts knirschen"],
+      answers: [
+        "**Zähneknirschen:** Stress + Schlaf — Knirschschiene vom Zahnarzt, Entspannung.",
+        "Mahlflächen abgenutzt, Kopfschmerz morgens; nicht ignorieren.",
+        "Frag: Schlaf, Stress, Zahnpflege."
+      ]
+    },
+    {
+      keys: ["trockene augen", "bildschirm augen", "digitale augenbelastung", "augentropfen"],
+      answers: [
+        "**Trockene Augen:** Bildschirmpausen (20-20-20), Blinzeln, Feuchtigkeit — Raum nicht zu trocken.",
+        "Bei Dauerbeschwerden Augenarzt; Brille/Sehhilfe aktuell halten.",
+        "Frag: Brille, Handy-Tipps, Ergonomie."
+      ]
+    },
+    {
+      keys: ["trinkwasser", "wasser trinken", "wie viel wasser", "dehydrierung trinken"],
+      answers: [
+        "**Trinken:** ~1,5–2 L/Tag je Aktivität/Wetter — Durstgefühl reicht meist.",
+        "Urinfarbe hell = gut; zu viel auf einmal unnötig; Alkohol/Kaffee zusätzlich Wasser.",
+        "Frag: Dehydrierung, Sommer, Ernährung."
+      ]
+    },
+    {
+      keys: ["kaffee", "koffein", "kaffee gesund", "koffein wirkung"],
+      answers: [
+        "**Kaffee/Koffein:** Wachmacher, blockiert Adenosin — Toleranz möglich, Entzug = Kopfschmerz.",
+        "Nachmittags weniger für Schlaf; Schwangere/Blutdruck: Arzt fragen; nicht zu viel Energy.",
+        "Frag: Schlaf, Einschlafen, Gesundheit."
+      ]
+    },
+    {
+      keys: ["alkohol", "alkohol gesundheit", "alkohol konsum", "wie viel alkohol"],
+      answers: [
+        "**Alkohol:** Ethanol — Leber, Schlaf, Risiko Krebs/Unfälle steigen mit Menge.",
+        "Kein „gesundes“ Rauchen-Äquivalent; Grenzwerte niedrig halten; Sucht: Hilfe holen.",
+        "Frag: Rauchen aufhören, Schlaf, Gesundheit."
+      ]
+    },
+    {
+      keys: ["rauchen aufhoeren", "rauchstopp", "nikotinentzug", "zigaretten aufhoeren"],
+      answers: [
+        "**Rauchen aufhören:** Nikotinabhängigkeit — Datum setzen, Unterstützung (Arzt, Hotline), Rückfälle normal.",
+        "Pflaster/Kaugummi/Verhalten; Lunge erholt sich schrittweise; Gewichtszunahme möglich.",
+        "Frag: Gesundheit, Stress, Sucht."
+      ]
+    },
+    {
+      keys: ["e-scooter", "escooter", "elektroroller", "e roller verkehr"],
+      answers: [
+        "**E-Scooter:** Erlaubt auf Radwegen/Straße je Zone — Helm empfohlen, Alkohol = wie Auto.",
+        "Parken nicht auf Gehwegen blockierend; Versicherung & Kennzeichnung Pflicht.",
+        "Frag: Fahrrad, Verkehr, Bußgeld."
+      ]
+    },
+    {
+      keys: ["fahrradhelm", "fahrrad sicherheit", "radfahren sicher", "fahrradlicht"],
+      answers: [
+        "**Fahrrad-Sicherheit:** Helm schützt · Licht vorne/hinten · Klingel · Blickkontakt im Verkehr.",
+        "Handzeichen, nicht auf dem Gehweg rasen; Regeln wie Kraftfahrzeuge an Kreuzungen.",
+        "Frag: E-Scooter, Verkehr, Fitness."
+      ]
+    },
+    {
+      keys: ["schwimmen lernen", "schwimmkurs", "schwimmen anfaenger", "wasser sicherheit"],
+      answers: [
+        "**Schwimmen lernen:** Kurs mit Aufsicht — Seepferdchen für Kinder; nie allein ohne Schwimmkenntnisse.",
+        "Regeln: nicht nach Sprung springen, Strömung beachten, Kälte.",
+        "Frag: Erste Hilfe, Sommer, Fitness."
+      ]
+    },
+    {
+      keys: ["zahnseide", "mundhygiene", "zaehne putzen", "zahnfleisch pflege"],
+      answers: [
+        "**Mundhygiene:** 2× täglich putzen, **Zahnseide**/Zwischenraumbürsten — Zahnfleisch nicht vergessen.",
+        "Zahnarzt 2×/Jahr; Mundgeruch oft Zähne/Zunge; nicht zu hart scrubben.",
+        "Frag: Zahnpflege, Zahnspange, Gesundheit."
+      ]
+    },
+    {
+      keys: ["ergonomie", "ergonomischer arbeitsplatz", "schreibtisch hoehe", "homeoffice ergonomie"],
+      answers: [
+        "**Ergonomie:** Monitor auf Augenhöhe, Arme 90°, Füße flach — Stuhl mit Lordosenstütze.",
+        "Alle 30–60 Min. bewegen; Laptop erhöhen + externe Tastatur.",
+        "Frag: Rückenschmerz, Homeoffice, Bildschirm-Augen."
+      ]
+    },
+    {
+      keys: ["laerm wohnung", "lärm nachbarn", "schallschutz", "laermschutz nacht"],
+      answers: [
+        "**Lärm:** Nachtruhe 22–6 Uhr (lokal variiert) — Gespräch zuerst, Hausverwaltung/Polizei bei Eskalation.",
+        "Teppiche, Möbel entkoppeln, Kopfhörer; eigene Lautstärke checken.",
+        "Frag: Nachbarschaft, Mietrecht, Konflikt."
+      ]
+    },
+    {
+      keys: ["tierarzt", "tierarzt kosten", "impfung hund", "impfung katze"],
+      answers: [
+        "**Tierarzt:** Jährliche Checks, Impfungen (Tollwut etc.) — Kosten einplanen, Tierversicherung optional.",
+        "Notfall: erreichbarer Tier-Notdienst; Impfpass aufbewahren.",
+        "Frag: Haustier, Hundeerziehung, Versicherung."
+      ]
+    },
+    {
+      keys: ["hundekot", "hundekotbeutel", "gassi gehen regeln", "hundepflichten"],
+      answers: [
+        "**Hundekot:** Auf öffentlichem Grund **immer** einsammeln & entsorgen — Leine wo vorgeschrieben.",
+        "Beutel mitführen; Kot nicht in Biotonne; andere Hunde respektieren.",
+        "Frag: Hundeerziehung, Nachhaltigkeit, Haustier."
+      ]
+    },
+    {
+      keys: ["wg suche", "wohngemeinschaft", "wg finden", "mitbewohner"],
+      answers: [
+        "**WG-Suche:** Probefrühstück, Putzplan & Kosten klären — schriftlicher Mietvertrag auch in WG.",
+        "Gemeinsame Regeln (Lärm, Gäste, Küche); Kaution & Nebenkosten transparent.",
+        "Frag: Wohnen, Mietrecht, Umzug."
+      ]
+    },
+    {
+      keys: ["wohnungsbesichtigung", "besichtigung wohnung", "wohnung angucken", "checkliste besichtigung"],
+      answers: [
+        "**Besichtigung:** Lage (Lärm, ÖPNV), Feuchtigkeit/Schimmel, Heizung testen — tagsüber schauen.",
+        "Mietvertrag-Muster lesen, Nebenkosten, Kaution; Fotos für später.",
+        "Frag: Mietrecht, Schimmel, Umzug."
+      ]
+    },
+    {
+      keys: ["ausbildungsplatz", "ausbildung finden", "azubi bewerbung", "lehrstelle"],
+      answers: [
+        "**Ausbildung:** Bewerbung wie Job — Praktika, Handwerk/Industrie/Kaufmännisch; IHK/Kammer Infos.",
+        "Gehalt steigt oft jährlich; Vertrag prüfen; Übernahmechance.",
+        "Frag: Bewerbung, Praktikum, Karriere."
+      ]
+    },
+    {
+      keys: ["betriebsrat", "betriebsvereinbarung", "mitbestimmung", "arbeitnehmervertretung"],
+      answers: [
+        "**Betriebsrat:** Gewählte Vertretung der Belegschaft — Mitbestimmung bei Sozial-/Personalfragen.",
+        "Nicht ersetzt Gewerkschaft; vertrauliche Ansprechpartner intern.",
+        "Frag: Gewerkschaft, Arbeit, Kündigung."
+      ]
+    },
+    {
+      keys: ["bewerbung email", "bewerbung per email", "anschreiben email", "betreff bewerbung"],
+      answers: [
+        "**Bewerbung per E-Mail:** Betreff klar (*Bewerbung als …*), PDF-Anhang, kurz höflich.",
+        "Lebenslauf + Anschreiben eine PDF oder sauber benannt; Größe < 5 MB.",
+        "Frag: Lebenslauf, Vorstellungsgespräch, Karriere."
+      ]
+    },
+    {
+      keys: ["online vorstellungsgespraech", "video interview", "teams bewerbung", "zoom bewerbung"],
+      answers: [
+        "**Online-Interview:** Kamera/Mikro testen, ruhiger Hintergrund, Licht von vorne.",
+        "Pünktlich einwählen; Blick in Kamera; Notizen erlaubt, Handy stumm.",
+        "Frag: Vorstellungsgespräch, Homeoffice, Bewerbung."
+      ]
+    },
+    {
+      keys: ["numerus clausus", "nc medizin", "nc psychologie", "zulassungsbeschraenkung"],
+      answers: [
+        "**NC** = Noten-basierte Zulassungsgrenze — schwankt je Semester/Hochschule.",
+        "Warten, Ausland, Quereinstieg, Alternativen prüfen; dosv.de für Medizin etc.",
+        "Frag: Studium, Abitur, Bewerbung."
+      ]
+    },
+    {
+      keys: ["semesterferien", "semesterferien planen", "vorlesungsfreie zeit", "uni ferien"],
+      answers: [
+        "**Semesterferien:** Praktikum, Reisen, Lernen für Prüfungen — nicht nur Pause.",
+        "Rente/Semesterbeitrag trotzdem; Wohnung behalten oder untervermieten (Vermieter!).",
+        "Frag: Studium, Praktikum, Reisen."
+      ]
+    },
+    {
+      keys: ["gehoerschutz", "gehörschutz", "lautstaerke konzert", "ohren schuetzen"],
+      answers: [
+        "**Gehörschutz:** >85 dB schädigt dauerhaft — Ohrstöpsel/ Kapselgehörschutz bei Konzert/Motor.",
+        "Pausen einlegen; Kopfhörer nicht zu laut (60/60-Regel).",
+        "Frag: Konzert, Gesundheit, Lärm."
+      ]
+    },
+    {
+      keys: ["bildschirmzeit", "bildschirmzeit kinder", "handy kinder", "medienerziehung"],
+      answers: [
+        "**Bildschirmzeit:** Altersgerechte Limits, gemeinsame Regeln — Schlaf & Bewegung zuerst.",
+        "Inhalte mitreden, nicht nur Dauer; Vorbild sein; kindgerechte Apps.",
+        "Frag: Erziehung, Schlaf, Cybermobbing."
+      ]
+    },
+    {
+      keys: ["mediation", "schlichtung", "konflikt mediation", "streit schlichten"],
+      answers: [
+        "**Mediation:** Neutraler Mediator hilft Lösung finden — freiwillig, vertraulich.",
+        "Arbeit, Familie, Nachbarschaft; günstiger als Gericht; Vereinbarung schriftlich.",
+        "Frag: Konflikt, Scheidung, Nachbarschaft."
+      ]
+    },
+    {
+      keys: ["heizen sparen", "heizkosten senken", "richtig heizen", "heizung einstellen"],
+      answers: [
+        "**Heizen sparen:** Nachtabsenkung, Türen zu, 20–22 °C Wohnen — Stoßlüften statt Kipp.",
+        "Thermostate nicht verdecken; Wartung; Dämmung langfristig.",
+        "Frag: Nebenkosten, Strom sparen, Wärmepumpe."
+      ]
+    },
+    {
+      keys: ["fahrschule", "fuehrerschein", "führerschein", "fahrstunden", "theoriepruefung"],
+      answers: [
+        "**Führerschein:** Theorie + Praxis in Fahrschule — Klasse B = Pkw, Kosten planen (mehrere tausend €).",
+        "Probezeit 2 Jahre, 0,0 Promille; MPU bei Auffälligkeiten.",
+        "Frag: Auto, Verkehr, Bußgeld."
+      ]
+    },
+    {
+      keys: ["gebrauchtwagen", "auto kaufen", "auto kauf tipps", "occasion pruefen"],
+      answers: [
+        "**Gebrauchtwagen:** HU/AU, Serviceheft, Unfallhistorie (z. B. Datenbank) — Probefahrt & unabhängige Prüfung.",
+        "Vertrag schriftlich, Gewährleistung klären; nicht unter Druck unterschreiben.",
+        "Frag: Kfz-Versicherung, TÜV, Finanzen."
+      ]
+    },
+    {
+      keys: ["tuev", "hauptuntersuchung", "hu au auto", "inspektion auto"],
+      answers: [
+        "**HU/AU (TÜV):** HU alle 2 Jahre (Neuwagen später) — sicherheitsrelevant; AU = Abgas.",
+        "Mängel beheben vor Termin; Plakette am Kennzeichen.",
+        "Frag: Gebrauchtwagen, Auto-Wartung."
+      ]
+    },
+    {
+      keys: ["auto wartung", "oelwechsel", "ölwechsel", "inspektion service auto"],
+      answers: [
+        "**Auto-Wartung:** Öl, Filter, Bremsen nach Hersteller-Intervall — Werkstatt oder selbst (Öl).",
+        "Reifendruck monatlich; Flüssigkeiten checken; Rost früh behandeln.",
+        "Frag: TÜV, Winterreifen, Gebrauchtwagen."
+      ]
+    },
+    {
+      keys: ["autounfall", "unfall auto was tun", "verkehrsunfall", "unfallstelle"],
+      answers: [
+        "**Autounfall:** Unfallstelle sichern (Warndreieck, Weste) — **112** bei Verletzten, Polizei bei Streit/Schaden.",
+        "Fotos, Daten tauschen, Versicherung melden; nicht vorschnell Schuld eingestehen.",
+        "Frag: Bußgeld, Kfz-Versicherung, Erste Hilfe."
+      ]
+    },
+    {
+      keys: ["kfz versicherung", "autoversicherung", "haftpflicht auto", "vollkasko teilkasko"],
+      answers: [
+        "**Kfz-Versicherung:** Haftpflicht Pflicht · Teilkasko (Diebstahl, Glas, Tier) · Vollkasko (+ eigene Schäden).",
+        "SF-Klassen senken Prämie; jährlich vergleichen; Fahrer & Nutzung angeben.",
+        "Frag: Versicherung, Autounfall, Gebrauchtwagen."
+      ]
+    },
+    {
+      keys: ["tanken sparen", "benzin sparen", "sprit sparen", "verbrauch senken auto"],
+      answers: [
+        "**Sprit sparen:** Vorausschauend fahren, Reifendruck, unnötiges Gewicht raus — App-Preisvergleich beim Tanken.",
+        "Motor warmlaufen lassen: kurz; Spritmonitor im Auto nutzen.",
+        "Frag: E-Auto, Carsharing, Finanzen."
+      ]
+    },
+    {
+      keys: ["carsharing", "carsharing app", "miles share now", "auto teilen"],
+      answers: [
+        "**Carsharing:** Auto per App mieten (Minuten/Stunden) — Parkplätze in Städten, Führerschein nötig.",
+        "Schäden dokumentieren vor Fahrt; Zone & Tankregel lesen.",
+        "Frag: E-Scooter, ÖPNV, Tanken sparen."
+      ]
+    },
+    {
+      keys: ["mitfahrgelegenheit", "blablacar", "fahrgemeinschaft", "mitfahren sparen"],
+      answers: [
+        "**Mitfahrgelegenheit:** Günstiger als Bahn/Flug auf Strecke — Bewertungen lesen, Treffpunkt öffentlich.",
+        "Zahlung über Plattform; Sicherheit: jemandem Bescheid sagen.",
+        "Frag: Reisen, Carsharing, Sicherheit online."
+      ]
+    },
+    {
+      keys: ["schneeketten", "schneeketten pflicht", "winter fahren berg", "glatteis fahren"],
+      answers: [
+        "**Schneeketten:** Bei Schnee/Eis in Bergen oft Pflicht — vor Anstieg montieren, max. Temp beachten.",
+        "Langsam fahren, kein Vollgas; Winterreifen + Ketten kombinieren wo nötig.",
+        "Frag: Winterreifen, Autounfall, Reisen."
+      ]
+    },
+    {
+      keys: ["bahn fahren", "zug fahren tipps", "deutsche bahn tipps", "bahn reisen"],
+      answers: [
+        "**Bahnfahrt:** Früh buchen spart · **Deutschland-Ticket** für Regional · Verspätung: Fahrgastrechte.",
+        "Anschluss prüfen, Ausweis dabei; ICE Reservierung optional.",
+        "Frag: Deutschland-Ticket, Flugverspätung, Reisen."
+      ]
+    },
+    {
+      keys: ["flugverspaetung", "flug annulliert", "fluggastrechte", "entschaedigung flug"],
+      answers: [
+        "**Flugverspätung:** EU-Rechte ab 3 h oft Essen/Kommunikation · Annullierung: Umleitung oder Erstattung.",
+        "Schriftlich bei Airline, EU-Formular; Reiseversicherung prüfen.",
+        "Frag: Reiseversicherung, Flughafen, Reisen."
+      ]
+    },
+    {
+      keys: ["reiseversicherung", "auslandskrankenversicherung", "reisekrankenversicherung", "annullierung versicherung"],
+      answers: [
+        "**Reiseversicherung:** Auslandskranken wichtig (Kosten hoch) · Annullierung optional · Gepäck.",
+        "Kreditkarte manchmal Basis-Schutz — Bedingungen lesen.",
+        "Frag: Flugverspätung, Reisepass, Gesundheit."
+      ]
+    },
+    {
+      keys: ["packliste", "packliste urlaub", "reise packen", "was einpacken reise"],
+      answers: [
+        "**Packliste:** Ausweis, Medikamente, Ladegerät, Adapter — weniger ist mehr, Wäscheplan.",
+        "Handgepäck: Flüssigkeiten 100 ml; Wertsachen & Wechselkleidung dabei.",
+        "Frag: Flughafen, Reiseversicherung, Reisen."
+      ]
+    },
+    {
+      keys: ["jetlag", "zeitverschiebung", "jet lag tipps", "umstellung zeitzone"],
+      answers: [
+        "**Jetlag:** Licht & Schlaf an Zielzeit anpassen — hin: früh hell, zurück: abends hell.",
+        "Koffein sparsam, viel trinken; 1 Tag pro Stunde Zeitverschiebung grob.",
+        "Frag: Zeitumstellung, Schlaf, Reisen."
+      ]
+    },
+    {
+      keys: ["geld ausland", "waehrung tauschen", "währung reise", "kreditkarte ausland"],
+      answers: [
+        "**Geld im Ausland:** Karte oft günstiger als Wechselstuben am Flughafen — Fremdwährungsgebühr prüfen.",
+        "Bargeld-Notreserve; EC/Giro teils eingeschränkt; Reisekarte informieren.",
+        "Frag: Reiseversicherung, Packliste, Finanzen."
+      ]
+    },
+    {
+      keys: ["kulturschock", "kultur schock reise", "fremde kultur ankommen", "culture shock"],
+      answers: [
+        "**Kulturschock:** Normale Phasen bei längerem Aufenthalt — Neugier, Geduld, lokale Regeln lernen.",
+        "Nicht alles vergleichen; Kontakte vor Ort; Heimweh normal.",
+        "Frag: Reisen, Sprachen lernen, Einsamkeit."
+      ]
+    },
+    {
+      keys: ["notfall ausland", "botschaft hilfe", "pass verloren ausland", "hilfe im ausland"],
+      answers: [
+        "**Notfall Ausland:** **Botschaft/Konsulat** bei Passverlust, Haft, schwerer Krise — Ausweiskopie vorher speichern.",
+        "EU: E111/EHIC Kranken · Reiseversicherung-Hotline · Familie informieren.",
+        "Frag: Reisepass, Reiseversicherung, Visum."
+      ]
+    },
+    {
+      keys: ["fussgaenger", "fussgaenger zone", "vorfahrt fussgaenger", "zebrastreifen"],
+      answers: [
+        "**Fußgänger:** Zebrastreifen = Vorfahrt wenn drauf · Handy weg · Kinder an der Hand.",
+        "Fußgängerzone: Radfahren nur wenn erlaubt; Blickkontakt mit Autos.",
+        "Frag: Fahrrad, Verkehr, Bußgeld."
+      ]
+    },
+    {
+      keys: ["hund anmelden", "hundesteuer", "hund registrieren", "hund melden gemeinde"],
+      answers: [
+        "**Hund anmelden:** In vielen Gemeinden meldepflichtig + **Hundesteuer** — Tierarzt, Chip, Haftpflicht oft Pflicht.",
+        "Maulkorb/Leinenpflicht je nach Ort; Kot entsorgen.",
+        "Frag: Hundeerziehung, Tierarzt, Haftpflicht."
+      ]
+    },
+    {
+      keys: ["katze haltung", "katze pflege", "katzenhaltung", "katze allein lassen"],
+      answers: [
+        "**Katzenhaltung:** Auslastung (Spiel, Kratzbaum), sauberes Klo, Tierarzt & Impfung.",
+        "Nicht zu lange allein ohne Beschäftigung; Auslauf nur sicher (Balkonnetz).",
+        "Frag: Haustier, Tierarzt, Hundeerziehung."
+      ]
+    },
+    {
+      keys: ["kaninchen", "meerschweinchen", "kleintier haltung", "hamster haltung"],
+      answers: [
+        "**Kleintiere:** Artgerechtes Gehege, Futter, Tierarzt — nicht zu klein, nicht in Zugluft.",
+        "Kaninchen/Meerschweinchen oft paarweise; tägliche Pflege.",
+        "Frag: Haustier, Tierarzt, Aquarium."
+      ]
+    },
+    {
+      keys: ["ebike", "e-bike", "pedelec", "fahrrad akku", "elektro fahrrad regeln"],
+      answers: [
+        "**E-Bike/Pedelec:** Pedelec bis 25 km/h + Tretunterstützung oft wie Fahrrad · S-Pedelec = Versicherungskennzeichen & Helm.",
+        "Akku pflegen, nicht voll entladen; Diebstahlschutz wichtig.",
+        "Frag: Fahrradhelm, Fahrrad Diebstahl, Verkehr."
+      ]
+    },
+    {
+      keys: ["fahrrad diebstahl", "fahrrad gestohlen", "fahrrad sichern", "fahrrad schloss"],
+      answers: [
+        "**Fahrrad-Diebstahl:** Qualitätsschloss + festen Anker · Rahmennummer notieren, Polizei + Versicherung.",
+        "GPS-Tracker optional; nicht nur am Vorderrad.",
+        "Frag: E-Bike, Bußgeld, Versicherung."
+      ]
+    },
+    {
+      keys: ["fahrrad reparatur", "fahrrad platten", "kette fahrrad", "fahrrad kaputt"],
+      answers: [
+        "**Fahrrad-Reparatur:** Platten: Ersatzschlauch/Kit · Kette ölen, Verschleiß checken.",
+        "Werkstatt bei E-Bike-Motor/Akku; jährliche Inspektion sinnvoll.",
+        "Frag: E-Bike, Fahrradhelm, Outdoor."
+      ]
+    },
+    {
+      keys: ["grillen balkon", "grillen nachbarn", "balkon grillen erlaubt", "grillparty laerm"],
+      answers: [
+        "**Grillen auf Balkon:** Mietvertrag/Hausordnung lesen — Rauch & Geruch können **Lärm-/Ruhestörung** sein.",
+        "Nachbarn vorher informieren, Ruhezeiten einhalten, Elektrogrill oft unproblematischer.",
+        "Frag: Lärmbelästigung, Nachbarn, Mietrecht."
+      ]
+    },
+    {
+      keys: ["laermbelaestigung", "laerm nachbarn", "musik zu laut", "ruhestoerung nachbarn"],
+      answers: [
+        "**Lärmbelästigung:** Ruhezeiten (meist 22–6 Uhr, Mittagsruhe) — zuerst freundlich reden, dokumentieren.",
+        "Hausverwaltung, ggf. Ordnungsamt/Mediation; Mietminderung nur in schweren Fällen.",
+        "Frag: Nachbarn, Mediation, Mietrecht."
+      ]
+    },
+    {
+      keys: ["eigenbedarf", "kuendigung eigenbedarf", "vermieter kuendigung wohnung", "mieter kuendigung wohnung"],
+      answers: [
+        "**Eigenbedarf-Kündigung:** Vermieter will selbst/für Angehörige einziehen — Fristen & Begründung prüfen.",
+        "Mieter: Widerspruch/Anwalt bei Zweifel; Ausgleich/ Fristverlängerung verhandeln.",
+        "Frag: Mietrecht, Mieterhöhung, Umzug."
+      ]
+    },
+    {
+      keys: ["mietnomade", "mieter zahlt nicht", "mietnomaden", "mietausfall"],
+      answers: [
+        "**Mietausfall:** Mahnung, Räumungsklage — Vorsorge: Schufa, Mietsicherheit, Kaution.",
+        "„Mietnomade“ ist kein juristischer Begriff; Fristen & Verfahren einhalten.",
+        "Frag: Mietschulden, Mietkaution, Mietrecht."
+      ]
+    },
+    {
+      keys: ["ordnungsamt", "ordnungsamt meldung", "ordnungswidrigkeit melden", "beschwerde ordnungsamt"],
+      answers: [
+        "**Ordnungsamt:** Meldung bei Lärm, Müll, Parkverstößen — sachlich, Ort/Zeit, ggf. Fotos.",
+        "Nicht für alle Streitigkeiten zuständig; Polizei bei Gefahr.",
+        "Frag: Lärmbelästigung, Bußgeld, Nachbarn."
+      ]
+    },
+    {
+      keys: ["rasen pflege", "unkraut garten", "rasenmaehen", "garten unkraut"],
+      answers: [
+        "**Rasen & Unkraut:** Regelmäßig mähen, nicht zu kurz — Unkraut jäten oder Mulch, wenig Herbizid.",
+        "Boden lockern, düngen nach Bedarf; Trockenheit gießen.",
+        "Frag: Garten, Kompost, Tomaten."
+      ]
+    },
+    {
+      keys: ["tomaten anbau", "tomaten pflanzen", "gemuese garten", "hochbeet"],
+      answers: [
+        "**Tomaten:** Warm, viel Licht — auspflanzen nach Eisheiligen, Stütze, regelmäßig gießen.",
+        "Hochbeet/Balkon möglich; Blatt unten entfernen gegen Pilz.",
+        "Frag: Garten, Balkongarten, Kompost."
+      ]
+    },
+    {
+      keys: ["balkongarten", "balkon bepflanzen", "kraeuter balkon", "balkon pflanzen tipps"],
+      answers: [
+        "**Balkongarten:** Kübel mit Drainage, passende Größe — Kräuter, Tomaten, Salat für Anfänger.",
+        "Wind/Sonne beachten; nicht zu viel auf einmal gießen.",
+        "Frag: Zimmerpflanzen, Tomaten, Urban Gardening."
+      ]
+    },
+    {
+      keys: ["motorrad fuehrerschein", "motorrad führerschein", "fuehrerschein klasse a", "motorrad fahren lernen"],
+      answers: [
+        "**Motorrad-Führerschein:** Klasse A/A2/A1 je nach Alter/Leistung — Theorie + Praxis, Schutzkleidung Pflicht.",
+        "StVO & Sichtbarkeit; Anfänger: Sicherheitstraining.",
+        "Frag: Fahrschule, Verkehr, Bußgeld."
+      ]
+    },
+    {
+      keys: ["babysitter", "babysitter finden", "kinderbetreuung abends", "aufsitzen kind"],
+      answers: [
+        "**Babysitter:** Empfehlungen, Kennenlernen, Notfallnummern — Erste-Hilfe-Kurs sinnvoll.",
+        "Regeln & Schlafzeiten schriftlich; jüngere Kinder nie allein lange.",
+        "Frag: Kita, Eltern, Erste Hilfe."
+      ]
+    },
+    {
+      keys: ["hausapotheke", "medikamente zuhause", "apotheke haushalt", "notfall haus"],
+      answers: [
+        "**Hausapotheke:** Pflaster, Fieberthermometer, Schmerzmittel (passend), Wunddesinfektion — Ablauf checken.",
+        "Kinder gesichert lagern; bei Unsicherheit Apotheke/Arzt.",
+        "Frag: Erste Hilfe, Erkältung, Reiseapotheke."
+      ]
+    },
+    {
+      keys: ["ware retournieren", "rueckgabe online", "rückgabe online shop", "retoure paket"],
+      answers: [
+        "**Online-Rückgabe:** 14 Tage Widerruf bei Fernabsatz — Rücksendung dokumentieren, Frist einhalten.",
+        "Zustand wie erhalten; Geld zurück nach Erhalt; Ausnahmen (Hygiene) beachten.",
+        "Frag: Widerrufsrecht, Gewährleistung, Verbraucherzentrale."
+      ]
+    },
+    {
+      keys: ["spam anrufe", "anruf spam", "werbeanrufe blockieren", "call center nervt"],
+      answers: [
+        "**Spam-Anrufe:** Nicht rangehen bei Unbekannten, Nummer blockieren — Liste „keine Werbung“ hilft begrenzt.",
+        "Nie Daten am Telefon geben; Meldung bei Verbraucherzentrale/Bundesnetzagentur.",
+        "Frag: Phishing, Datenschutz, Verbraucherzentrale."
+      ]
+    },
+    {
+      keys: ["passwort gehackt", "datenleck", "account gehackt", "was tun bei hack"],
+      answers: [
+        "**Account gehackt:** Sofort Passwort ändern (unique), 2FA aktivieren — andere Konten mit gleichem Passwort.",
+        "Gerät scannen, Bank/Karte prüfen; Meldung an Anbieter.",
+        "Frag: 2FA, Passwort-Manager, Phishing."
+      ]
+    },
+    {
+      keys: ["was ist ein auto", "wie funktioniert ein auto", "auto einfach", "was ist ein pkw"],
+      answers: [
+        "**Auto:** Fahrzeug mit Motor — treibt Raeder an, lenkt mit Lenkrad, bremst mit Bremsen.",
+        "Kern: Motor → Getriebe → Raeder. Benzin/Strom/Elektro als Energie.",
+        "Sicherheit: Gurt, Airbag, regelmaessige Wartung. Fuehrerschein noetig.",
+        "Frag: Was ist ein Elektroauto? · Verkehr · Umwelt."
+      ]
+    },
+    {
+      keys: ["was ist ein computer", "was ist pc", "computer einfach", "was ist laptop"],
+      answers: [
+        "**Computer:** Elektronisches Geraet das Daten verarbeitet — CPU, RAM, Speicher, Ein-/Ausgabe.",
+        "Software (Programme) + Hardware (Teile). Beispiele: Browser, Spiele, Text.",
+        "Laptop = mobiler PC. Smartphone = kleiner Computer mit Touch.",
+        "Frag: Was ist Programmierung? · Internet · KI."
+      ]
+    },
+    {
+      keys: ["was ist wifi", "wlan", "was ist wlan", "internet zuhause"],
+      answers: [
+        "**WLAN/WiFi:** Drahtloses Netzwerk zuhause — Router verbindet Internet mit Geraeten.",
+        "Passwort schuetzt das Netz. 2.4 GHz = Reichweite, 5 GHz = schneller nah.",
+        "Tipps: Router zentral, Updates, starkes Passwort.",
+        "Frag: Wie funktioniert das Internet? · Cybersicherheit."
+      ]
+    },
+    {
+      keys: ["was ist email", "e-mail", "elektronische post"],
+      answers: [
+        "**E-Mail:** Digitale Nachricht ueber Internet — Adresse wie name@anbieter.de.",
+        "Anhang fuer Dateien. Spam-Filter und Vorsicht bei Links.",
+        "Geschaeftlich und privat wichtig — professionelle Adresse hilft.",
+        "Frag: Phishing · Datenschutz · Internet."
+      ]
+    },
+    {
+      keys: ["was ist fussball", "fussball einfach", "was ist soccer"],
+      answers: [
+        "**Fussball:** Teams versuchen mit dem Fuss den Ball ins gegnerische Tor zu schiessen.",
+        "11 Spieler pro Team · 2 Halbzeiten · nur Torwart darf in der eigenen Strafraum mit Haenden spielen.",
+        "WM, Champions League, Bundesliga — groesster Sport weltweit.",
+        "Frag: Was ist Sport? · Fair Play · Teamwork."
+      ]
+    },
+    {
+      keys: ["was ist schwimmen", "schwimmen lernen", "schwimmen einfach"],
+      answers: [
+        "**Schwimmen:** Fortbewegung im Wasser — Arme, Beine, Atmung koordinieren.",
+        "Stile: Brust, Kraul, Ruecken, Schmetterling. Schwimmen trainiert den ganzen Koerper.",
+        "Sicherheit: nie allein, Aufsicht bei Kindern, in flachem Wasser ueben.",
+        "Frag: Gesundheit · Sport · Sicherheit im Wasser."
+      ]
+    },
+    {
+      keys: ["was ist hund", "was ist ein hund", "hunde einfach"],
+      answers: [
+        "**Hund:** Haus-Tier und bester Freund des Menschen — loyal, trainierbar, sozial.",
+        "Braucht: Futter, Wasser, Bewegung, Tierarzt, Liebe. Rassen unterschiedlich gross.",
+        "Erziehung mit Geduld. Hundehaltung = Verantwortung viele Jahre.",
+        "Frag: Was ist ein Tier? · Haustiere · Tierschutz."
+      ]
+    },
+    {
+      keys: ["was ist katze", "was ist eine katze", "katzen einfach"],
+      answers: [
+        "**Katze:** Beliebtes Haustier — eigenstaendig, jagt Instinkt, putzt sich selbst.",
+        "Braucht: Futter, Wasser, Kratzbaum, Ruheplatz, Tierarzt.",
+        "Indoor sicherer als Freigang (Verkehr, Tiere).",
+        "Frag: Haustiere · Tiere · Verantwortung."
+      ]
+    },
+    {
+      keys: ["was ist sonne", "die sonne einfach", "was macht die sonne"],
+      answers: [
+        "**Sonne:** Stern in der Mitte unseres Sonnensystems — liefert Licht und Waerme.",
+        "Ohne Sonne kein Leben auf der Erde. Nicht direkt ansehen!",
+        "Sonnenenergie = erneuerbare Energie. Tag/Nacht durch Erdrotation.",
+        "Frag: Sonnensystem · Astronomie · Klimawandel."
+      ]
+    },
+    {
+      keys: ["was ist mond", "der mond einfach"],
+      answers: [
+        "**Mond:** Erdtrabant — reflektiert Sonnenlicht, verursacht Gezeiten.",
+        "Phasen: Vollmond, Neumond usw. — ca. 29 Tage Zyklus.",
+        "1969 erste Menschen auf dem Mond (Apollo 11).",
+        "Frag: Sonnensystem · Astronomie · Raumfahrt."
+      ]
+    },
+    {
+      keys: ["was ist wetter", "wetter einfach", "was ist klima"],
+      answers: [
+        "**Wetter:** Zustand der Atmosphaere — Temperatur, Regen, Wind, Wolken (kurzfristig).",
+        "**Klima** = Durchschnitt ueber viele Jahre. Wetter aendert sich taeglich.",
+        "Wetterbericht hilft bei Planung. Regen, Sonne, Schnee, Gewitter.",
+        "Frag: Klimawandel · Jahreszeiten · Meteorologie."
+      ]
+    },
+    {
+      keys: ["was ist sommer", "sommer einfach"],
+      answers: [
+        "**Sommer:** Warme Jahreszeit — laengere Tage, mehr Sonne, Ferienzeit.",
+        "Auf Nordhalbkugel ca. Juni–August. Leicht leichte Kleidung, Sonnenschutz.",
+        "Aktivitaeten: Schwimmen, Reisen, Eis essen.",
+        "Frag: Jahreszeiten · Wetter · Ferien."
+      ]
+    },
+    {
+      keys: ["was ist winter", "winter einfach"],
+      answers: [
+        "**Winter:** Kalte Jahreszeit — kurze Tage, Schnee moeglich, Weihnachten.",
+        "Warm anziehen, Heizung, Grippe-Vorsorge. Dezember–Februar (Nordhalbkugel).",
+        "Sport: Ski, Schlittschuh. Gemuetlichkeit zuhause.",
+        "Frag: Jahreszeiten · Schnee · Weihnachten."
+      ]
+    },
+    {
+      keys: ["was ist familie", "familie einfach"],
+      answers: [
+        "**Familie:** Menschen die zusammengehoeren — Eltern, Kinder, Geschwister, manchmal Grosseltern.",
+        "Wichtig: Respekt, Kommunikation, Zeit miteinander.",
+        "Familien sehen unterschiedlich aus — Patchwork, Alleinerziehend, gross oder klein.",
+        "Frag: Freundschaft · Gesellschaft · Kinderrechte."
+      ]
+    },
+    {
+      keys: ["was ist freund", "freundschaft einfach", "was ist freundschaft"],
+      answers: [
+        "**Freundschaft:** Vertrauensvolle Beziehung — gemeinsame Zeit, Hilfe, Ehrlichkeit.",
+        "Gute Freunde hoeren zu, respektieren Grenzen, feiern Erfolge.",
+        "Qualitaet wichtiger als Quantitaet. Online + offline moeglich.",
+        "Frag: Kommunikation · Mobbing · Soziales."
+      ]
+    },
+    {
+      keys: ["was ist stress", "stress einfach", "stress abbauen"],
+      answers: [
+        "**Stress:** Koerperliche/mentale Reaktion auf Druck — kurz OK, dauerhaft belastend.",
+        "Abbauen: Pausen, Sport, Schlaf, Gespraech, Atemuebungen.",
+        "Perfektionismus und Ueberlastung vermeiden. Hilfe holen ist stark.",
+        "Frag: Meditation · Gesundheit · Schlaf."
+      ]
+    },
+    {
+      keys: ["was ist meditation", "meditation einfach"],
+      answers: [
+        "**Meditation:** Bewusste Ruhe — Fokus auf Atem, Koerper oder Gedanken beobachten.",
+        "5–10 Min/Tag reichen zum Start. Reduziert Stress, verbessert Konzentration.",
+        "Apps oder stille Ecke. Kein Muss — fuer viele hilfreich.",
+        "Frag: Yoga · Stress · Achtsamkeit."
+      ]
+    },
+    {
+      keys: ["was ist obst", "obst einfach"],
+      answers: [
+        "**Obst:** Suesses Pflanzenteil — Vitamine, Ballaststoffe, Energie. Aepfel, Bananen, Beeren…",
+        "2 Portionen Obst/Tag empfohlen. Frisch, gefroren oder als Smoothie.",
+        "Wichtig fuer Immunsystem und Verdauung.",
+        "Frag: Gesundheit · Ernaehrung · Gemuese."
+      ]
+    },
+    {
+      keys: ["was ist gemuese", "gemuese einfach"],
+      answers: [
+        "**Gemuese:** Essbare Pflanzenteile — Vitamine, Mineralien, wenig Kalorien.",
+        "Brokkoli, Karotten, Salat, Tomaten… Bunt auf dem Teller = vielfaeltig.",
+        "Gedünstet, roh oder im Ofen. 3 Portionen/Tag ideal.",
+        "Frag: Gesundheit · Ernaehrung · Kochen."
+      ]
+    },
+    {
+      keys: ["was ist musik", "musik einfach"],
+      answers: [
+        "**Musik:** Toene in Rhythmus und Melodie — Gefuehle, Kultur, Kommunikation.",
+        "Instrumente: Gitarre, Klavier, Drums… Genres: Pop, Rock, Klassik, Hip-Hop.",
+        "Hoeren, machen, tanzen — gut fuer Stimmung und Gehirn.",
+        "Frag: Kunst · Kultur · Instrumente."
+      ]
+    },
+    {
+      keys: ["was ist kunst", "kunst einfach"],
+      answers: [
+        "**Kunst:** Kreativer Ausdruck — Malerei, Skulptur, Fotografie, digitale Kunst.",
+        "Schoenheit subjektiv. Museen, Street Art, eigene Projekte.",
+        "NOCO Render = Pixel-Kunst im Chat.",
+        "Frag: Musik · Design · Kreativitaet."
+      ]
+    },
+    {
+      keys: ["was ist europa", "europa einfach"],
+      answers: [
+        "**Europa:** Kontinent mit ca. 44 Laendern — Deutschland, Frankreich, Spanien, Italien…",
+        "EU = politische Union vieler europaeischer Staaten. Euro in vielen Laendern.",
+        "Geschichte, Kultur, Sprachen sehr vielfaeltig.",
+        "Frag: Deutschland · Geographie · EU."
+      ]
+    },
+    {
+      keys: ["was ist deutschland", "deutschland einfach"],
+      answers: [
+        "**Deutschland:** Land in Mitteleuropa — ca. 84 Mio. Einwohner, Hauptstadt Berlin.",
+        "Bundeslaender, Demokratie, starke Wirtschaft. Sprache: Deutsch.",
+        "Bekannt: Autos, Fussball, Oktoberfest, Geschichte.",
+        "Frag: Europa · Demokratie · Geschichte."
+      ]
+    },
+    {
+      keys: ["was ist frankreich", "frankreich einfach"],
+      answers: [
+        "**Frankreich:** Land in Westeuropa — Hauptstadt Paris, Sprache Franzoesisch.",
+        "Eiffelturm, Baguette, Mode, Wein. EU-Mitglied.",
+        "Nachbar von Deutschland — Rhein grenzt.",
+        "Frag: Europa · Geographie · Sprachen."
+      ]
+    },
+    {
+      keys: ["was ist mathe", "mathematik einfach", "rechnen einfach"],
+      answers: [
+        "**Mathe:** Lehre von Zahlen, Formen und Logik — Plus, Minus, Mal, Geteilt.",
+        "Alltag: Einkaufen, Kochen, Bauen. Schule: Algebra, Geometrie, Analysis.",
+        "Uebung macht den Meister. Fehler sind normal.",
+        "Frag: Tipps zum Lernen · Physik · Logik."
+      ]
+    },
+    {
+      keys: ["was ist englisch", "englische sprache", "warum englisch"],
+      answers: [
+        "**Englisch:** Weltweit verbreitete Sprache — Internet, Musik, Business, Reisen.",
+        "In Schule Pflicht in DE. Einfache Saetze: Hello, Thank you, How are you?",
+        "Filme mit Untertiteln helfen beim Lernen.",
+        "Frag: Sprachen · Schule · Kommunikation."
+      ]
+    },
+    {
+      keys: ["was ist arbeit", "arbeit einfach", "beruf einfach"],
+      answers: [
+        "**Arbeit:** Taetigkeit gegen Lohn — Job, Ausbildung, Studium als Vorbereitung.",
+        "Wichtig: Work-Life-Balance, faire Bezahlung, Sicherheit am Arbeitsplatz.",
+        "Viele Berufe: Handwerk, IT, Medizin, Kuenstler…",
+        "Frag: Bewerbung · Wirtschaft · Karriere."
+      ]
+    },
+    {
+      keys: ["was ist schule einfach", "schule fuer kinder", "warum schule"],
+      answers: [
+        "**Schule:** Ort zum Lernen — Lesen, Schreiben, Rechnen, Soziales, Sport.",
+        "Grundschule → weiterfuehrende Schule. Lehrer helfen, Hausaufgaben ueben.",
+        "Freunde finden, Regeln lernen, auf Zukunft vorbereiten.",
+        "Frag: Lernen · Pruefung · Bildung."
+      ]
+    },
+    {
+      keys: ["was ist baum", "baeume einfach"],
+      answers: [
+        "**Baum:** Grosse Pflanze mit Stamm, Aesten, Blaettern — produziert Sauerstoff.",
+        "Wichtig fuer Klima, Tiere, Holz. Wald = viele Baeume zusammen.",
+        "Nicht jeden Baum faellen — Natur schuetzen.",
+        "Frag: Oekologie · Pflanzen · Klimawandel."
+      ]
+    },
+    {
+      keys: ["was ist blume", "blumen einfach"],
+      answers: [
+        "**Blume:** Bluhende Pflanze — oft bunt, duftend, lockt Insekten zur Bestaeubung.",
+        "Rosen, Tulpen, Sonnenblumen… Garten oder Wildblumen.",
+        "Geschenk-Symbol. Manche essbar (z.B. im Salat — vorsichtig!).",
+        "Frag: Pflanzen · Natur · Garten."
+      ]
+    },
+    {
       keys: ["noco render motive", "3600 motive", "2100 motive", "1850 motive", "1600 motive", "1350 motive", "1100 motive", "900 motive", "pixel motive liste", "motiv anzahl"],
       answers: [
         "**NOCO Render v5.3:** **3600 Motive** — ~2900 benannte Begriffe + erweiterte Motiv-Bibliothek.",
@@ -4619,12 +6805,12 @@
   ];
 
   var FALLBACKS = [
-    "Gute Frage! **NOCO:** Was ist NOCO OS? · Keycard · Security\n**Vault:** KI · Internet · Klimawandel?",
-    "Da bin ich unsicher. Probier: **NOCO Vault** · **NOCO Echo** · **NOCO Render** · **NOCO Exclusive**",
-    "Thema unklar — frag: *Was sind die NOCO Modell-Namen?* oder *Was ist NOCO Vault?*",
-    "**NOCO Vault** kennt 520+ Themen. Frag: *Was kann ich dich fragen?* oder *Was ist Genetik?*",
-    "Tipp: **NOCO Sparks** links — Kategorien nach Thema. **Was geht hier?** fuer Uebersicht.",
-    "Frag spezifischer oder **Neu generieren**. Mit **NOCO Flux** (Exclusive) volle Antworten."
+    "Das Thema kenne ich so noch nicht genau — probier ein **Stichwort** (*KI*, *Schlaf*, *Philosophie*) oder *Was ist …?*",
+    "Ich bin unsicher. **NOCO Vault** hat 900+ Themen — z.B. *Was ist Demokratie?* · *Was ist ein Hund?* · *Was ist Mathe?*",
+    "**Freie Fragen gehen:** *Was bedeutet …?* · *Kannst du mir … erklaeren?* · nur *Blockchain* oder *Psychologie*.",
+    "Fuer **Bilder:** *Mach ein Bild von Katze* · **Video:** *Erstelle ein Video von Apfel* · **Features:** *Was ist Agent?*",
+    "Schreib **Hilfe** oder *Was kann ich dich fragen?* — oder nutze **NOCO Sparks** links fuer Themenvorschlaege.",
+    "Formuliere es anders oder klick **Neu generieren**. Mit **NOCO Flux** (Exclusive) volle Vault-Antworten."
   ];
 
   var FALLBACK_EXTEND = [
@@ -5147,13 +7333,55 @@
         "Was ist Mexiko?",
         "Was ist Artemis?",
         "Was ist Biogas?",
+        "Was ist ein Umzug?",
+        "Was ist das Deutschland-Ticket?",
+        "Was ist Trinkgeld?",
+        "Was ist Stalking?",
+        "Was ist Astrologie?",
+        "Tipps fuer Hausaufgaben",
+        "Was ist Zeitumstellung?",
+        "Was ist Lohnsteuer?",
+        "Was ist Mietkaution?",
+        "Was ist Schimmel?",
+        "Tipps zum Vorstellungsgespraech",
+        "Was ist Keto?",
+        "Was ist Selbstvertrauen?",
+        "Was ist die SCHUFA?",
+        "Was ist ein Minijob?",
+        "Was ist Pflegegrad?",
+        "Was ist ein Nachsendeauftrag?",
+        "Was ist Kindergeld?",
+        "Was ist eine Krankmeldung?",
+        "Was ist Widerrufsrecht?",
+        "Was ist ALG I?",
+        "Was ist 2FA?",
+        "Was ist ein Notgroschen?",
+        "Tipps gegen Prüfungsangst",
+        "Was ist Phishing?",
+        "Was ist ein Herzinfarkt?",
+        "Tipps zum Einschlafen",
+        "Was ist Laktoseintoleranz?",
+        "Was bringt Meditation?",
+        "Was ist ein E-Scooter?",
+        "Was ist der NC?",
+        "Tipps fuer WG-Suche",
         "Was ist Luftqualität?",
         "Was ist Bienensterben?",
         "Was ist Diabetes?",
         "Was ist Long COVID?",
         "Was ist der Bundesrat?",
         "Was ist Kita?",
-        "Was ist Demografie?"
+        "Was ist Demografie?",
+        "Was ist ein Gebrauchtwagen-Kauf?",
+        "Was tun bei Autounfall?",
+        "Tipps fuers Tanken sparen",
+        "Was sind Fluggastrechte?",
+        "Was ist Jetlag?",
+        "Darf man auf dem Balkon grillen?",
+        "Was ist ein E-Bike?",
+        "Was tun bei Lärmbelästigung?",
+        "Was ist Eigenbedarf?",
+        "Was ist eine Hausapotheke?"
       ]
     },
     {
@@ -5287,13 +7515,227 @@
       .trim();
   }
 
+  var GENERAL_TOPIC_SYNONYMS = {
+    "handy": "smartphone",
+    "mobiltelefon": "smartphone",
+    "handyvertrag": "vertrag kuendigen",
+    "strom": "strom sparen",
+    "gas": "vertrag kuendigen",
+    "krank": "krankmeldung",
+    "krankschreibung": "krankmeldung",
+    "au": "krankmeldung",
+    "urlaub": "urlaubsanspruch",
+    "rente": "rentenversicherung",
+    "alg": "arbeitslosengeld",
+    "alg1": "arbeitslosengeld",
+    "alg2": "buergergeld",
+    "amazon": "online shopping",
+    "shoppen": "online shopping",
+    "einkaufen online": "online shopping",
+    "reklamation": "gewaehrleistung",
+    "garantie": "gewaehrleistung",
+    "konto": "girokonto",
+    "bank": "girokonto",
+    "sparen": "sparkonto",
+    "steuer": "steuererklaerung",
+    "elster": "steuererklaerung",
+    "baby": "stillen",
+    "schwanger": "schwangerschaft",
+    "sonne": "sonnenbrand",
+    "hitze": "sonnenbrand",
+    "zeck": "zeckenbiss",
+    "verbraucher": "verbraucherzentrale",
+    "miete senken": "mietminderung",
+    "gehaltswunsch": "gehaltserhoehung",
+    "paypal": "paypal klarna",
+    "klarna": "paypal klarna",
+    "wifi": "mesh wlan",
+    "wlan": "mesh wlan",
+    "router": "mesh wlan",
+    "glasfaser": "glasfaser dsl",
+    "dsl": "glasfaser dsl",
+    "internet": "glasfaser dsl",
+    "sim": "esim prepaid",
+    "prepaid": "esim prepaid",
+    "roaming": "esim prepaid",
+    "2fa": "zwei faktor",
+    "mfa": "zwei faktor",
+    "bitwarden": "passwort manager",
+    "dropbox": "cloud speicher",
+    "drive": "cloud speicher",
+    "icloud": "cloud speicher",
+    "flohmarkt": "second hand",
+    "kleinanzeigen": "second hand",
+    "vinted": "second hand",
+    "etf": "depot etf",
+    "broker": "depot etf",
+    "budget": "haushaltsbudget",
+    "notfall": "notgroschen",
+    "einsam": "einsamkeit",
+    "phishing": "phishing email",
+    "spam": "phishing email",
+    "pflanze": "zimmerpflanzen",
+    "pflanzen": "zimmerpflanzen",
+    "hund": "hund erziehung",
+    "welpenerziehung": "hund erziehung",
+    "frisur": "friseur",
+    "haare": "friseur",
+    "pc": "pc langsam",
+    "laptop": "pc langsam",
+    "computer": "pc langsam",
+    "ruecken": "rueckenschmerz",
+    "rücken": "rueckenschmerz",
+    "nacken": "rueckenschmerz",
+    "muskelkater": "muskelkater dehnen",
+    "schnarchen": "schnarchen schlafapnoe",
+    "apnoe": "schnarchen schlafapnoe",
+    "abnehmen": "abnehmen gesund",
+    "uebergewicht": "abnehmen gesund",
+    "laktose": "laktoseintoleranz",
+    "nussallergie": "nussallergie",
+    "bienenstich": "insektenstich",
+    "wespe": "insektenstich",
+    "sonnencreme": "sonnencreme hautpflege",
+    "pickel": "akne",
+    "stroke": "schlaganfall",
+    "herz": "herzinfarkt",
+    "zahnspange": "zahnspange",
+    "knirschen": "bruxismus",
+    "augentropfen": "trockene augen",
+    "wasser": "trinkwasser",
+    "kaffee": "kaffee koffein",
+    "koffein": "kaffee koffein",
+    "alkohol": "alkohol gesundheit",
+    "rauchen": "rauchen aufhoeren",
+    "zigarette": "rauchen aufhoeren",
+    "einschlafen": "einschlafen schlafstoerung",
+    "insomnie": "einschlafen schlafstoerung",
+    "escooter": "e-scooter",
+    "roller": "e-scooter",
+    "helm": "fahrradhelm",
+    "fahrrad": "fahrradhelm",
+    "schwimmen": "schwimmen lernen",
+    "zahnseide": "zahnseide mundhygiene",
+    "ergonomie": "ergonomie arbeitsplatz",
+    "laerm": "laerm wohnung",
+    "lärm": "laerm wohnung",
+    "tierarzt": "tierarzt impfung",
+    "gassi": "hundekot",
+    "wg": "wg suche",
+    "wohngemeinschaft": "wg suche",
+    "besichtigung": "wohnungsbesichtigung",
+    "ausbildung": "ausbildungsplatz",
+    "azubi": "ausbildungsplatz",
+    "lehrstelle": "ausbildungsplatz",
+    "betriebsrat": "betriebsrat",
+    "nc": "numerus clausus",
+    "semesterferien": "semesterferien",
+    "gehoerschutz": "gehoerschutz",
+    "bildschirmzeit": "bildschirmzeit kinder",
+    "mediation": "mediation schlichtung",
+    "heizen": "heizen sparen",
+    "fuehrerschein": "fahrschule",
+    "führerschein": "fahrschule",
+    "theoriepruefung": "fahrschule",
+    "occasion": "gebrauchtwagen",
+    "tüv": "tuev",
+    "hu": "tuev",
+    "hauptuntersuchung": "tuev",
+    "ölwechsel": "auto wartung",
+    "oelwechsel": "auto wartung",
+    "unfall": "autounfall",
+    "verkehrsunfall": "autounfall",
+    "autoversicherung": "kfz versicherung",
+    "vollkasko": "kfz versicherung",
+    "sprit": "tanken sparen",
+    "benzin": "tanken sparen",
+    "diesel": "tanken sparen",
+    "miles": "carsharing",
+    "sharenow": "carsharing",
+    "blablacar": "mitfahrgelegenheit",
+    "mitfahren": "mitfahrgelegenheit",
+    "jet lag": "jetlag",
+    "zeitverschiebung": "jetlag",
+    "packen": "packliste",
+    "fluggastrechte": "flugverspaetung",
+    "annullierung": "flugverspaetung",
+    "auslandskranken": "reiseversicherung",
+    "reisepass verloren": "notfall ausland",
+    "botschaft": "notfall ausland",
+    "zebrastreifen": "fussgaenger",
+    "pedelec": "ebike",
+    "e-bike": "ebike",
+    "elektrofahrrad": "ebike",
+    "fahrradklau": "fahrrad diebstahl",
+    "grillparty": "grillen balkon",
+    "grillen": "grillen balkon",
+    "laerm": "laermbelaestigung",
+    "lärm": "laermbelaestigung",
+    "musik zu laut": "laermbelaestigung",
+    "eigenbedarf": "eigenbedarf",
+    "mietnomade": "mietnomade",
+    "mieter zahlt nicht": "mietnomade",
+    "unkraut": "rasen pflege",
+    "rasen": "rasen pflege",
+    "hochbeet": "tomaten anbau",
+    "motorrad": "motorrad fuehrerschein",
+    "babysitting": "babysitter",
+    "retoure": "ware retournieren",
+    "widerruf paket": "ware retournieren",
+    "gehackt": "passwort gehackt",
+    "hack": "passwort gehackt",
+    "hundesteuer": "hund anmelden",
+    "katze": "katze haltung",
+    "kaninchen": "kaninchen",
+    "meerschweinchen": "kaninchen"
+  };
+
+  function applyTopicSynonyms(text) {
+    var t = normalize(String(text || "").trim());
+    var keys = Object.keys(GENERAL_TOPIC_SYNONYMS);
+    var i, k, parts;
+    if (!t) return "";
+    if (GENERAL_TOPIC_SYNONYMS[t]) return GENERAL_TOPIC_SYNONYMS[t];
+    parts = t.split(/\s+/);
+    for (i = 0; i < parts.length; i++) {
+      if (GENERAL_TOPIC_SYNONYMS[parts[i]]) return GENERAL_TOPIC_SYNONYMS[parts[i]];
+    }
+    for (i = 0; i < keys.length; i++) {
+      k = keys[i];
+      if (k.indexOf(" ") === -1 && t.indexOf(k) !== -1) return GENERAL_TOPIC_SYNONYMS[k];
+    }
+    return t;
+  }
+
+  function normalizeGeneralQuestion(text) {
+    var t = fixCommonTypos(String(text || "").trim());
+    t = t.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, " ");
+    t = t.replace(/\s+/g, " ");
+    t = t.replace(/\b(aehm|aeh|ahem|naja|halt|eben|und zwar|folgendes|naemlich|nämlich|sozusagen|quasi|irgendwie|eigentlich mal|mal eben)\b/gi, " ");
+    t = t.replace(/^(erklär mal|erklaer mal|guck mal|schau mal|sag mal)\s+/gi, "");
+    t = t.replace(/^[,.:;\-–—]+\s*/g, "");
+    t = t.replace(/\?{2,}/g, "?");
+    t = t.replace(/\b(\w+)(?:\s+\1\b)+/gi, "$1");
+    t = t.replace(/\s+(mal|schnell|bitte|eben|doch|oder)\s*$/gi, "");
+    t = t.replace(/\s+/g, " ").trim();
+    return t;
+  }
+
   function stripQuestionNoise(text) {
     return normalize(text)
-      .replace(/^(ey |yo |hm |na |lol |okay |ok |also |bitte |mal |kurz |einfach |schnell )+/g, "")
-      .replace(/^(hey |hallo |hi |moin |servus |guten tag )+/g, "")
-      .replace(/^(kannst du mir |kannst du |kann ich |koenntest du |wuerdest du |sag mir |sag mal |erzaehl mir |erklaer mir |erklaere mir |ich wollte fragen |ich frag mich |ich will wissen |ich moechte wissen )+/g, "")
-      .replace(/^(was ist|was sind|was bedeutet|was macht|was weiss|was weiß|wie funktioniert|wie geht|wie ist|erklare|erklaere|erklaer|beschreibe|definiere|tell me about|what is)\s+/g, "")
-      .replace(/^(kannst du mir erklaeren|kannst du erklaeren|ich moechte wissen|ich will wissen|sag mir was|nochmal)\s+/g, "")
+      .replace(/^(ey |yo |hm |na |lol |okay |ok |also |bitte |mal |kurz |einfach |schnell |nur |eben )+/g, "")
+      .replace(/^(hey |hallo |hi |moin |servus |guten tag |guten morgen |guten abend )+/g, "")
+      .replace(/^(kannst du mir |kannst du |kann ich |koenntest du |wuerdest du |magst du |sag mir |sag mal |erzaehl mir |erklaer mir |erklaere mir |ich wollte fragen |ich frag mich |ich will wissen |ich moechte wissen |ich wuerde gern wissen |ich wuerde gerne wissen )+/g, "")
+      .replace(/^(was ist|was sind|was war|was waren|was bedeutet|was macht|was weiss|was weiß|wie funktioniert|wie geht|wie ist|erklare|erklaere|erklaer|beschreibe|definiere|tell me about|what is|what are|how does)\s+/g, "")
+      .replace(/^(kannste mir |kannste |hast du ahnung von |hast du ahnung |ich wollt wissen |ich wollte wissen |waere cool wenn du |wäre cool wenn du |und zwar |folgendes |naemlich |nämlich )+/g, "")
+      .replace(/^(kannst du mir erklaeren|kannst du erklaeren|ich moechte wissen|ich will wissen|sag mir was|nochmal|kurz gesagt|eigentlich)\s+/g, "")
+      .replace(/^(ich checks nicht|ich check nicht|ich versteh nicht|ich verstehe nicht|keine ahnung|hab keine ahnung|weiss nicht|weiß nicht)\s+/g, "")
+      .replace(/^(gibt es|gibts|brauch|brauche|haette gern|haette gerne|interessiert mich|thema)\s+/g, "")
+      .replace(/^(hab ne frage|hab ne frage zu|habe ne frage|ne frage zu|frage zu|frage:)\s+/g, "")
+      .replace(/^(ich brauch hilfe bei|ich brauche hilfe bei|brauche hilfe bei|ich brauch tipps fuer|ich brauche tipps fuer)\s+/g, "")
+      .replace(/^(was mach ich|was mache ich|was tun|was muss ich tun) (bei|wenn|nach|beim|im|in der|in dem)\s+/g, "")
+      .replace(/^(darf man|darf ich|ist das erlaubt|ist es erlaubt|was kostet|wie viel kostet|wie lange dauert)\s+/g, "")
+      .replace(/\s+(bitte|danke|oder so|eigentlich|genau|nochmal)\s*$/g, "")
       .replace(/\?+$/, "")
       .replace(/\s+/g, " ")
       .trim();
@@ -5623,7 +8065,127 @@
       [/eisenhower matrix|eisenhower prinzip/gi, "eisenhower matrix"],
       [/\blatex\b|overleaf/gi, "latex dokument"],
       [/plagiat|plagiarismus/gi, "plagiat"],
-      [/apa zitier|apa style/gi, "apa zitierstil"]
+      [/localotion|locomoshon|locomotion/gi, "noco motion"],
+      [/philosofie|filosofie/gi, "philosophie"],
+      [/psycologie|pschologie/gi, "psychologie"],
+      [/apa zitier|apa style/gi, "apa zitierstil"],
+      [/deutschland.?ticket|d.?ticket/gi, "deutschland ticket"],
+      [/trinkgeld|servicegeld/gi, "trinkgeld"],
+      [/stromausfall|blackout|kein strom/gi, "stromausfall"],
+      [/horoskop|sternzeichen|tierkreis/gi, "horoskop astrologie"],
+      [/astrologie/gi, "astrologie horoskop"],
+      [/gluecksspiel|glücksspiel|spielsucht/gi, "gluecksspiel"],
+      [/lotto|lotterie/gi, "lotto"],
+      [/impfpass|impfausweis/gi, "impfpass"],
+      [/hausaufgaben|schulaufgaben/gi, "hausaufgaben"],
+      [/umzug|umziehen/gi, "umzug"],
+      [/scheidung|trennung ehe/gi, "scheidung"],
+      [/heirat|hochzeit standesamt/gi, "heirat"],
+      [/stalking|cyberstalking/gi, "stalking"],
+      [/zeitumstellung|sommerzeit winterzeit/gi, "zeitumstellung"],
+      [/steuerklasse|lohnsteuer/gi, "lohnsteuer"],
+      [/sehstaerke|sehtest|brille kontaktlinse/gi, "brille sehstaerke"],
+      [/tattoo|taetowierung/gi, "tattoo"],
+      [/piercing/gi, "piercing"],
+      [/mietkaution|kaution miete/gi, "mietkaution"],
+      [/nebenkosten|betriebskosten/gi, "nebenkosten"],
+      [/schimmel|schimmelpilz/gi, "schimmel wohnung"],
+      [/kuendigung arbeit|job kuendigen/gi, "kuendigung arbeit"],
+      [/vorstellungsgespraech|vorstellungsgespräch|job interview/gi, "vorstellungsgespraech"],
+      [/lebenslauf|curriculum vitae/gi, "lebenslauf"],
+      [/gehaltsverhandlung|gehalt verhandeln/gi, "gehaltsverhandlung"],
+      [/homoeopathie|homöopathie|globuli/gi, "homoeopathie"],
+      [/intervallfasten|16.?8 fasten/gi, "intermittierendes fasten"],
+      [/ketogene|keto diaet/gi, "keto"],
+      [/sperrmuell|sperrmüll/gi, "sperrmuell"],
+      [/geschenkideen|was schenken/gi, "geschenke"],
+      [/selbstvertrauen|selbstbewusstsein/gi, "selbstvertrauen"],
+      [/perfektionismus/gi, "perfektionismus"],
+      [/arbeitszeugnis|zwischenzeugnis/gi, "arbeitszeugnis"],
+      [/inkasso|mahnung/gi, "mahnung inkasso"],
+      [/pfandflasche|pfand system/gi, "pfand"],
+      [/mieterhoehung|miete erhoehen/gi, "mieterhoehung"],
+      [/meldebescheinigung|wohnsitz anmeldung/gi, "meldebescheinigung"],
+      [/personalausweis|reisepass/gi, "personalausweis reisepass"],
+      [/\bschufa\b|bonitaet/gi, "schufa"],
+      [/dispokredit|ueberziehungskredit/gi, "dispo"],
+      [/ratenkredit|privatkredit/gi, "ratenkredit"],
+      [/baufinanzierung|hypothek|immobilienkredit/gi, "baufinanzierung"],
+      [/nachsendeauftrag/gi, "nachsendeauftrag"],
+      [/pflegegrad|pflegeversicherung/gi, "pflegegrad"],
+      [/aufenthaltstitel/gi, "visum aufenthaltstitel"],
+      [/fuehrungszeugnis|führungszeugnis/gi, "fuehrungszeugnis"],
+      [/buergeramt|einwohnermeldeamt/gi, "buergeramt"],
+      [/minijob|geringfuegig|450 euro/gi, "minijob"],
+      [/midijob|gleitzone/gi, "midijob"],
+      [/werkstudent/gi, "werkstudent"],
+      [/winterreifen|m\+s reifen/gi, "winterreifen"],
+      [/verkehrsbussgeld|knöllchen/gi, "bussgeld"],
+      [/punkte flensburg|fahreignungsregister/gi, "punkte flensburg"],
+      [/schulzeugnis|abschlusszeugnis/gi, "schulzeugnis"],
+      [/mietschulden|mietrueckstand/gi, "mietschulden"],
+      [/kannste|könntest/gi, "kannst du"],
+      [/widerrufsrecht|widerruf online/gi, "widerruf"],
+      [/gewaehrleistung|reklamation/gi, "gewaehrleistung"],
+      [/girokonto|kontowechsel/gi, "girokonto"],
+      [/tagesgeld|festgeld/gi, "sparkonto"],
+      [/krankmeldung|krankschreibung|arbeitsunfaehigkeit/gi, "krankmeldung"],
+      [/kindergeld|familienkasse/gi, "kindergeld"],
+      [/zeckenbiss|borreliose/gi, "zeckenbiss"],
+      [/steuererklaerung|steuererklärung/gi, "steuererklaerung"],
+      [/mietminderung/gi, "mietminderung"],
+      [/verbraucherzentrale/gi, "verbraucherzentrale"],
+      [/elterngeld plus|basiselterngeld/gi, "elterngeld"],
+      [/arbeitslosengeld|\balg1\b/gi, "arbeitslosengeld"],
+      [/gehaltserhoehung|lohnerhoehung/gi, "gehaltserhoehung"],
+      [/passwort.?manager|bitwarden|1password/gi, "passwort manager"],
+      [/\b2fa\b|zwei faktor|mfa/gi, "zwei faktor"],
+      [/google drive|dropbox|icloud/gi, "cloud speicher"],
+      [/\besim\b|prepaid|roaming/gi, "esim"],
+      [/glasfaser|\bdsl\b/gi, "glasfaser dsl"],
+      [/mesh.?wlan|wifi verstaerker/gi, "mesh wlan"],
+      [/pc langsam|laptop langsam/gi, "pc langsam"],
+      [/notgroschen|finanzielle reserve/gi, "notgroschen"],
+      [/haushaltsbudget|geldplan/gi, "haushaltsbudget"],
+      [/etf depot|broker/gi, "depot etf"],
+      [/pruefungsangst|prüfungsangst/gi, "pruefungsangst"],
+      [/einsamkeit|soziale isolation/gi, "einsamkeit"],
+      [/soziale angst|sozialphobie/gi, "soziale angst"],
+      [/hundeerziehung|welpenerziehung/gi, "hund erziehung"],
+      [/zimmerpflanzen|pflanzen pflege/gi, "zimmerpflanzen"],
+      [/kleinanzeigen|vinted|flohmarkt/gi, "second hand"],
+      [/eli5|fuer anfaenger|für anfänger/gi, "was ist"],
+      [/rueckenschmerz|rückenschmerz|nackenschmerz/gi, "rueckenschmerz"],
+      [/schlafapnoe|schlafapnöe/gi, "schnarchen"],
+      [/laktoseintoleranz/gi, "laktose"],
+      [/bienenstich|wespenstich/gi, "insektenstich"],
+      [/schlaganfall|stroke/gi, "schlaganfall"],
+      [/herzinfarkt/gi, "herzinfarkt"],
+      [/zaeheneknirschen|bruxismus/gi, "bruxismus"],
+      [/rauchstopp|nikotinentzug/gi, "rauchen aufhoeren"],
+      [/hab ne frage/gi, "was ist"],
+      [/e-scooter|escooter|elektroroller/gi, "e-scooter"],
+      [/fahrradhelm/gi, "fahrradhelm"],
+      [/numerus clausus/gi, "numerus clausus nc"],
+      [/wohngemeinschaft|\bwg\b/gi, "wg suche"],
+      [/hundekotbeutel/gi, "hundekot"],
+      [/gehoerschutz|gehörschutz/gi, "gehoerschutz"],
+      [/bildschirmzeit/gi, "bildschirmzeit"],
+      [/heizkosten|heizen sparen/gi, "heizen sparen"],
+      [/führerschein|fuehrerscn|fuererschein/gi, "fuehrerschein"],
+      [/gebrauchtwagen|gebraucht wagen/gi, "gebrauchtwagen"],
+      [/flugverspaetung|flug verspaetung|flug annulliert/gi, "flugverspaetung"],
+      [/blablacar|bla bla car/gi, "blablacar"],
+      [/kulturschock|kultur schock/gi, "kulturschock"],
+      [/jetlag|jet lag/gi, "jetlag"],
+      [/tüv|tuv/gi, "tuev"],
+      [/kfz versicherung|auto versicherung/gi, "kfz versicherung"],
+      [/ebike|e-bike|e bike/gi, "ebike"],
+      [/pedelec|pedelec/gi, "pedelec"],
+      [/laermbelaestigung|lärm belästigung/gi, "laermbelaestigung"],
+      [/mietnomade|miet nomade/gi, "mietnomade"],
+      [/eigenbedarf|eigen bedarf/gi, "eigenbedarf"],
+      [/hundesteuer|hund steuer/gi, "hundesteuer"]
     ];
     var i;
     for (i = 0; i < fixes.length; i++) {
@@ -5652,6 +8214,42 @@
     "pixel": "was ist noco render",
     "bild": "was ist noco render",
     "render": "was ist noco render",
+    "motion": "was ist noco motion",
+    "video": "wie erstelle ich ein video",
+    "locomotion": "was ist noco motion",
+    "localotion": "was ist noco motion",
+    "agent": "was ist noco agent",
+    "inside": "was ist noco inside",
+    "summary": "was ist noco summary",
+    "brief": "was ist noco brief",
+    "glow": "was ist noco glow",
+    "create": "wie erstelle ich ein bild",
+    "philosophie": "was ist philosophie",
+    "psychologie": "was ist psychologie",
+    "liebe": "was ist liebe beziehung",
+    "freundschaft": "was ist freundschaft",
+    "arbeit": "was ist arbeit karriere",
+    "karriere": "was ist karriere bewerbung",
+    "studium": "was ist studium uni",
+    "uni": "was ist studium uni",
+    "universum": "was ist universum astronomie",
+    "astronomie": "was ist astronomie",
+    "ernaehrung": "was ist ernaehrung gesund",
+    "essen": "was ist ernaehrung",
+    "reisen": "was ist reisen urlaub",
+    "geld": "was ist geld finanzen",
+    "finanzen": "was ist finanzen geld",
+    "glueck": "was ist glueck zufriedenheit",
+    "angst": "was ist angst psychologie",
+    "depression": "was ist depression psychologie",
+    "kunst": "was ist kunst kultur",
+    "literatur": "was ist literatur",
+    "wetter": "was ist wetter klima",
+    "klima": "was ist klimawandel",
+    "energie": "was ist erneuerbare energie",
+    "oekologie": "was ist oekologie umwelt",
+    "alltag": "allgemeine frage irgendein thema",
+    "frage": "was kann ich dich fragen",
     "echo": "was ist noco echo",
     "vault": "was ist noco vault",
     "rush": "was ist noco rush",
@@ -5668,6 +8266,64 @@
     "hub": "was kann noco ai",
     "funktionen": "was kann noco ai",
     "themen": "was kann ich dich fragen",
+    "yoga": "was ist yoga meditation",
+    "meditation": "was ist meditation achtsamkeit",
+    "achtsamkeit": "was ist achtsamkeit meditation",
+    "fitness": "was ist fitness training",
+    "training": "was ist fitness training",
+    "auto": "was ist auto verkehr",
+    "verkehr": "was ist auto verkehr",
+    "politik": "was ist politik deutschland",
+    "wahl": "was ist politik deutschland",
+    "religion": "was ist religion glaube",
+    "glaube": "was ist religion",
+    "islam": "was ist islam",
+    "christentum": "was ist christentum",
+    "wohnen": "was ist wohnen miete",
+    "miete": "was ist miete wohnung",
+    "wohnung": "was ist wohnung miete",
+    "haustier": "was ist haustier",
+    "natur": "was ist natur outdoor",
+    "outdoor": "was ist natur wandern",
+    "camping": "was ist camping outdoor",
+    "mode": "was ist mode fashion",
+    "fashion": "was ist mode",
+    "zeit": "was ist zeitmanagement",
+    "produktivitaet": "was ist zeitmanagement produktivitaet",
+    "erkaeltung": "was ist erkaeltung husten",
+    "husten": "was ist erkaeltung husten",
+    "nachhaltigkeit": "was ist nachhaltigkeit alltag",
+    "umwelt": "was ist oekologie umwelt",
+    "stoizismus": "was ist stoizismus leben",
+    "vegan": "was ist veganismus",
+    "vegetarisch": "was ist ernaehrung vegan",
+    "kochen": "was ist kochen rezepte",
+    "rezepte": "was ist kochen rezepte",
+    "hobby": "was ist hobby freizeit",
+    "freizeit": "was ist hobby freizeit",
+    "langweilig": "was ist hobby freizeit",
+    "eltern": "was ist eltern erziehung",
+    "kinder": "was ist eltern kinder",
+    "familie": "was ist familie eltern",
+    "streaming": "was ist streaming netflix",
+    "netflix": "was ist streaming netflix",
+    "youtube": "was ist streaming youtube",
+    "spotify": "was ist streaming spotify",
+    "konflikt": "was ist konflikt streit",
+    "streit": "was ist konflikt streit",
+    "traum": "was ist traum schlaf",
+    "traeume": "was ist traum schlafen",
+    "albtraum": "was ist traum albtraum",
+    "einkaufen": "was ist einkaufen budget",
+    "supermarkt": "was ist einkaufen",
+    "sommer": "was ist sommer freizeit",
+    "winter": "was ist winter jahreszeiten",
+    "herbst": "was ist jahreszeiten",
+    "fruehling": "was ist jahreszeiten fruehling",
+    "grillen": "was ist bbq grillen",
+    "whatsapp": "was ist smartphone apps",
+    "discord": "was ist gaming discord",
+    "email": "was ist email internet",
     "mathe": "was ist mathematik",
     "geo": "was ist geographie",
     "dino": "was ist dinosaurier",
@@ -6035,25 +8691,490 @@
     "plagiat": "was ist plagiat",
     "apa": "was ist apa zitierstil",
     "stable diffusion": "was ist stable diffusion",
-    "socialengineering": "was ist social engineering"
+    "socialengineering": "was ist social engineering",
+    "umzug": "was ist umzug wohnungswechsel",
+    "scheidung": "was ist scheidung trennung",
+    "heirat": "was ist heirat hochzeit",
+    "stromausfall": "was ist stromausfall blackout",
+    "putzen": "was ist haushalt putzen",
+    "haushalt": "was ist haushalt putzen",
+    "versicherung": "was ist versicherung haftpflicht",
+    "flughafen": "was ist flughafen fliegen tipps",
+    "fliegen": "was ist flughafen fliegen tipps",
+    "trinkgeld": "was ist trinkgeld restaurant",
+    "deutschlandticket": "was ist deutschland ticket",
+    "dticket": "was ist deutschland ticket",
+    "tattoo": "was ist tattoo piercing",
+    "piercing": "was ist tattoo piercing",
+    "brille": "was ist brille sehstaerke",
+    "grippe": "was ist grippe erkaeltung",
+    "stalking": "was ist stalking belaestigung online",
+    "nachbarn": "was ist nachbarn nachbarschaft",
+    "zeitumstellung": "was ist zeitumstellung sommerzeit",
+    "sommerzeit": "was ist zeitumstellung sommerzeit",
+    "lohnsteuer": "was ist lohnsteuer steuerklasse",
+    "steuer": "was ist lohnsteuer steuerklasse",
+    "kita": "was ist kita kinderbetreuung",
+    "kindergarten": "was ist kita kindergarten",
+    "lotto": "was ist lotto gluecksspiel",
+    "gluecksspiel": "was ist lotto gluecksspiel",
+    "horoskop": "was ist horoskop astrologie",
+    "astrologie": "was ist horoskop astrologie",
+    "impfpass": "was ist impfpass impfungen",
+    "stromsparen": "was ist strom sparen",
+    "wassersparen": "was ist wasser sparen",
+    "hausaufgaben": "was ist hausaufgaben tipps",
+    "oepnv": "was ist deutschland ticket oepnv",
+    "bahn": "was ist deutschland ticket bahn",
+    "kaution": "was ist mietkaution wohnung",
+    "mietkaution": "was ist mietkaution wohnung",
+    "nebenkosten": "was ist nebenkosten abrechnung",
+    "schimmel": "was ist schimmel wohnung",
+    "kuendigung": "was ist kuendigung arbeit",
+    "kündigung": "was ist kuendigung arbeit",
+    "interview": "was ist vorstellungsgespraech",
+    "lebenslauf": "was ist lebenslauf bewerbung",
+    "cv": "was ist lebenslauf bewerbung",
+    "gehalt": "was ist gehaltsverhandlung",
+    "homoeopathie": "was ist homoeopathie globuli",
+    "homöopathie": "was ist homoeopathie globuli",
+    "keto": "was ist keto ketogene diaet",
+    "fasten": "was ist intermittierendes fasten",
+    "sperrmuell": "was ist sperrmuell entsorgung",
+    "geschenke": "was ist geschenke ideen",
+    "geschenk": "was ist geschenke ideen",
+    "selbstvertrauen": "was ist selbstvertrauen",
+    "motivation": "was ist motivation antrieb",
+    "perfektionismus": "was ist perfektionismus",
+    "entscheidung": "was ist entscheidungen treffen",
+    "entscheidungen": "was ist entscheidungen treffen",
+    "hoeflichkeit": "was ist hoeflichkeit umgangston",
+    "höflichkeit": "was ist hoeflichkeit umgangston",
+    "weihnachten": "was ist weihnachten tradition",
+    "silvester": "was ist silvester neujahr",
+    "neujahr": "was ist silvester neujahr",
+    "zeugnis": "was ist arbeitszeugnis",
+    "handwerker": "was ist handwerker renovierung",
+    "parken": "was ist parken parkverbot",
+    "mahnung": "was ist mahnung inkasso",
+    "inkasso": "was ist mahnung inkasso",
+    "pfand": "was ist pfand pfandflasche",
+    "pfandflasche": "was ist pfand pfandflasche",
+    "mieterhoehung": "was ist mieterhoehung miete",
+    "anmeldung": "was ist meldebescheinigung anmeldung",
+    "meldebescheinigung": "was ist meldebescheinigung anmeldung",
+    "personalausweis": "was ist personalausweis reisepass",
+    "reisepass": "was ist personalausweis reisepass",
+    "pass": "was ist personalausweis reisepass",
+    "schufa": "was ist schufa bonitaet",
+    "dispo": "was ist dispokredit dispo",
+    "kredit": "was ist ratenkredit privatkredit",
+    "ratenkredit": "was ist ratenkredit privatkredit",
+    "hypothek": "was ist baufinanzierung hypothek",
+    "baufinanzierung": "was ist baufinanzierung hypothek",
+    "nachsendeauftrag": "was ist nachsendeauftrag post",
+    "pflegegrad": "was ist pflegegrad pflegeversicherung",
+    "visum": "was ist visum aufenthaltstitel",
+    "aufenthaltstitel": "was ist visum aufenthaltstitel",
+    "fuehrungszeugnis": "was ist fuehrungszeugnis",
+    "führungszeugnis": "was ist fuehrungszeugnis",
+    "buergeramt": "was ist buergeramt meldeamt",
+    "bürgeramt": "was ist buergeramt meldeamt",
+    "minijob": "was ist minijob midijob",
+    "midijob": "was ist minijob midijob",
+    "praktikum": "was ist praktikum pflichtpraktikum",
+    "werkstudent": "was ist werkstudent student job",
+    "winterreifen": "was ist winterreifen reifen",
+    "bussgeld": "was ist bussgeld verkehr",
+    "blitzer": "was ist bussgeld verkehr",
+    "flensburg": "was ist punkte flensburg",
+    "punkte": "was ist punkte flensburg",
+    "schulzeugnis": "was ist schulzeugnis noten",
+    "mietschulden": "was ist mietschulden mietrueckstand",
+    "widerruf": "was ist widerrufsrecht online",
+    "gewaehrleistung": "was ist gewaehrleistung garantie",
+    "garantie": "was ist gewaehrleistung garantie",
+    "paypal": "was ist paypal klarna lastschrift",
+    "klarna": "was ist paypal klarna lastschrift",
+    "girokonto": "was ist girokonto kontowechsel",
+    "konto": "was ist girokonto kontowechsel",
+    "sparkonto": "was ist sparkonto tagesgeld",
+    "tagesgeld": "was ist sparkonto tagesgeld",
+    "festgeld": "was ist sparkonto tagesgeld",
+    "urlaub": "was ist urlaubsanspruch urlaubstage",
+    "urlaubsanspruch": "was ist urlaubsanspruch",
+    "krankmeldung": "was ist krankmeldung krankschreibung",
+    "krankschreibung": "was ist krankmeldung krankschreibung",
+    "kindergeld": "was ist kindergeld antrag",
+    "schwangerschaft": "was ist schwangerschaft trimester",
+    "schwanger": "was ist schwangerschaft",
+    "sonnenbrand": "was ist sonnenbrand hitzschlag",
+    "hitzschlag": "was ist sonnenbrand hitzschlag",
+    "zecken": "was ist zeckenbiss borreliose",
+    "zeckenbiss": "was ist zeckenbiss",
+    "steuererklaerung": "was ist steuererklaerung elster",
+    "steuererklärung": "was ist steuererklaerung elster",
+    "elster": "was ist steuererklaerung elster",
+    "mietminderung": "was ist mietminderung mietrecht",
+    "verbraucherzentrale": "was ist verbraucherzentrale",
+    "elterngeld": "was ist elterngeld antrag",
+    "stillen": "was ist stillen beikost",
+    "rentenversicherung": "was ist rentenversicherung",
+    "arbeitslosengeld": "was ist arbeitslosengeld alg1",
+    "alg1": "was ist arbeitslosengeld alg1",
+    "gehaltserhoehung": "was ist gehaltserhoehung lohn",
+    "onlineshopping": "was ist online shopping",
+    "amazon": "was ist online shopping",
+    "2fa": "was ist zwei faktor authentifizierung",
+    "esim": "was ist esim prepaid roaming",
+    "glasfaser": "was ist glasfaser dsl internet",
+    "mesh": "was ist mesh wlan",
+    "notgroschen": "was ist notgroschen finanzielle reserve",
+    "budget": "was ist haushaltsbudget",
+    "depot": "was ist depot etf",
+    "nachhilfe": "was ist nachhilfe lernhilfe",
+    "pruefungsangst": "was ist pruefungsangst",
+    "einsamkeit": "was ist einsamkeit",
+    "sozialeangst": "was ist soziale angst",
+    "hundeerziehung": "was ist hund erziehung",
+    "zimmerpflanzen": "was ist zimmerpflanzen pflege",
+    "friseur": "was ist friseur haarschnitt",
+    "phishing": "was ist phishing email",
+    "passwortmanager": "was ist passwort manager",
+    "cloud": "was ist cloud speicher",
+    "vinted": "was ist second hand kleinanzeigen",
+    "flohmarkt": "was ist second hand flohmarkt",
+    "rueckenschmerz": "was ist rueckenschmerz nackenschmerz",
+    "rückenschmerz": "was ist rueckenschmerz",
+    "muskelkater": "was ist muskelkater dehnen",
+    "schnarchen": "was ist schnarchen schlafapnoe",
+    "abnehmen": "was ist abnehmen gesund",
+    "bmi": "was ist bmi uebergewicht",
+    "laktose": "was ist laktoseintoleranz",
+    "nussallergie": "was ist nussallergie",
+    "bienenstich": "was ist insektenstich",
+    "sonnencreme": "was ist sonnencreme hautpflege",
+    "akne": "was ist akne pickel",
+    "schlaganfall": "was ist schlaganfall erkennen",
+    "herzinfarkt": "was ist herzinfarkt erkennen",
+    "zahnspange": "was ist zahnspange",
+    "bruxismus": "was ist bruxismus zaeheneknirschen",
+    "kaffee": "was ist kaffee koffein",
+    "alkohol": "was ist alkohol gesundheit",
+    "rauchen": "was ist rauchen aufhoeren",
+    "trinkwasser": "was ist trinkwasser wie viel",
+    "einschlafen": "was ist einschlafen schlafstoerung",
+    "escooter": "was ist e-scooter elektroroller",
+    "fahrradhelm": "was ist fahrradhelm sicherheit",
+    "schwimmen": "was ist schwimmen lernen",
+    "zahnseide": "was ist zahnseide mundhygiene",
+    "ergonomie": "was ist ergonomie arbeitsplatz",
+    "laerm": "was ist laerm wohnung schallschutz",
+    "wg": "was ist wg suche wohngemeinschaft",
+    "ausbildung": "was ist ausbildungsplatz lehrstelle",
+    "betriebsrat": "was ist betriebsrat",
+    "nc": "was ist numerus clausus",
+    "gehoerschutz": "was ist gehoerschutz",
+    "bildschirmzeit": "was ist bildschirmzeit kinder",
+    "mediation": "was ist mediation schlichtung",
+    "heizen": "was ist heizen sparen",
+    "hundekot": "was ist hundekot gassi",
+    "tierarzt": "was ist tierarzt impfung",
+    "fuehrerschein": "was ist fahrschule fuehrerschein",
+    "fahrschule": "was ist fahrschule fuehrerschein",
+    "gebrauchtwagen": "was ist gebrauchtwagen auto kaufen",
+    "tuev": "was ist tuev hauptuntersuchung",
+    "hu": "was ist tuev hauptuntersuchung",
+    "autounfall": "was ist autounfall",
+    "unfall": "was ist autounfall",
+    "kfz": "was ist kfz versicherung",
+    "sprit": "was ist tanken sparen",
+    "benzin": "was ist tanken sparen",
+    "carsharing": "was ist carsharing",
+    "blablacar": "was ist mitfahrgelegenheit",
+    "schneeketten": "was ist schneeketten",
+    "jetlag": "was ist jetlag",
+    "packliste": "was ist packliste urlaub",
+    "flugverspaetung": "was ist flugverspaetung",
+    "reiseversicherung": "was ist reiseversicherung",
+    "kulturschock": "was ist kulturschock",
+    "ebike": "was ist ebike pedelec",
+    "pedelec": "was ist ebike pedelec",
+    "hundesteuer": "was ist hund anmelden",
+    "katze": "was ist katze haltung",
+    "kaninchen": "was ist kaninchen",
+    "laerm": "was ist laermbelaestigung",
+    "lärm": "was ist laermbelaestigung",
+    "eigenbedarf": "was ist eigenbedarf",
+    "mietnomade": "was ist mietnomade",
+    "ordnungsamt": "was ist ordnungsamt",
+    "balkongarten": "was ist balkongarten",
+    "motorrad": "was ist motorrad fuehrerschein",
+    "babysitter": "was ist babysitter",
+    "hausapotheke": "was ist hausapotheke",
+    "retoure": "was ist ware retournieren",
+    "gehackt": "was ist passwort gehackt"
   };
 
+  function extractQuotedPhrase(text) {
+    var m = String(text || "").match(/["'„“‚‘]([^"'„“‚‘]{2,})["'„“‚‘]/);
+    if (m && m[1]) return stripQuestionNoise(fixCommonTypos(m[1])).trim();
+    return "";
+  }
+
+  function extractTopicFromQuestion(text) {
+    var core = stripQuestionNoise(fixCommonTypos(String(text || "")));
+    var m, topic, quoted;
+    if (!core) return "";
+    quoted = extractQuotedPhrase(text);
+    if (quoted && quoted.length >= 2) return quoted;
+    m = core.match(/^(?:ich versteh[e]? nicht|ich checks? nicht|keine ahnung|weiss nicht|weiß nicht)\s+(?:was|wie|warum)\s+(.+?)(?:\s+ist|\s+sind|\s+war)?$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^was soll\s+(.+?)\s+(?:sein|bedeuten|heissen)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^was meint man mit\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:frage mich|ich frag mich)\s+(?:was|wie|warum)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:wie nennt man|was nennt man)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:infos?|informationen|hilfe|erklaerung)\s+(?:zu|zum|zur|ueber|über|von|bei)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:interesse an|interessiert mich)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:der|die|das)\s+unterschied zwischen\s+(.+)\s+und\s+(.+)$/);
+    if (m && m[1] && m[2]) return m[1].trim() + " " + m[2].trim();
+    m = core.match(/^(?:hast du ahnung (von|bei|über|ueber))\s+(.+)$/);
+    if (m && m[2] && m[2].length >= 2) return m[2].trim();
+    m = core.match(/^(?:kannste|koenntest) (?:mir )?(?:sagen|erklaeren|erklären) (?:was )?(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].replace(/\s+(ist|sind|war)$/, "").trim();
+    m = core.match(/^(.+?)\s+und\s+(?:wie|was)\s+(?:funktioniert|ist|sind)\s+(?:das|es|der rest)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:ich such[e]?|suche) (infos?|informationen|hilfe) (?:zu|zum|zur|ueber|über|von|bei)\s+(.+)$/);
+    if (m && m[2] && m[2].length >= 2) return m[2].trim();
+    m = core.match(/^(?:wuerde|würde) gern[e]? wissen (?:was |)(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].replace(/\s+(ist|sind)$/, "").trim();
+    m = core.match(/^what do you know about\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^tell me something about\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(.+?)\s+oder\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2 && m[2] && m[2].length >= 2) return m[1].trim();
+    m = core.match(/^was bringt\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^lohnt sich\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2 && !/exclusive|noco|flux|premium/.test(m[1])) return m[1].trim();
+    m = core.match(/^(?:hab|habe) ne frage (?:zu|zum|zur|ueber|über)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:hab|habe) (?:ich )?gehoert von\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:kurze |eine |ne )?frage[,:]?\s+(?:zu|zum|zur|ueber|über|wegen)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^tipps (?:fuer|für|zu|zum|beim|im|in der)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:ueber|über|about)\s+(?:den|die|das|dem|der)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].replace(/\s+eigentlich\s*$/i, "").trim();
+    m = core.match(/(?:ueber|über|zu|von|wegen|zum|zur|betreffend|about)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) {
+      topic = m[1].replace(/\s+(erklaeren|erklären|sagen|wissen|eigentlich)\s*$/i, "").trim();
+      if (topic.length >= 2) return topic;
+    }
+    m = core.match(/^(.+),\s*was ist das$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(.+)\s+eigentlich\s*$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].replace(/^was ist\s+/, "").trim();
+    m = core.match(/^(?:was ist|was sind|was war|was waren|wie funktioniert|wie ist|warum ist|warum sind|wer ist|wann|wo ist)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^was (hältst|haeltst|denkst) du (von|über|ueber)\s+(.+)$/);
+    if (m && m[3] && m[3].length >= 2) return m[3].trim();
+    m = core.match(/^(?:was mach ich|was mache ich|was tun|was muss ich tun) (?:bei|wenn|nach|beim|im|in der|in dem)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^ist (.+) (schlimm|schädlich|schaedlich|gefährlich|gefaehrlich|normal)\??$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^was passiert (?:bei|wenn|nach)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^wie sieht (.+) (?:aus|so aus)\??$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:was kostet|wie viel kostet|wie lange dauert)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].replace(/\s+(ungefaehr|ca|etwa)$/i, "").trim();
+    m = core.match(/^(?:darf man|darf ich)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^ist (?:das |es )?(.+) erlaubt\??$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^stimmt das (?:das )?(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^(?:erklaer|erklaere|erklaer mir|beschreib|definiere)\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    m = core.match(/^wie (?:mache|mach|kann|soll|sollte) ich(?: (?:ein|eine|einen|einem|der|die|das))?\s+(.+)$/);
+    if (m && m[1] && m[1].length >= 2) return m[1].replace(/\s+(machen|tun|anfangen|funktionieren)\s*$/i, "").trim();
+    m = core.match(/^how (?:do|can|should) i(?: (?:a|an|the))?\s+(.+)$/i);
+    if (m && m[1] && m[1].length >= 2) return m[1].trim();
+    return "";
+  }
+
   function interpretCasualQuery(input) {
-    var raw = String(input || "").trim();
+    var raw = normalizeGeneralQuestion(input);
     if (!raw || raw.charAt(0) === "/") return raw;
     var fixed = fixCommonTypos(raw);
     var core = stripQuestionNoise(fixed);
+    core = core.replace(/^(hey|hi|hallo|moin|servus|na|yo)[,.!\s]+/i, "");
     var n = normalize(fixed);
     var words = core.split(/\s+/).filter(Boolean);
+    var quoted = extractQuotedPhrase(raw);
 
+    if (quoted) {
+      return "was ist " + quoted;
+    }
+    if (/^(uebrigens|überhaupt|achso|ach so|btw|nachtrag)[,:!\s]+(was|wie|warum|)/i.test(core)) {
+      return core.replace(/^(uebrigens|überhaupt|achso|ach so|btw|nachtrag)[,:!\s]+/i, "").replace(/^(was|wie|warum)\s+/, "was ist ").replace(/^was ist was\s+/, "was ist ");
+    }
+    if (/^kurz gefragt[,:]?\s+/.test(core)) {
+      return "was ist " + core.replace(/^kurz gefragt[,:]?\s+/, "");
+    }
+    if (/^mal (ehrlich|kurz)[,:]?\s+/.test(core)) {
+      return "was ist " + core.replace(/^mal (ehrlich|kurz)[,:]?\s+/, "");
+    }
+
+    if (/^tipps (fuer|für|zu|zum|beim|im|in der|in dem)\s+/.test(core)) {
+      return core.replace(/^tipps (fuer|für|zu|zum|beim|im|in der|in dem)\s+/, "tipps fuer ");
+    }
+    if (/^(ratschlaege|ratschläge|empfehlungen|vorschlaege|vorschläge) (fuer|für|zu|zum|beim)\s+/.test(core)) {
+      return "tipps fuer " + core.replace(/^(ratschlaege|ratschläge|empfehlungen|vorschlaege|vorschläge) (fuer|für|zu|zum|beim)\s+/, "");
+    }
+    if (/^wie (kann|soll|sollte|muss) ich\s+/.test(core) && !/funktioniert|geht\s+/.test(core)) {
+      return "tipps " + core.replace(/^wie (kann|soll|sollte|muss) ich\s+/, "");
+    }
+    if (/^was (muss|soll|sollte) ich (beim|bei der|bei dem|im|in der|in dem)\s+/.test(core)) {
+      return "tipps " + core.replace(/^was (muss|soll|sollte) ich /, "");
+    }
+    if (/^any tips (for|on|about)\s+/i.test(core)) {
+      return "tipps fuer " + core.replace(/^any tips (for|on|about)\s+/i, "");
+    }
+    if (/^(kurze |eine |ne )?frage[,:]?\s+(zu|zum|zur|ueber|über|wegen)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(kurze |eine |ne )?frage[,:]?\s+(zu|zum|zur|ueber|über|wegen)\s+/, "");
+    }
+    if (/^(haette|hätte) mal (eine |ne )?frage (zu|zum|zur|ueber|über|wegen)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(haette|hätte) mal (eine |ne )?frage (zu|zum|zur|ueber|über|wegen)\s+/, "");
+    }
+    if (/^(hab|habe) (ich )?gehoert von\s+/.test(core)) {
+      return "was ist " + core.replace(/^(hab|habe) (ich )?gehoert von\s+/, "");
+    }
+    if (/^was wisst? (ihr|du) (über|ueber|zu|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^was wisst? (ihr|du) (über|ueber|zu|von)\s+/, "");
+    }
+    if (/^kennt (ihr|jemand|du) (das thema |)(.+)$/i.test(core)) {
+      return "was ist " + core.replace(/^kennt (ihr|jemand|du) (das thema |)/i, "");
+    }
+    if (/^ist (.+) (gefaehrlich|schlecht|gut|wichtig|gesund)\??$/.test(core)) {
+      return "was ist " + core.replace(/^ist (.+) (gefaehrlich|schlecht|gut|wichtig|gesund)\??$/, "$1");
+    }
+    if (/^was ist los mit\s+/.test(core)) {
+      return "was ist " + core.replace(/^was ist los mit\s+/, "");
+    }
+    if (/^(kannste|koenntest) (mir )?(sagen|erklaeren|erklären) (was )?(über|ueber|zu|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(kannste|koenntest) (mir )?(sagen|erklaeren|erklären) (was )?(über|ueber|zu|von)\s+/, "");
+    }
+    if (/^hast du ahnung (von|bei|über|ueber)\s+/.test(core)) {
+      return "was ist " + core.replace(/^hast du ahnung (von|bei|über|ueber)\s+/, "");
+    }
+    if (/^(und zwar|folgendes|naemlich|nämlich)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(und zwar|folgendes|naemlich|nämlich)\s+/, "");
+    }
+    if (/^(ich )?wollt(e)? (mal )?wissen (was |)(.+)$/.test(core)) {
+      return core.replace(/^(ich )?wollt(e)? (mal )?wissen (was )?/, "was ist ").replace(/\s+ist$/, "");
+    }
+    if (/^waere cool wenn du (mir )?(was |)(zu|über|ueber|von)\s+/.test(core) || /^wäre cool wenn du (mir )?(was |)(zu|über|ueber|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^w(ae|ä)re cool wenn du (mir )?(was )?(zu|über|ueber|von)\s+/, "");
+    }
+    if (/^mal kurz (was ist|wie ist|was sind)\s+/.test(core)) {
+      return core.replace(/^mal kurz /, "");
+    }
+    if (/^jo[,!\s]+(was|wie|warum)\s+/.test(core)) {
+      return core.replace(/^jo[,!\s]+/, "");
+    }
+    if (/^(ich )?such[e]? (infos?|informationen|hilfe) (zu|zum|zur|ueber|über|von|bei)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(ich )?such[e]? (infos?|informationen|hilfe) (zu|zum|zur|ueber|über|von|bei)\s+/, "");
+    }
+    if (/^(wuerde|würde) gern[e]? wissen (was |)/.test(core)) {
+      return core.replace(/^(wuerde|würde) gern[e]? wissen (was )?/, "was ist ").replace(/\s+ist$/, "");
+    }
+    if (/^what do you know about\s+/i.test(core)) {
+      return "was ist " + core.replace(/^what do you know about\s+/i, "");
+    }
+    if (/^tell me something about\s+/i.test(core)) {
+      return "was ist " + core.replace(/^tell me something about\s+/i, "");
+    }
+    if (/^is .+ (good|bad|important|healthy|dangerous)\??$/i.test(core)) {
+      return "was ist " + core.replace(/^is (.+) (good|bad|important|healthy|dangerous)\??$/i, "$1");
+    }
+    if (/^can you (explain|tell me about)\s+/i.test(core)) {
+      return "was ist " + core.replace(/^can you (explain|tell me about)\s+/i, "");
+    }
+    if (/^(erklaer|erklaere|erklär) mal\s+/.test(core)) {
+      return "was ist " + core.replace(/^(erklaer|erklaere|erklär) mal\s+/, "");
+    }
+    if (/^schreib mir (was |)(zu|über|ueber|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^schreib mir (was |)(zu|über|ueber|von)\s+/, "");
+    }
+    if (/^(in einfachen worten|einfach erklaert|einfach erklärt|fuer anfaenger|für anfänger|fuer dummies|eli5)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(in einfachen worten|einfach erklaert|einfach erklärt|fuer anfaenger|für anfänger|fuer dummies|eli5)\s+/, "");
+    }
+    if (/^was ist (.+) (genau|eigentlich|so genau)\??$/.test(core)) {
+      return "was ist " + core.replace(/^was ist (.+) (genau|eigentlich|so genau)\??$/, "$1");
+    }
+    if (/^was bringt\s+/.test(core)) {
+      return "was ist " + core.replace(/^was bringt\s+/, "");
+    }
+    if (/^lohnt sich\s+/.test(core) && !/exclusive|noco|flux|premium/.test(core)) {
+      return "was ist " + core.replace(/^lohnt sich\s+/, "");
+    }
+    if (/^(hab|habe) ne frage (zu|zum|zur|ueber|über)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(hab|habe) ne frage (zu|zum|zur|ueber|über)\s+/, "");
+    }
+    if (/^(weisst du|weißt du) was\s+(.+)\s+ist\??$/.test(core)) {
+      return "was ist " + core.replace(/^(weisst du|weißt du) was\s+/, "").replace(/\s+ist\??$/, "");
+    }
+    if (/^kann man\s+(.+)\s+(erklaeren|erklären|sagen)\??$/.test(core)) {
+      return "was ist " + core.replace(/^kann man\s+/, "").replace(/\s+(erklaeren|erklären|sagen)\??$/, "");
+    }
     if (words.length === 1 && ONE_WORD_INTENTS[words[0]]) {
       return ONE_WORD_INTENTS[words[0]];
     }
     if (words.length === 2 && words[0] === "was" && ONE_WORD_INTENTS[words[1]]) {
       return ONE_WORD_INTENTS[words[1]];
     }
-    if (words.length === 2 && words[0] === "wie" && ONE_WORD_INTENTS[words[1]]) {
-      return "wie funktioniert " + ONE_WORD_INTENTS[words[1]].replace(/^was ist\s+/, "");
+    if (words.length === 2 && words[0] === "warum" && ONE_WORD_INTENTS[words[1]]) {
+      return "warum " + ONE_WORD_INTENTS[words[1]].replace(/^was ist\s+/, "");
+    }
+    if (/^what is\s+/i.test(core)) {
+      return "was ist " + core.replace(/^what is\s+/i, "");
+    }
+    if (/^how does\s+/i.test(core)) {
+      return "wie funktioniert " + core.replace(/^how does\s+/i, "").replace(/\s+work\s*$/i, "");
+    }
+    if (/^tell me about\s+/i.test(core)) {
+      return "was ist " + core.replace(/^tell me about\s+/i, "");
+    }
+    if (/^explain\s+/i.test(core)) {
+      return "was ist " + core.replace(/^explain\s+/i, "");
+    }
+    if (/^tipps (fuer|für|zu|zum|beim)\s+/.test(core)) {
+      return core.replace(/^tipps (fuer|für|zu|zum|beim)\s+/, "tipps fuer ");
+    }
+    if (/^wie kann ich (besser )?(lernen|schlafen|sparen|kochen|abnehmen|fit werden)/.test(core)) {
+      return core.replace(/^wie kann ich (besser )?/, "tipps ");
+    }
+    if (/^was kannst du mir (zu|über|ueber|von)\s+(.+)\s+sagen/.test(core)) {
+      return "was ist " + core.replace(/^was kannst du mir (zu|über|ueber|von)\s+/, "").replace(/\s+sagen\s*$/, "");
+    }
+    if (/^(hätte|haette) (gern|gerne) (info|infos) (zu|über|ueber|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(hätte|haette) (gern|gerne) (info|infos) (zu|über|ueber|von)\s+/, "");
+    }
+    if (/^(.+),\s*was ist das\??$/.test(core)) {
+      return "was ist " + core.replace(/^(.+),\s*was ist das\??$/, "$1");
+    }
+    if (/^was ist\s+(.+)\s+eigentlich\??$/.test(core)) {
+      return "was ist " + core.replace(/^was ist\s+(.+)\s+eigentlich\??$/, "$1");
     }
     if (/^zeichne\s+(mir\s+)?(ein\s+)?(bild\s+)?(von\s+)?/.test(core)) {
       return "erstelle ein bild von " + core.replace(/^zeichne\s+(mir\s+)?(ein\s+)?(bild\s+)?(von\s+)?/, "");
@@ -6072,6 +9193,51 @@
     }
     if (/^was\s+kannst\s+du\s+(über|ueber|zu|von)\s+/.test(core)) {
       return "was ist " + core.replace(/^was\s+kannst\s+du\s+(über|ueber|zu|von)\s+/, "");
+    }
+    if (/^ich (will|moechte|möchte) wissen (was|wie|warum|wer|wann|wo)\s+/.test(core)) {
+      return core.replace(/^ich (will|moechte|möchte) wissen /, "");
+    }
+    if (/^(ich )?hab(e)? (eine |ne )?frage (zu|ueber|über|wegen|zum|zur)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(ich )?hab(e)? (eine |ne )?frage (zu|ueber|über|wegen|zum|zur)\s+/, "");
+    }
+    if (/^was genau (ist|sind|war|waren)\s+/.test(core)) {
+      return core.replace(/^was genau /, "was ");
+    }
+    if (/^wofuer (ist|sind)\s+/.test(core) || /^wofür (ist|sind)\s+/.test(core)) {
+      return "was ist " + core.replace(/^wof(ue|ü)r (ist|sind)\s+/, "");
+    }
+    if (/^wieso\s+/.test(core)) {
+      return "warum " + core.replace(/^wieso\s+/, "");
+    }
+    if (/^weshalb\s+/.test(core)) {
+      return "warum " + core.replace(/^weshalb\s+/, "");
+    }
+    if (/^(weißt du|weisst du) (was|wie|wer)\s+/.test(core)) {
+      return core.replace(/^(weißt du|weisst du) /, "");
+    }
+    if (/^kannst du mir (sagen|erzaehlen|erzählen) (was |etwas )?(ueber|über|zu|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^kannst du mir (sagen|erzaehlen|erzählen) (was |etwas )?(ueber|über|zu|von)\s+/, "");
+    }
+    if (/^nur mal (kurz|schnell) (erklaeren|erklären|sagen) (was |)(ueber|über|zu|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^nur mal (kurz|schnell) (erklaeren|erklären|sagen) (was |)?(ueber|über|zu|von)\s+/, "");
+    }
+    if (/^ich frag mich\s+/.test(core)) {
+      return "was ist " + core.replace(/^ich frag mich\s+/, "");
+    }
+    if (/^mir ist (nicht )?klar (was|wie|warum)\s+/.test(core)) {
+      return core.replace(/^mir ist (nicht )?klar /, "");
+    }
+    if (/^stell\s+(mir\s+)?(das\s+|etwas\s+)?(als\s+bild\s+)?dar\s+/.test(core)) {
+      return "erstelle ein bild von " + core.replace(/^stell\s+(mir\s+)?(das\s+|etwas\s+)?(als\s+bild\s+)?dar\s+/, "");
+    }
+    if (/^stell\s+(mir\s+).+\s+dar$/.test(core) && !/video|film|clip|animation/.test(core)) {
+      return "erstelle ein bild von " + core.replace(/^stell\s+(mir\s+)?/, "").replace(/\s+dar$/, "");
+    }
+    if (/^(video|film|clip|animation|motion)\s+(von|vom|mit|über|ueber)\s+/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^(video|film|clip|animation|motion)\s+(von|vom|mit|über|ueber)\s+/, "");
+    }
+    if (/^animier(e)?\s+(mir\s+)?/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^animier(e)?\s+(mir\s+)?/, "");
     }
     if (/^wie\s+(?!funktioniert|geht|ist|warum|viel|oft|lange)/.test(core)) {
       return "wie funktioniert " + core.replace(/^wie\s+/, "");
@@ -6142,6 +9308,21 @@
     if (/^vergleiche?\s+/.test(core)) {
       return core.replace(/^vergleiche?\s+/, "vergleich ");
     }
+    if (/^(ich will|ich moechte|ich möchte)\s+(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^(ich will|ich moechte|ich möchte)\s+(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/, "");
+    }
+    if (/^(kannst du|koenntest du|bitte)\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^(kannst du|koenntest du|bitte)\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/, "");
+    }
+    if (/^generier(e)?\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^generier(e)?\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/, "");
+    }
+    if (/^mach\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^mach\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/, "");
+    }
+    if (/^erstelle\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/.test(core)) {
+      return "erstelle ein video von " + core.replace(/^erstelle\s+(mir\s+)?(ein\s+)?(video|film|clip|animation)\s+(von\s+)?/, "");
+    }
     if (/^(ich will|ich moechte|ich möchte)\s+(ein\s+)?(bild\s+)?(von\s+)?/.test(core)) {
       return "erstelle ein bild von " + core.replace(/^(ich will|ich moechte|ich möchte)\s+(ein\s+)?(bild\s+)?(von\s+)?/, "");
     }
@@ -6160,10 +9341,94 @@
     if (/^chat\s*(verlauf|summary|zusammen)/.test(core)) {
       return "was habe ich geschrieben";
     }
+    if (/^(ich )?checks?( nicht| nich) (was|wie|warum)\s+/.test(core)) {
+      return core.replace(/^(ich )?checks?( nicht| nich) /, "was ist ").replace(/\s+ist$/, "");
+    }
+    if (/^(ich )?versteh(e)?( nicht| nich) (was|wie|warum)\s+/.test(core)) {
+      return core.replace(/^(ich )?versteh(e)?( nicht| nich) /, "was ist ").replace(/\s+ist$/, "");
+    }
+    if (/^keine ahnung (was|wie|warum)\s+/.test(core)) {
+      return core.replace(/^keine ahnung /, "was ist ").replace(/\s+ist$/, "");
+    }
+    if (/^was soll (.+) (sein|bedeuten|heissen)\??$/.test(core)) {
+      return "was ist " + core.replace(/^was soll (.+) (sein|bedeuten|heissen)\??$/, "$1");
+    }
+    if (/^was meint man mit\s+/.test(core)) {
+      return "was ist " + core.replace(/^was meint man mit\s+/, "");
+    }
+    if (/^(wie|was) nennt man\s+/.test(core)) {
+      return "was ist " + core.replace(/^(wie|was) nennt man\s+/, "");
+    }
+    if (/^(gibt es|gibts) (infos?|informationen) (zu|über|ueber|zum|zur|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(gibt es|gibts) (infos?|informationen) (zu|über|ueber|zum|zur|von)\s+/, "");
+    }
+    if (/^brauch(e)? (infos?|informationen|hilfe) (zu|bei|über|ueber|zum|zur|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^brauch(e)? (infos?|informationen|hilfe) (zu|bei|über|ueber|zum|zur|von)\s+/, "");
+    }
+    if (/^interessiert mich (was |das thema |)(.+)$/.test(core)) {
+      return "was ist " + core.replace(/^interessiert mich (was |das thema |)/, "");
+    }
+    if (/^(hätte|haette) (interesse|lust) (an|auf|zu|bei)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(hätte|haette) (interesse|lust) (an|auf|zu|bei)\s+/, "");
+    }
+    if (/^was ist der unterschied zwischen\s+/.test(core) || /^unterschied zwischen\s+/.test(core)) {
+      return core.replace(/^was ist der unterschied zwischen\s+/, "vergleich ").replace(/^unterschied zwischen\s+/, "vergleich ");
+    }
+    if (/^kann mir jemand (sagen|erklären|erklaeren) (was )?(über|ueber|zu|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^kann mir jemand (sagen|erklären|erklaeren) (was )?(über|ueber|zu|von)\s+/, "");
+    }
+    if (/^was weiss man (über|ueber|zu|von)\s+/.test(core) || /^was weiß man (über|ueber|zu|von)\s+/.test(core)) {
+      return "was ist " + core.replace(/^was weiss man (über|ueber|zu|von)\s+/, "").replace(/^was weiß man (über|ueber|zu|von)\s+/, "");
+    }
+    if (/^wie würde man\s+(.+)\s+(erklären|erklaeren|beschreiben)/.test(core)) {
+      return "was ist " + core.replace(/^wie würde man\s+/, "").replace(/\s+(erklären|erklaeren|beschreiben)$/, "");
+    }
     if (/^(mein|der)\s+plan/.test(core)) {
       return "welchen plan habe ich";
     }
-    if (words.length >= 2 && words.length <= 4 && !/^(was|wie|wer|wann|wo|warum|hallo|danke|hi|hey|moin|servus|ok|okay|ja|nein|cool|nice|bitte)$/.test(words[0])) {
+    if (/^was (mach|mache) ich (wenn|bei|nach|beim|im|in der)\s+/.test(core)) {
+      return "was ist " + core.replace(/^was (mach|mache) ich (wenn|bei|nach|beim|im|in der)\s+/, "");
+    }
+    if (/^was (muss|soll) ich (bei|beim|nach|im|in der)\s+/.test(core)) {
+      return "tipps " + core.replace(/^was (muss|soll) ich /, "");
+    }
+    if (/^ist (.+) (schlimm|schädlich|schaedlich|gefährlich|gefaehrlich|normal)\??$/.test(core)) {
+      return "was ist " + core.replace(/^ist (.+) (schlimm|schädlich|schaedlich|gefährlich|gefaehrlich|normal)\??$/, "$1");
+    }
+    if (/^wie sieht (.+) (aus|so aus)\??$/.test(core)) {
+      return "was ist " + core.replace(/^wie sieht (.+) (aus|so aus)\??$/, "$1");
+    }
+    if (/^(ich )?brauch(e)? (hilfe|tipps) (bei|für|fuer|zum|zur)\s+/.test(core)) {
+      return "tipps " + core.replace(/^(ich )?brauch(e)? (hilfe|tipps) (bei|für|fuer|zum|zur)\s+/, "");
+    }
+    if (/^was passiert (bei|wenn|nach)\s+/.test(core)) {
+      return "was ist " + core.replace(/^was passiert (bei|wenn|nach)\s+/, "");
+    }
+    if (/^(was kostet|wie viel kostet|wie lange dauert)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(was kostet|wie viel kostet|wie lange dauert)\s+/, "");
+    }
+    if (/^(darf man|darf ich)\s+/.test(core)) {
+      return "was ist " + core.replace(/^(darf man|darf ich)\s+/, "");
+    }
+    if (/^ist (das |es )?(.+) erlaubt\??$/.test(core)) {
+      return "was ist " + core.replace(/^ist (?:das |es )?(.+) erlaubt\??$/, "$1");
+    }
+    if (/^stimmt das (das )?/.test(core)) {
+      return "was ist " + core.replace(/^stimmt das (?:das )?/, "");
+    }
+    if (/^geht das (noch |)(.+)\??$/.test(core)) {
+      return "was ist " + core.replace(/^geht das (?:noch )?/, "").replace(/\??$/, "");
+    }
+    if (/^(was|wie|wer|wann|wo|warum)\s/.test(core)) {
+      return fixed;
+    }
+    if (/^(erstelle|zeichne|male|mach|zeig|generier|animier|stell|gib|render|video|film|bild|pixel|motion|agent|inside|summary|brief|hilfe|help)\b/.test(core)) {
+      return fixed;
+    }
+    if (words.length >= 2 && words.length <= 8 && !/^(hallo|danke|hi|hey|moin|servus|ok|okay|ja|nein|cool|nice|bitte|super|danke)$/.test(words[0])) {
+      return "was ist " + core;
+    }
+    if (words.length === 1 && words[0].length >= 3 && !/^(hallo|danke|hi|hey|moin|servus|ok|okay|ja|nein|cool|nice|bitte|super|ey|yo|hm|na)$/.test(words[0])) {
       return "was ist " + core;
     }
     return fixed;
@@ -6509,7 +9774,152 @@
       ["zettelkasten", "second brain notizen"], ["notion", "workspace notes"],
       ["obsidian", "markdown pkm"], ["gtd", "getting things done"],
       ["eisenhower", "dringend wichtig matrix"], ["latex", "wissenschaft satz"],
-      ["plagiat", "zitieren quellen"], ["apa", "zitierstil"]
+      ["plagiat", "zitieren quellen"], ["apa", "zitierstil"],
+      ["philosophie", "ethik moral sinn des lebens"],
+      ["psychologie", "gehirn emotion stress angst"],
+      ["liebe", "beziehung partnerschaft freundschaft"],
+      ["freundschaft", "soziale beziehung freunde"],
+      ["karriere", "arbeit bewerbung job beruf"],
+      ["arbeit", "karriere beruf bewerbung"],
+      ["studium", "uni universitaet bildung"],
+      ["universum", "astronomie galaxie schwarzes loch"],
+      ["ernaehrung", "essen gesund diaet vegan"],
+      ["reisen", "urlaub tourismus fernweh"],
+      ["finanzen", "geld sparen investieren budget"],
+      ["glueck", "zufriedenheit wohlbefinden"],
+      ["wetter", "wettervorhersage regen sonne klima"],
+      ["kunst", "kultur literatur museum"],
+      ["literatur", "buecher schreiben lesen"],
+      ["motion", "noco motion video erstellen"],
+      ["locomotion", "noco motion pseudo video"],
+      ["localotion", "noco motion"],
+      ["video", "erstelle video noco motion"],
+      ["agent", "noco agent auftrag automatisierung"],
+      ["inside", "noco inside analyse kernpunkte"],
+      ["summary", "noco summary stichpunkte"],
+      ["erklaer", "was ist erklaer mir"],
+      ["erklaere", "was ist erklaer mir"],
+      ["alltag", "allgemeine frage thema"],
+      ["frage", "was kann ich dich fragen"],
+      ["yoga", "meditation achtsamkeit entspannung"],
+      ["fitness", "training sport muskelaufbau"],
+      ["auto", "verkehr fahrzeug e-auto"],
+      ["politik", "demokratie wahl bundestag"],
+      ["religion", "glaube christentum islam"],
+      ["wohnen", "miete wohnung eigenheim"],
+      ["haustier", "hund katze tier"],
+      ["erkaeltung", "husten schnupfen grippaler"],
+      ["nachhaltigkeit", "umwelt muelltrennung plastik"],
+      ["mode", "fashion kleidung stil"],
+      ["natur", "wald outdoor camping"],
+      ["zeitmanagement", "produktivitaet pomodoro"],
+      ["wieso", "warum"],
+      ["weshalb", "warum"],
+      ["wofuer", "was ist"],
+      ["wofür", "was ist"],
+      ["kochen", "rezepte kueche essen"],
+      ["hobby", "freizeit zeitvertreib"],
+      ["eltern", "kinder erziehung familie"],
+      ["streaming", "netflix youtube spotify"],
+      ["konflikt", "streit kommunikation"],
+      ["traum", "traeume schlaf albtraum"],
+      ["einkaufen", "supermarkt budget sparen"],
+      ["sommer", "urlaub hitze freizeit"],
+      ["what is", "was ist"],
+      ["how does", "wie funktioniert"],
+      ["tell me about", "was ist"],
+      ["explain", "was ist erklaer"],
+      ["umzug", "wohnungswechsel mietwohnung"],
+      ["scheidung", "trennung ehe"],
+      ["heirat", "hochzeit standesamt"],
+      ["stromausfall", "blackout kein strom"],
+      ["putzen", "haushalt reinigen"],
+      ["versicherung", "haftpflicht kfz"],
+      ["flughafen", "fliegen reise flugzeug"],
+      ["trinkgeld", "restaurant service"],
+      ["deutschlandticket", "oepnv monatskarte bahn"],
+      ["dticket", "deutschland ticket"],
+      ["tattoo", "taetowierung piercing"],
+      ["brille", "sehstaerke kontaktlinsen"],
+      ["grippe", "influenza erkaeltung"],
+      ["stalking", "cyberstalking belaestigung"],
+      ["nachbarn", "nachbarschaft"],
+      ["zeitumstellung", "sommerzeit winterzeit"],
+      ["lohnsteuer", "steuerklasse netto brutto"],
+      ["kita", "kindergarten hort betreuung"],
+      ["lotto", "gluecksspiel casino"],
+      ["horoskop", "astrologie sternzeichen"],
+      ["impfpass", "impfungen impfausweis"],
+      ["stromsparen", "energie sparen haushalt"],
+      ["wassersparen", "trinkwasser sparen"],
+      ["hausaufgaben", "schulaufgaben lernen"],
+      ["checks nicht", "was ist verstehe nicht"],
+      ["keine ahnung", "was ist"],
+      ["was meint man", "was ist bedeutung"],
+      ["mietkaution", "kaution wohnung"],
+      ["nebenkosten", "betriebskosten heizkosten"],
+      ["schimmel", "feuchtigkeit wohnung"],
+      ["kuendigung", "arbeitsvertrag job"],
+      ["lebenslauf", "cv bewerbung"],
+      ["gehaltsverhandlung", "lohn verhandeln"],
+      ["homoeopathie", "globuli alternative medizin"],
+      ["keto", "ketogene diaet low carb"],
+      ["fasten", "intervallfasten 16 8"],
+      ["sperrmuell", "muell entsorgung"],
+      ["geschenke", "geschenkideen schenken"],
+      ["selbstvertrauen", "selbstbewusstsein"],
+      ["perfektionismus", "perfekt sein"],
+      ["weihnachten", "advent geschenke"],
+      ["silvester", "neujahr feuerwerk"],
+      ["handwerker", "renovierung reparatur"],
+      ["mahnung", "inkasso schulden"],
+      ["gehoert von", "was ist"],
+      ["kurze frage", "was ist"],
+      ["pfand", "pfandflasche mehrweg"],
+      ["mieterhoehung", "miete erhoehen"],
+      ["schufa", "bonitaet auskunft"],
+      ["dispo", "ueberziehungskredit"],
+      ["baufinanzierung", "hypothek immobilie"],
+      ["pflegegrad", "pflegeversicherung"],
+      ["visum", "aufenthaltstitel einreise"],
+      ["buergeramt", "meldeamt anmeldung"],
+      ["minijob", "450 euro job"],
+      ["werkstudent", "student nebenjob"],
+      ["winterreifen", "reifen wechseln"],
+      ["flensburg", "punkte verkehr"],
+      ["mietschulden", "miete nicht bezahlt"],
+      ["kannste", "kannst du erklaer"],
+      ["hast du ahnung", "was ist"],
+      ["und zwar", "was ist"],
+      ["widerruf", "widerrufsrecht online"],
+      ["kindergeld", "familienkasse eltern"],
+      ["krankmeldung", "krankschreibung au"],
+      ["steuererklaerung", "elster steuer"],
+      ["zecken", "zeckenbiss borreliose"],
+      ["alg1", "arbeitslosengeld"],
+      ["such infos", "was ist"],
+      ["wuerde gern wissen", "was ist"],
+      ["eli5", "was ist einfach"],
+      ["fuer anfaenger", "was ist"],
+      ["2fa", "zwei faktor authentifizierung"],
+      ["glasfaser", "internet zuhause dsl"],
+      ["notgroschen", "finanzielle reserve"],
+      ["pruefungsangst", "pruefungsstress"],
+      ["einsamkeit", "allein sein"],
+      ["kleinanzeigen", "second hand vinted"],
+      ["rueckenschmerz", "ruecken nacken schmerz"],
+      ["schnarchen", "schlafapnoe"],
+      ["schlaganfall", "fast test stroke"],
+      ["rauchen", "rauchstopp nikotinentzug"],
+      ["hab ne frage", "was ist"],
+      ["was bringt", "was ist"],
+      ["lohnt sich", "was ist"],
+      ["escooter", "e-scooter elektroroller"],
+      ["wg", "wohngemeinschaft suche"],
+      ["nc", "numerus clausus"],
+      ["tierarzt", "impfung hund katze"],
+      ["uebrigens", "was ist"],
+      ["achso", "was ist"]
     ];
     var i, expanded = norm;
     for (i = 0; i < aliases.length; i++) {
@@ -6527,6 +9937,10 @@
     for (i = 0; i < keys.length; i++) {
       key = normalize(keys[i]);
       if (norm === key || raw === key || core === key) { best = Math.max(best, 100); continue; }
+      if (core.split(/\s+/).length === 1 && core.length >= 3 && core === key) {
+        best = Math.max(best, 88);
+        continue;
+      }
       if (norm.indexOf(key) !== -1) best = Math.max(best, 58 + Math.min(key.length, 32));
       if (core.indexOf(key) !== -1) best = Math.max(best, 62 + Math.min(key.length, 28));
       if (key.indexOf(norm) !== -1 && norm.length > 2) best = Math.max(best, 48 + norm.length);
@@ -6554,6 +9968,14 @@
         best = Math.max(best, Math.round(hits * 22 + ratio * 34));
         if (ratio >= 0.85 && words.length >= 2) best = Math.max(best, Math.round(52 + ratio * 38));
         if (hits >= words.length && words.length >= 1) best = Math.max(best, 68 + words.length * 4);
+      }
+    }
+    if (core.split(/\s+/).filter(Boolean).length <= 2 && core.length >= 4) {
+      for (i = 0; i < keys.length; i++) {
+        key = normalize(keys[i]);
+        if (key === core || key.indexOf(core) === 0 || core.indexOf(key.split(/\s+/)[0]) === 0) {
+          best = Math.max(best, 66);
+        }
       }
     }
     return best;
@@ -6674,9 +10096,18 @@
   function getClosestSuggestions(input, limit) {
     limit = limit || 4;
     var ranked = [];
-    var i, sc;
+    var queries = [String(input || "")];
+    var topic = applyTopicSynonyms(stripQuestionNoise(fixCommonTypos(normalizeGeneralQuestion(input))));
+    var i, q, sc;
+    if (topic) {
+      queries.push(topic);
+      queries.push("was ist " + topic);
+    }
     for (i = 0; i < KNOWLEDGE.length; i++) {
-      sc = scoreMatch(input, KNOWLEDGE[i].keys);
+      sc = 0;
+      for (q = 0; q < queries.length; q++) {
+        sc = Math.max(sc, scoreMatch(queries[q], KNOWLEDGE[i].keys));
+      }
       if (sc > 0) ranked.push({ score: sc, label: KNOWLEDGE[i].keys[0] });
     }
     ranked.sort(function (a, b) { return b.score - a.score; });
@@ -6684,30 +10115,30 @@
   }
 
   function isCapabilitiesQuery(input) {
-    return /was kann ich (dich )?fragen|welche fragen|was weisst du|was weiss du|was kannst du|deine funktionen|was kann noco|noco namen|modell namen|was sind die noco|hilfe|help|was bietest du|was machst du|uebersicht|hub|funktionen liste|themen liste|alle themen/.test(normalize(input));
+    return /was kann ich (dich )?fragen|was ist neu|was gibts neues|neu in noco|welche fragen|was weisst du|was weiss du|was kannst du|deine funktionen|was kann noco|noco namen|modell namen|was sind die noco|hilfe|help|was bietest du|was machst du|uebersicht|hub|funktionen liste|themen liste|alle themen/.test(normalize(input));
   }
 
   function getBrandGuide() {
     return "**NOCO Namen — kurz erklaert:**\n\n" +
       "**Modelle:**\n• **NOCO Flux** (Exclusive) — Rush, unbegrenzt\n• **NOCO Prism** (Free 1-10) — Voll-Vault\n• **NOCO Spark** (Free 11+) — kompakt\n\n" +
-      "**Funktionen:**\n• **NOCO Vault** — 520+ Themen-Wissens-Engine\n• **NOCO Brief** — Recherche-Briefings & Vergleiche\n• **NOCO Glow** — Live-Intent-Prism beim Tippen\n• **NOCO Echo** — Chat-Verlauf\n• **NOCO Render** — 3600 Motive Pixel-Kunst\n• **NOCO Sheen** — Blur-Animation\n• **NOCO Lens** — Keywords (Exclusive)\n• **NOCO Rush** — ~90 ms Speed\n• **NOCO Access** — Plan-Leiste\n• **NOCO Sparks** — Schnellfragen";
+      "**Funktionen:**\n• **NOCO Vault** — 520+ Themen-Wissens-Engine\n• **Wiki-API 1.1** — Wikipedia-Abstracts live\n• **Nexus-Auto** — Vault + Wiki intelligent\n• **NOCO Brief** — Recherche-Briefings & Vergleiche\n• **NOCO Glow** — Live-Intent-Prism beim Tippen\n• **NOCO Echo** — Chat-Verlauf\n• **NOCO Render** — 3600 Motive Pixel-Kunst\n• **NOCO Sheen** — Blur-Animation\n• **NOCO Lens** — Keywords (Exclusive)\n• **NOCO Rush** — ~90 ms Speed\n• **NOCO Access** — Plan-Leiste\n• **NOCO Sparks** — Schnellfragen";
   }
 
   function getCapabilitiesAnswer() {
-    return "**NOCO AI — Das kannst du fragen:**\n\n" +
+    return "**NOCO AI v5.2 — Was ist neu & was kannst du?**\n\n" +
+      "**Neu:** **NOCO AI Automation** — Vault + Wiki-API intelligent gemischt · **Wiki-API 1.0** · 10 Agent-Vorlagen\n\n" +
       getBrandGuide() + "\n\n" +
-      "**◎ So startest du:**\n" +
-      "• **NOCO Brief** — `/brief Thema` oder *Briefe mir Klimawandel* · Vergleich *Python vs JavaScript*\n" +
-      "• **NOCO Echo** — *Was habe ich geschrieben?* / `/summary`\n" +
-      "• **NOCO Render** — *Mach ein Bild von…* im Chat / `/pixel` (Exclusive, 1 Bild zur Zeit)\n" +
-      "• **NOCO Lens Detect** — KI-Bild pruefen / `/detect` (+ Button)\n" +
-      "• **NOCO Vault** — 520+ Themen: NOCO OS, Wissenschaft, Tech\n\n" +
-      "**✦ NOCO OS:** Workspace, Keycard, Forge, Security\n" +
-      "**⬡ Wissenschaft:** Physik, Chemie, Genetik, Quanten, Vulkan\n" +
-      "**♡ Mensch:** Medizin, Koerper, Psychologie, Achtsamkeit\n" +
-      "**◇ Tech:** Blockchain, VR, WLAN, Open Source, Roboter\n" +
-      "**◉ Gesellschaft:** Menschenrechte, Demokratie, Fake News\n\n" +
-      "Links: **NOCO Sparks** (17 Kategorien) · **Hub**\n**Schreibhilfe:** Kurz tippen reicht — z.B. nur *KI* oder *Plan*\n**NOCO Exclusive** = Flux + Rush + Lens + Render";
+      "**So startest du:**\n" +
+      "• **Fragen** — *Was ist …?* · *Erklaer mir …* · Stichworte (*Hund*, *Mathe*, *KI*)\n" +
+      "• **Bild** — *Mach ein Bild von Katze* · Shortcut **Bild**\n" +
+      "• **Video** — *Erstelle ein Video von …* · **Video** / Motion\n" +
+      "• **Agent** — *Plane …* · *Erstelle Idee …* · *Baue …* — 10 Vorlagen beim Agent-Toggle\n" +
+      "• **Inside** — Datei hochladen · **Lens** — Bild erkennen\n" +
+      "• **Summary · Brief · Echo · Glow** — Shortcuts unten\n\n" +
+      "**Hilfe:** Tippe **Help** oder `/help` · **NOCO Sparks** links · **◎ Hub** fuer alle Features\n\n" +
+      "**Vault:** 900+ einfache Themen — Wissenschaft, Alltag, Tech, Gesellschaft, Tiere, Schule\n" +
+      "**Wissensquelle** (oben): **NOCO-Wissen** · **Wiki-API 1.0** · **NOCO Automation** (staerkstes Modell, Exclusive)\n" +
+      "**Exclusive** (oben rechts) = Flux + Rush + Render + Motion unbegrenzt";
   }
 
   function hashCode(str) {
@@ -6769,13 +10200,272 @@
     return best;
   }
 
+  var QUERY_STOPWORDS = {
+    "das": 1, "die": 1, "der": 1, "den": 1, "dem": 1, "des": 1,
+    "ein": 1, "eine": 1, "einer": 1, "einem": 1, "eines": 1,
+    "und": 1, "oder": 1, "mit": 1, "von": 1, "vom": 1, "zum": 1, "zur": 1,
+    "fuer": 1, "für": 1, "ueber": 1, "über": 1, "auch": 1, "mal": 1, "bitte": 1,
+    "genau": 1, "eigentlich": 1, "noch": 1, "schon": 1, "denn": 1, "doch": 1,
+    "aber": 1, "wenn": 1, "dass": 1, "ist": 1, "sind": 1, "war": 1, "waren": 1,
+    "wird": 1, "werden": 1, "haben": 1, "hat": 1, "kann": 1, "koennen": 1,
+    "können": 1, "muss": 1, "soll": 1, "will": 1, "moechte": 1, "möchte": 1,
+    "mir": 1, "mich": 1, "dich": 1, "dir": 1, "sich": 1, "uns": 1, "euch": 1,
+    "hier": 1, "dort": 1, "dann": 1, "also": 1, "dabei": 1, "damit": 1,
+    "dazu": 1, "darueber": 1, "darüber": 1, "worauf": 1, "wobei": 1,
+    "wieso": 1, "weshalb": 1, "warum": 1, "wann": 1, "wo": 1, "wer": 1,
+    "was": 1, "wie": 1, "thema": 1, "frage": 1, "infos": 1, "info": 1,
+    "informationen": 1, "hilfe": 1, "erklaerung": 1, "erklaeren": 1,
+    "bedeutung": 1, "definition": 1, "gibt": 1, "gibts": 1, "brauch": 1,
+    "brauche": 1, "interesse": 1, "interessiert": 1, "etwas": 1, "alles": 1
+  };
+
+  function fuzzyResolveOneWordIntent(word) {
+    var w = normalize(word);
+    var keys, i, best = 0, bestKey = "", sc;
+    if (!w || w.length < 3) return "";
+    if (ONE_WORD_INTENTS[w]) return ONE_WORD_INTENTS[w];
+    keys = Object.keys(ONE_WORD_INTENTS);
+    for (i = 0; i < keys.length; i++) {
+      sc = fuzzyWordScore(w, keys[i]);
+      if (sc > best) { best = sc; bestKey = keys[i]; }
+    }
+    if (best >= 0.68 && bestKey) return ONE_WORD_INTENTS[bestKey];
+    return "";
+  }
+
+  function fuzzyTopicMatch(input) {
+    var core = stripQuestionNoise(fixCommonTypos(String(input || "")));
+    var words = core.split(/\s+/).filter(Boolean);
+    var topic = extractTopicFromQuestion(input) || extractTopicFromQuestion(prepareUserMessage(input));
+    var best = { score: 0, entry: null, query: "" };
+    var i, intent, m, parts, phrase;
+
+    function tryQuery(q) {
+      m = findBestMatch(q);
+      if (m.score > best.score) best = { score: m.score, entry: m.entry, query: q };
+    }
+
+    for (i = 0; i < words.length; i++) {
+      if (words[i].length < 3 || QUERY_STOPWORDS[words[i]]) continue;
+      intent = fuzzyResolveOneWordIntent(words[i]);
+      if (intent) tryQuery(intent);
+      tryQuery("was ist " + words[i]);
+      tryQuery("was ist " + applyTopicSynonyms(words[i]));
+    }
+    for (i = 0; i < words.length - 1; i++) {
+      phrase = [];
+      if (words[i].length >= 2 && !QUERY_STOPWORDS[words[i]]) phrase.push(words[i]);
+      if (words[i + 1].length >= 2 && !QUERY_STOPWORDS[words[i + 1]]) phrase.push(words[i + 1]);
+      if (!phrase.length) continue;
+      phrase = phrase.join(" ");
+      tryQuery("was ist " + phrase);
+      tryQuery("was ist " + applyTopicSynonyms(phrase));
+    }
+    if (topic) {
+      tryQuery("was ist " + topic);
+      tryQuery(topic);
+      if (topic.indexOf(" und ") !== -1) {
+        parts = topic.split(/\s+und\s+/);
+        for (i = 0; i < parts.length; i++) {
+          if (parts[i].trim().length >= 2) tryQuery("was ist " + parts[i].trim());
+        }
+      }
+    }
+    return best;
+  }
+
+  function topicOnlyMatch(input) {
+    var core = stripQuestionNoise(fixCommonTypos(normalizeGeneralQuestion(input)));
+    var words = core.split(/\s+/).filter(Boolean);
+    var kept = [];
+    var i, phrase, m;
+    for (i = 0; i < words.length; i++) {
+      if (!QUERY_STOPWORDS[words[i]] && words[i].length >= 2) kept.push(words[i]);
+    }
+    if (!kept.length) return { score: 0, entry: null, query: "" };
+    phrase = kept.join(" ");
+    m = findBestMatch("was ist " + phrase);
+    if (m.score >= 6 && m.entry) {
+      return { score: m.score, entry: m.entry, query: "was ist " + phrase };
+    }
+    if (kept.length >= 2) {
+      m = findBestMatch("was ist " + kept.slice(-2).join(" "));
+      if (m.score >= 6 && m.entry) {
+        return { score: m.score, entry: m.entry, query: "was ist " + kept.slice(-2).join(" ") };
+      }
+    }
+    m = findBestMatch("was ist " + kept[kept.length - 1]);
+    if (m.score >= 6 && m.entry) {
+      return { score: m.score, entry: m.entry, query: "was ist " + kept[kept.length - 1] };
+    }
+    return { score: 0, entry: null, query: "" };
+  }
+
+  function relaxedTopicMatch(best, input) {
+    var core = stripQuestionNoise(fixCommonTypos(normalizeGeneralQuestion(input)));
+    var words = core.split(/\s+/).filter(Boolean);
+    var kept = [];
+    var i, phrase, m;
+    if (!best) best = { score: 0, entry: null, query: "" };
+    for (i = 0; i < words.length; i++) {
+      if (!QUERY_STOPWORDS[words[i]] && words[i].length >= 3) kept.push(words[i]);
+    }
+    if (!kept.length || kept.length > 4) return best;
+    phrase = kept.join(" ");
+    m = findBestMatch("was ist " + phrase);
+    if (m.score >= 58 && m.score > best.score && m.entry) {
+      return { score: m.score, entry: m.entry, query: "was ist " + phrase };
+    }
+    if (kept.length === 1) {
+      m = findBestMatch("was ist " + applyTopicSynonyms(kept[0]));
+      if (m.score >= 55 && m.score > best.score && m.entry) {
+        return { score: m.score, entry: m.entry, query: "was ist " + kept[0] };
+      }
+    }
+    return best;
+  }
+
+  function wordCascadeMatch(input) {
+    var words = stripQuestionNoise(fixCommonTypos(normalizeGeneralQuestion(input))).split(/\s+/).filter(Boolean);
+    var best = { score: 0, entry: null, query: "" };
+    var i, w, syn, intent, m, phrase, parts;
+    for (i = words.length - 1; i >= 0; i--) {
+      w = words[i];
+      if (QUERY_STOPWORDS[w] || w.length < 3) continue;
+      syn = applyTopicSynonyms(w);
+      intent = fuzzyResolveOneWordIntent(w) || fuzzyResolveOneWordIntent(syn) || ("was ist " + syn);
+      m = findBestMatch(intent);
+      if (m.score > best.score) best = { score: m.score, entry: m.entry, query: intent };
+    }
+    for (i = words.length - 2; i >= 0; i--) {
+      parts = [];
+      if (words[i].length >= 2 && !QUERY_STOPWORDS[words[i]]) parts.push(words[i]);
+      if (words[i + 1].length >= 2 && !QUERY_STOPWORDS[words[i + 1]]) parts.push(words[i + 1]);
+      if (!parts.length) continue;
+      phrase = applyTopicSynonyms(parts.join(" "));
+      intent = "was ist " + phrase;
+      m = findBestMatch(intent);
+      if (m.score > best.score) best = { score: m.score, entry: m.entry, query: intent };
+    }
+    return best;
+  }
+
+  function resolveQueryCandidates(input) {
+    var raw = String(input || "").trim();
+    var prepared = prepareUserMessage(raw);
+    var seen = {};
+    var candidates = [];
+    var core, words, topic, i, parts, syn;
+    function push(q) {
+      q = String(q || "").trim();
+      if (!q || seen[q]) return;
+      seen[q] = true;
+      candidates.push(q);
+    }
+    push(prepared);
+    push(raw);
+    push(raw.replace(/[^\w\säöüßaeoeue-]/gi, " ").replace(/\s+/g, " ").trim());
+    push(normalizeGeneralQuestion(raw));
+    push(stripQuestionNoise(fixCommonTypos(raw)));
+    push(expandQuery(prepared));
+    push(expandQuery(raw));
+    core = stripQuestionNoise(fixCommonTypos(prepared));
+    syn = applyTopicSynonyms(core);
+    if (syn && syn !== core) {
+      push(syn);
+      push("was ist " + syn);
+      push(expandQuery(syn));
+    }
+    topic = extractTopicFromQuestion(prepared) || extractTopicFromQuestion(raw);
+    if (!topic) topic = extractQuotedPhrase(raw) || extractQuotedPhrase(prepared);
+    if (topic) {
+      push(topic);
+      push("was ist " + topic);
+      push(expandQuery(topic));
+      syn = applyTopicSynonyms(topic);
+      if (syn && syn !== topic) {
+        push(syn);
+        push("was ist " + syn);
+        push(expandQuery(syn));
+      }
+    }
+    if (/^was ist\s+/.test(core)) push(core.replace(/^was ist\s+/, ""));
+    if (/^was sind\s+/.test(core)) push(core.replace(/^was sind\s+/, ""));
+    if (/^wie funktioniert\s+/.test(core)) push(core.replace(/^wie funktioniert\s+/, ""));
+    if (/^warum\s+/.test(core)) push(core.replace(/^warum\s+/, ""));
+    if (/^erklaer[e]?\s+/.test(core)) push(core.replace(/^erklaer[e]?\s+/, ""));
+    words = core.split(/\s+/).filter(Boolean);
+    if (words.length >= 2) {
+      push(words.slice(-2).join(" "));
+      push(words[words.length - 1] + " " + words[words.length - 2]);
+    }
+    if (words.length >= 3) push(words.slice(-3).join(" "));
+    if (core.indexOf("-") !== -1) {
+      push(core.replace(/-/g, " "));
+      push(core.replace(/-/g, ""));
+    }
+    if (words.length >= 1) push(words[words.length - 1]);
+    for (i = 0; i < words.length; i++) {
+      if (words[i].length >= 3 && !QUERY_STOPWORDS[words[i]]) {
+        push("was ist " + words[i]);
+        if (ONE_WORD_INTENTS[words[i]]) push(ONE_WORD_INTENTS[words[i]]);
+        if (fuzzyResolveOneWordIntent(words[i])) push(fuzzyResolveOneWordIntent(words[i]));
+        syn = applyTopicSynonyms(words[i]);
+        if (syn && syn !== words[i]) push("was ist " + syn);
+      }
+    }
+    for (i = 0; i < words.length - 1; i++) {
+      parts = [];
+      if (words[i].length >= 2 && !QUERY_STOPWORDS[words[i]]) parts.push(words[i]);
+      if (words[i + 1].length >= 2 && !QUERY_STOPWORDS[words[i + 1]]) parts.push(words[i + 1]);
+      if (!parts.length) continue;
+      push("was ist " + parts.join(" "));
+      syn = applyTopicSynonyms(parts.join(" "));
+      if (syn && syn !== parts.join(" ")) push("was ist " + syn);
+    }
+    if (topic && topic.indexOf(" oder ") !== -1) {
+      parts = topic.split(/\s+oder\s+/);
+      if (parts[0] && parts[0].trim().length >= 2) push("was ist " + parts[0].trim());
+    }
+    if (topic && topic.indexOf(" und ") !== -1) {
+      parts = topic.split(/\s+und\s+/);
+      for (i = 0; i < parts.length; i++) {
+        if (parts[i].trim().length >= 2) push("was ist " + parts[i].trim());
+      }
+    }
+    return candidates;
+  }
+
+  function findBestFromCandidates(candidates) {
+    var best = { score: 0, entry: null, query: "" };
+    var i, m;
+    for (i = 0; i < candidates.length; i++) {
+      m = findBestMatch(candidates[i]);
+      if (m.score > best.score) best = { score: m.score, entry: m.entry, query: candidates[i] };
+    }
+    return best;
+  }
+
   function getTopicLabel(entry) {
     if (!entry || !entry.keys || !entry.keys[0]) return "Allgemein";
     var k = normalize(entry.keys[0]);
     if (/noco|forge|keycard|workspace|exclusive|firstlight|security|nexus|focus|hub|sync|explorer|liquid|widget|pay|shadow|casino|cloud/.test(k)) return "NOCO OS";
     if (/ki|internet|computer|programm|html|smartphone|robot|passwort|cyber|javascript/.test(k)) return "Tech & KI";
     if (/physik|chemie|biologie|sonne|erde|wasser|klima|energie|universum/.test(k)) return "Wissenschaft";
-    if (/geschichte|deutschland|demokratie|politik|geld|sprache|menschenrecht|diversitaet|fake news|gleichstellung|renaissance/.test(k)) return "Gesellschaft";
+    if (/philosophie|ethik|sinn des leben/.test(k)) return "Philosophie";
+    if (/liebe|beziehung|freundschaft|partnerschaft/.test(k)) return "Beziehungen";
+    if (/arbeit|karriere|bewerbung|beruf/.test(k)) return "Arbeit & Karriere";
+    if (/studium|uni|schule bildung|abitur/.test(k)) return "Bildung";
+    if (/universum|astronomie|galaxie|big bang/.test(k)) return "Astronomie";
+    if (/ernaehrung|essen gesund|vegan|diaet/.test(k)) return "Ernaehrung";
+    if (/reisen|urlaub|tourismus/.test(k)) return "Reisen";
+    if (/geld|finanzen|sparen|investieren/.test(k)) return "Finanzen";
+    if (/glueck|zufriedenheit|wohlbefinden/.test(k)) return "Alltag";
+    if (/angst|depression|mental health/.test(k)) return "Psychologie";
+    if (/kunst|literatur|kultur|museum/.test(k)) return "Kultur";
+    if (/wetter|wettervorhersage/.test(k)) return "Wetter";
+    if (/allgemeine frage|erklaer mir|frag mich/.test(k)) return "System";
+    if (/geschichte|deutschland|demokratie|politik|sprache|menschenrecht|diversitaet|fake news|gleichstellung|renaissance/.test(k)) return "Gesellschaft";
     if (/medizin|koerper|impfung|genetik|anatomie|achtsamkeit|meditation/.test(k)) return "Mensch & Medizin";
     if (/blockchain|bitcoin|vr |open source|wlan|quanten|datenbank|chatgpt/.test(k)) return "Tech & Zukunft";
     if (/multi chat|neu generieren|noco sparks|slash|feedback/.test(k)) return "NOCO Tools";
@@ -6865,8 +10555,239 @@
     return "**Einfach erklaert:** " + short;
   }
 
+  function stripMd(text) {
+    return String(text || "").replace(/\*\*/g, "").replace(/^#+\s*/gm, "").replace(/^[-•]\s*/gm, "").trim();
+  }
+
+  function splitSentences(plain) {
+    return String(plain || "")
+      .replace(/([.!?])\s+/g, "$1\n")
+      .split("\n")
+      .map(function (s) { return s.trim(); })
+      .filter(function (s) { return s.length > 6; });
+  }
+
+  function detectAnswerAdjust(input) {
+    var n = normalize(fixCommonTypos(String(input || "")));
+    if (!n || n.length > 80) return null;
+    if (/^(bitte\s+)?(laenger|langer|ausfuehrlich|ausfuehrlicher|mehr\s+details?|detailreicher|expand|verlaenger|longer)/.test(n)) return "longer";
+    if (/^(bitte\s+)?(kuerzer|kurz|knapper|zusammenfass|fass\s+zusammen|3\s+punkte|drei\s+punkte|kurzfassung|shorter|kompakter)/.test(n)) return "shorter";
+    if (/^(bitte\s+)?(thematisch|zum\s+thema|fokussier|fokus|mehr\s+zum\s+thema|on\s*topic|praeziser|praezise)/.test(n)) return "ontopic";
+    if (/(mach|macht)\s*(es\s*)?(laenger|langer|kuerzer|kurz)/.test(n)) {
+      if (/laenger|langer/.test(n)) return "longer";
+      if (/kuerzer|kurz/.test(n)) return "shorter";
+    }
+    if (/(bitte\s+)?(noch\s+)?(ein\s+)?(bisschen\s+)?(laenger|langer)/.test(n)) return "longer";
+    if (/(bitte\s+)?(noch\s+)?(ein\s+)?(bisschen\s+)?(kuerzer|kurz)/.test(n)) return "shorter";
+    return null;
+  }
+
+  function expandText(text) {
+    var plain = stripMd(text);
+    var sentences = splitSentences(plain).filter(function (s) { return s.length > 8; });
+    var core = sentences.slice(0, 4).join(" ");
+    var extra = [
+      "Darueber hinaus lohnt sich ein genauerer Blick auf die Zusammenhaenge.",
+      "Praktisch bedeutet das: Du kannst die Idee Schritt fuer Schritt anwenden.",
+      "Kurz gesagt bleibt das Kernthema gleich — nur mit mehr Kontext und Beispielen.",
+      "Wenn du tiefer einsteigen willst, starte mit dem wichtigsten Punkt und arbeite dich nach unten."
+    ];
+    var i, out = "**Ausfuehrliche Version:**\n\n" + core;
+    for (i = 0; i < extra.length && out.length < 900; i++) {
+      out += "\n\n" + extra[i];
+      if (sentences[i + 1]) out += " " + sentences[i + 1];
+    }
+    if (sentences.length > 2) {
+      out += "\n\n**Zusammenfassung:** " + sentences[0] + " " + (sentences[1] || "");
+    }
+    return out;
+  }
+
+  function shortenToKeyPoints(text) {
+    var plain = stripMd(text);
+    var sentences = splitSentences(plain);
+    var a = sentences[0] || plain.slice(0, 120);
+    var b = sentences[Math.floor(sentences.length / 2)] || sentences[1] || "Kernpunkt zwei: Fokus auf das Wichtigste.";
+    var c = sentences[sentences.length - 1] || sentences[2] || "Kernpunkt drei: Naechster Schritt klar machen.";
+    return "**3 Kernpunkte:**\n\n1. " + a.trim() + "\n2. " + b.trim() + "\n3. " + c.trim();
+  }
+
+  function makeMoreOnTopic(text) {
+    var plain = stripMd(text);
+    var sentences = splitSentences(plain);
+    var focus = sentences.slice(0, 3).join(" ");
+    return (
+      "**Fokus aufs Thema:**\n\n" + focus +
+      "\n\n**Praxis-Tipp:** Bleib bei dieser Kernaussage — weniger Abschweifung, mehr Klarheit."
+    );
+  }
+
+  function adjustAnswerText(text, mode) {
+    if (mode === "longer") return expandText(text);
+    if (mode === "shorter") return shortenToKeyPoints(text);
+    if (mode === "ontopic") return makeMoreOnTopic(text);
+    return text;
+  }
+
+  function splitSummarySentences(text) {
+    return String(text || "")
+      .replace(/\r\n/g, "\n")
+      .replace(/[•·▪]\s*/g, "\n")
+      .replace(/^\s*[-*]\s+/gm, "")
+      .replace(/([.!?;:])\s+/g, "$1\n")
+      .split("\n")
+      .map(function (s) { return s.replace(/\s+/g, " ").trim(); })
+      .filter(function (s) { return s.length > 8; });
+  }
+
+  function scoreSummarySentence(sentence, index, total, keywords) {
+    var score = 0;
+    var s = sentence.toLowerCase();
+    var wi, w;
+    score += Math.min(sentence.length / 32, 4.5);
+    if (index === 0) score += 2.2;
+    if (index < Math.min(4, total)) score += 1.4;
+    if (/\d+[%€$]?|\b(wichtig|kern|haupt|zentral|bedeutet|fazit|zusammenfass|daher|deshalb|erstens|zweitens|schluss)\b/i.test(s)) score += 2.6;
+    if (keywords && keywords.length) {
+      for (wi = 0; wi < keywords.length; wi++) {
+        w = keywords[wi];
+        if (s.indexOf(w) >= 0) score += 1.5;
+      }
+    }
+    if (sentence.length > 240) score -= 1.2;
+    if (sentence.length < 20) score -= 0.6;
+    return score;
+  }
+
+  function topSummaryKeywords(text, n) {
+    n = n || 8;
+    var words = String(text || "").toLowerCase()
+      .replace(/[^a-zA-ZäöüÄÖÜß0-9\s-]/g, " ")
+      .split(/\s+/)
+      .filter(function (w) { return w.length > 3; });
+    var stop = { dass: 1, diese: 1, dieser: 1, werden: 1, haben: 1, nach: 1, auch: 1, oder: 1, wenn: 1, weil: 1, sowie: 1, durch: 1, unter: 1, einem: 1, einer: 1, eines: 1 };
+    var freq = {}, i, w, list = [];
+    for (i = 0; i < words.length; i++) {
+      w = words[i];
+      if (stop[w]) continue;
+      freq[w] = (freq[w] || 0) + 1;
+    }
+    Object.keys(freq).forEach(function (k) { list.push({ w: k, c: freq[k] }); });
+    list.sort(function (a, b) { return b.c - a.c; });
+    return list.slice(0, n).map(function (x) { return x.w; });
+  }
+
+  function extractSummaryPoints(text, max) {
+    max = max || 5;
+    var sentences = splitSummarySentences(text);
+    if (!sentences.length) {
+      var chunk = String(text || "").replace(/\s+/g, " ").trim();
+      if (chunk.length > 16) {
+        var parts = chunk.match(/.{1,140}(\s|$)/g) || [chunk];
+        sentences = parts.map(function (p) { return p.trim(); }).filter(function (p) { return p.length > 12; });
+      }
+    }
+    var keywords = topSummaryKeywords(text, 10);
+    var scored = [], i;
+    for (i = 0; i < sentences.length; i++) {
+      scored.push({
+        text: sentences[i],
+        score: scoreSummarySentence(sentences[i], i, sentences.length, keywords)
+      });
+    }
+    scored.sort(function (a, b) { return b.score - a.score; });
+    var picked = [];
+    var seen = {};
+    for (i = 0; i < scored.length && picked.length < max; i++) {
+      var key = scored[i].text.slice(0, 40);
+      if (seen[key]) continue;
+      seen[key] = true;
+      picked.push(scored[i].text);
+    }
+    i = 0;
+    while (picked.length < max && i < sentences.length) {
+      if (!seen[sentences[i].slice(0, 40)]) {
+        seen[sentences[i].slice(0, 40)] = true;
+        picked.push(sentences[i]);
+      }
+      i++;
+    }
+    return picked.slice(0, max);
+  }
+
+  function summarizeText(text, opts) {
+    opts = opts || {};
+    var plain = stripMd(String(text || "").trim());
+    if (!plain || plain.length < 12) {
+      return { text: "**NOCO Summary**\n\nText zu kurz — bitte mehr Inhalt einfuegen.", topic: "Summary", confidence: 0 };
+    }
+    var words = plain.split(/\s+/).filter(Boolean);
+    var wordCount = words.length;
+    var kind = wordCount > 280 ? "Ausfuehrlicher Text" : wordCount > 100 ? "Mittellanger Text" : "Kurzer Text";
+    var sentences = splitSummarySentences(plain);
+    var points = extractSummaryPoints(plain, 5);
+    var i;
+    while (points.length < 5) {
+      points.push("Weitere Details stehen im Originaltext.");
+    }
+    var out =
+      "**NOCO Summary** — " + kind + " · ~" + wordCount + " Woerter\n\n" +
+      "**Aufbau:** " + (sentences.length > 4 ? sentences.length + " Saetze/Abschnitte erkannt" : "kompakte Aussagen") + "\n\n" +
+      "**5 Stichpunkte:**\n";
+    for (i = 0; i < 5; i++) {
+      var line = points[i].trim();
+      if (line.length > 280) line = line.slice(0, 277) + "…";
+      out += (i + 1) + ". " + line + "\n";
+    }
+    if (!opts.skipFlavor) out = applyModelFlavor(out, opts);
+    return { text: out, topic: "Summary", confidence: 92 };
+  }
+
+  function getFeatureHints() {
+    var f = NOCO_BRAND.features;
+    return {
+      agent: "Fuehrt komplexe Auftraege aus — Plane, Idee, Bau: grosse strukturierte Deliverables",
+      create: "Zeichnet Pixel-Bilder im Chat aus 3600 Motiven — frei formulieren",
+      inside: "Analysiert Dateien & Texte — Dokument, Kernpunkte, Code, Bild",
+      motion: "4s Epic Video — 8 Keyframes, Pixel-Morph, Loop-Export · 3600 Motive",
+      hub: "Zentrale im Chat — Bild, Motion, Inside, Agent per Buttons",
+      image: "Startet Bild-Modus — z. B. Mach ein Bild von …",
+      summary: "Fasst langen Text in 5 vollstaendige Stichpunkte zusammen",
+      brief: "Erstellt strukturiertes Recherche-Briefing aus der Vault",
+      glow: "Live-Intent-Prism — zeigt Kategorie & Chips beim Tippen",
+      echo: "Liest & fasst deinen Chat-Verlauf zusammen",
+      lens: "KI-Bild erkennen — NOCO Pixel & Stil per Upload pruefen",
+      detect: "Oeffnet Bild-Upload fuer NOCO Lens Erkennung",
+      file: "Datei fuer NOCO Inside hochladen — Text, Code oder Bild",
+      new: "Neuen leeren Chat starten",
+      help: "Alle Slash-Befehle & Feature-Hilfe anzeigen",
+      brand: {
+        agent: f.agent.desc,
+        create: f.buildCreate.desc,
+        inside: f.insight.desc,
+        motion: f.motion.desc,
+        summary: f.summary.desc,
+        brief: f.brief.desc,
+        glow: f.glow.desc,
+        render: f.render.desc,
+        hub: f.hub.desc,
+        file: f.file.desc
+      }
+    };
+  }
+
   function getSlashHelp() {
-    return "**NOCO Befehle (mit / im Chat):**\n• `/help` — diese Liste\n• `/new` — neuer Chat\n• `/clear` — Chat leeren\n• `/model` — NOCO Access & Modell (Flux/Prism/Spark)\n• `/brief Thema` — **NOCO Brief** Recherche-Briefing\n• `/summary` — **NOCO Echo** Zusammenfassung\n• `/pixel` — Bild im Chat erstellen\n• `/detect` — **KI-Bild erkennen** (Datei)\n• `/search Wort` — im Chat suchen\n• `/topics` — System-Ansicht\n• `/saved` — gespeicherte Antworten\n• `/random` — Zufalls-Frage aus NOCO Sparks\n• `/hub` — **NOCO Hub** Uebersicht oeffnen";
+    return (
+      "**NOCO Hilfe v5.2**\n\n" +
+      "**Was ist neu?** 10 Agent-Vorlagen · groessere Vault · Sparks-Sidebar · staerkere Agent-Antworten\n" +
+      "**Was kannst du?** Frag *Was kann ich dich fragen?* oder *Was ist neu?*\n\n" +
+      "**Chat:** `/help` · `/new` · `/clear` · `/search` · `/topics` · `/saved` · `/random`\n" +
+      "**Bild:** `/pixel` — *Mach ein Bild von …*\n" +
+      "**Video:** `/motion [Motiv]` — Epic 4s Video\n" +
+      "**Agent:** `/agent [Auftrag]` — Plane · Idee · Build · 10 Vorlagen\n" +
+      "**Inside:** `/inside` · **Summary** · **Echo** · **Brief** · **Lens** `/detect` · **Hub** `/hub`\n\n" +
+      "**Einfache Fragen:** *Was ist Hund?* · *Was ist Mathe?* · *Was ist Sonne?* — 900+ Themen in der Vault"
+    );
   }
 
   function getSystemStats() {
@@ -6953,19 +10874,983 @@
     return { text: brief, confidence: 100, topic: "Chat-Verlauf", variants: 1 };
   }
 
+  function detectAgentIntent(input, opts) {
+    opts = opts || {};
+    if (opts.agentTaskType === "fitness") return "fitness";
+    if (opts.agentTaskType === "learning") return "learning";
+    if (opts.agentTaskType === "project") return "project";
+    if (opts.agentTaskType === "plan") return "plan";
+    if (opts.agentTaskType === "idea") return "idea";
+    if (opts.agentTaskType === "build") return "build";
+    if (opts.agentTaskType === "marketing") return "marketing";
+    if (opts.agentTaskType === "content") return "content";
+    if (opts.agentTaskType === "travel") return "travel";
+    if (opts.agentTaskType === "meal") return "meal";
+    if (opts.agentTaskType === "resume") return "resume";
+    if (opts.agentTaskType === "social") return "social";
+    if (opts.agentTaskType === "home") return "home";
+    var t = String(input || "").toLowerCase();
+    if (/fitness|trainingsplan|workout|sport|abnehmen|muskel|trainier/i.test(t)) return "fitness";
+    if (/lernplan|lern\s*plan|mathe|pruefung|lernen|klausur|schule|uni|studium/i.test(t)) return "learning";
+    if (/youtube|kanal\s*plan|content\s*plan|upload\s*plan/i.test(t)) return "content";
+    if (/marketing|kampagne|werbung|ads/i.test(t)) return "marketing";
+    if (/reise|urlaub|trip|flug|packliste/i.test(t)) return "travel";
+    if (/meal|ernaehrung|essen\s*plan|kochen|rezept|einkauf/i.test(t)) return "meal";
+    if (/bewerbung|lebenslauf|cv|interview|karriere/i.test(t)) return "resume";
+    if (/social\s*media|instagram|tiktok|reichweite/i.test(t)) return "social";
+    if (/einrichtung|wohnung|renovier|moebel|interior/i.test(t)) return "home";
+    if (/logo|branding|poster|kanal|gaming|app|startup|projekt|business|unternehmen|website|saas/i.test(t)) return "project";
+    if (/plan(e|en)?|roadmap|zeitplan|strategie|konzept|aufbau|struktur/i.test(t)) return "plan";
+    if (/idee|brainstorm|kreativ|konzipier|erfind|vision/i.test(t)) return "idea";
+    if (/bau(e|en)?|entwickl|programmier|implementier|erstell(e|en)?|mach(e|en)?|design(e|en)?|codier/i.test(t)) return "build";
+    if (/analys|bewert|vergleich|recherche|report|audit/i.test(t)) return "analyze";
+    if (/marketing|monet|pitch|launch/i.test(t)) return "business";
+    return "deliver";
+  }
+
+  function extractAgentSubject(input, goal) {
+    var t = String(goal || input || "").trim();
+    if (!goal) {
+      t = t.replace(/^(noco\s*)?agent[:\s]*/i, "");
+      t = t.replace(/^(plane|plan|erstelle|erstell|bau|baue|mach|mache|entwickle|entwickeln|generiere|kreiere|designe|konzipiere|analysiere)\s*(mir\s*)?(ein(en)?\s*)?(idee|plan|konzept|projekt|app|video|logo|strategie|bericht)?\s*(fuer|für|von|zu|zum|zur)?\s*/i, "");
+    }
+    return t.trim().slice(0, 160) || "dein Auftrag";
+  }
+
+  function agentBullets(title, items) {
+    var i, out = "**" + title + "**\n";
+    for (i = 0; i < items.length; i++) out += "• " + items[i] + "\n";
+    return out.trim();
+  }
+
+  function agentNumbers(title, items) {
+    var i, out = "**" + title + "**\n";
+    for (i = 0; i < items.length; i++) out += (i + 1) + ". " + items[i] + "\n";
+    return out.trim();
+  }
+
+  function buildAgentVaultInsight(input, prepared, opts) {
+    var best = findBestFromCandidates(resolveQueryCandidates(input));
+    if (!shouldAcceptVaultMatch(best, input, prepared) || best.score < 12) return "";
+    var vaultText = pickAnswer(best.entry, best.query || prepared, { skipFlavor: true });
+    if (!vaultText || vaultText.length < 50) return "";
+    var plain = stripMd(vaultText);
+    var points = extractSummaryPoints(plain, 4);
+    var i, section = "**Vault-Insight** · " + getTopicLabel(best.entry) + "\n";
+    if (!points.length) {
+      section += "1. " + plain.slice(0, 240) + (plain.length > 240 ? "…" : "");
+      return section;
+    }
+    for (i = 0; i < points.length; i++) {
+      var line = points[i].trim();
+      if (line.length > 260) line = line.slice(0, 257) + "…";
+      section += (i + 1) + ". " + line + "\n";
+    }
+    return section.trim();
+  }
+
+  function buildAgentNextSteps(intent, subject) {
+    var steps = [
+      "Kernziel in 1 Satz festhalten: " + subject,
+      "Ersten Meilenstein mit Deadline setzen (7 Tage)",
+      "Optional: NOCO Render fuer Visuals oder NOCO Inside fuer Dateien"
+    ];
+    if (intent === "build" || intent === "project") {
+      steps[1] = "Tech-Stack & MVP-Scope in 3 Bulletpoints schreiben";
+      steps[2] = "Erstes Feature lokal prototypen — dann iterieren";
+    }
+    if (intent === "learning") {
+      steps[1] = "Heute 25 Min fokussiert starten (Pomodoro)";
+      steps[2] = "Fehlerlog anlegen — wo stockt es?";
+    }
+    return agentNumbers("Naechste Schritte (sofort)", steps);
+  }
+
+  function buildAgentBody(intent, subject, input, opts) {
+    var pro = !!(opts && opts.proMode);
+    var s = subject;
+    var sections = [];
+
+    if (intent === "fitness") {
+      sections.push(
+        agentBullets("Ziel & Rahmen", [
+          "Hauptziel: " + s,
+          "Zeitbudget: 3–4 Einheiten/Woche · 35–45 Min",
+          "Level: Einsteiger bis Fortgeschritten (anpassbar)"
+        ]),
+        agentBullets("Woche 1–4 · Grundphase", [
+          "**Mo** — Ganzkoerper (Kniebeuge, Liegestuetz, Plank) · 35 Min",
+          "**Mi** — Cardio Zone 2 · 30 Min",
+          "**Fr** — Oberkoerper + Core · 40 Min",
+          "**Sa** — Mobility/Yoga · 25 Min"
+        ]),
+        agentBullets("Woche 5–8 · Aufbau", [
+          "Volumen +10 % pro Woche",
+          "Protein ~1.6 g/kg · Schlaf 7–8 h",
+          "Deload in Woche 8 (50 % Volumen)"
+        ])
+      );
+      if (pro) {
+        sections.push(agentBullets("Ernaehrung & Recovery", [
+          "Hydration 2–3 L/Tag · Post-Workout Protein",
+          "Dehnen 10 Min nach jeder Einheit",
+          "Fortschritt tracken: Wiederholungen + Gewicht"
+        ]));
+      }
+    } else if (intent === "learning") {
+      sections.push(
+        agentBullets("Lernziel", [
+          "Thema: " + s,
+          "Zeitrahmen: 5 Wochen · 60–90 Min/Tag",
+          "Methode: Pomodoro 25/5 + aktive Wiederholung"
+        ]),
+        agentBullets("Phase 1 — Grundlagen (Woche 1–2)", [
+          "Kernbegriffe & Formeln sammeln",
+          "10 Uebungen/Tag · Fehler notieren",
+          "Woechentlicher Selbsttest (30 Min)"
+        ]),
+        agentBullets("Phase 2 — Vertiefung (Woche 3–4)", [
+          "Schwachstellen gezielt ueben",
+          "Zeitdruck-Tests simulieren",
+          "Zusammenhaenge visualisieren (Mindmap)"
+        ]),
+        agentNumbers("Phase 3 — Pruefung (Woche 5)", [
+          "Altklausuren / Musteraufgaben",
+          "Letzte Luecken schliessen",
+          "Tag vorher: leichte Wiederholung, kein Cramping"
+        ])
+      );
+    } else if (intent === "project") {
+      sections.push(
+        agentBullets("Vision", [
+          "Idee: " + s,
+          "Problem → Zielgruppe → Loesung in 3 Saetzen",
+          "USP: Was macht es einzigartig?"
+        ]),
+        agentNumbers("MVP — 3 Kernfeatures", [
+          "Feature A: Kernnutzen sofort erlebbar",
+          "Feature B: Differenzierung / Wow-Moment",
+          "Feature C: Retention oder Sharing"
+        ]),
+        agentBullets("4-Wochen-Roadmap", [
+          "**W1** — Research + Wireframes + Scope",
+          "**W2** — MVP Feature A bauen",
+          "**W3** — Feature B + erste Tests",
+          "**W4** — Polish, Launch, Feedback sammeln"
+        ])
+      );
+      if (/logo|branding|poster|kanal/i.test(String(input || ""))) {
+        sections.push(agentBullets("Branding-Hinweis", [
+          "3 Varianten skizzieren (Minimal · Bold · Retro)",
+          "NOCO Render: *Mach ein Logo fuer " + s + "*",
+          "Kontrast & Lesbarkeit auf dunklem Hintergrund pruefen"
+        ]));
+      }
+    } else if (intent === "plan") {
+      sections.push(
+        agentBullets("Kurzbriefing", [
+          "Auftrag: " + s,
+          "Output: Strukturierter Mehrphasen-Plan",
+          "Fokus: Umsetzbar, messbar, priorisiert"
+        ]),
+        agentBullets("Phase 1 — Fundament", [
+          "Ziel & Scope schriftlich fixieren",
+          "Ressourcen, Tools & Zeitbudget klaren",
+          "Risiken & Annahmen dokumentieren"
+        ]),
+        agentBullets("Phase 2 — Umsetzung", [
+          "Meilensteine mit Deadlines (2–4 Wochen)",
+          "Taegliche/wöchentliche Routinen definieren",
+          "Feedback-Schleifen einplanen"
+        ]),
+        agentBullets("Phase 3 — Optimierung", [
+          "KPIs messen & anpassen",
+          "Skalierung oder Vereinfachung",
+          "Lessons Learned festhalten"
+        ])
+      );
+      if (pro) {
+        sections.push(agentBullets("Risiko-Matrix", [
+          "Zeitverzug → Puffer 20 % einplanen",
+          "Scope Creep → Must-have vs. Nice-to-have",
+          "Motivation → kleine Wins woechentlich feiern"
+        ]));
+      }
+    } else if (intent === "idea") {
+      sections.push(
+        agentBullets("Ideen-Spark", [
+          "Thema: " + s,
+          "Brainstorm-Modus: Quantitaet vor Perfektion",
+          "3 Richtungen unten — eine vertiefen"
+        ]),
+        agentNumbers("3 Konzept-Richtungen", [
+          "**A — Minimal:** Schnell, klar, wenig Aufwand · Fokus auf Kernnutzen",
+          "**B — Bold:** Auffaellig, emotional, Social-Wow · hoeheres Risiko, mehr Reach",
+          "**C — Nische:** Spezifische Zielgruppe · tiefe Loesung, loyaler Kern"
+        ]),
+        agentBullets("Vertiefung (gewaehlte Richtung)", [
+          "Name + ein Satz Pitch",
+          "3 Features die das Problem loesen",
+          "Erster Test mit 5 echten Nutzern"
+        ])
+      );
+    } else if (intent === "build") {
+      sections.push(
+        agentBullets("Build-Brief", [
+          "Projekt: " + s,
+          "Ziel: Umsetzbares technisches Konzept",
+          "Annahme: Web/App/Tool — anpassbar"
+        ]),
+        agentNumbers("Architektur-Skizze", [
+          "**Frontend** — UI, Routing, State (z.B. React/Vanilla)",
+          "**Logik** — Kernfunktionen modular",
+          "**Daten** — localStorage / API / Dateien je nach Scope"
+        ]),
+        agentBullets("Implementierungs-Reihenfolge", [
+          "1. Skeleton + Navigation",
+          "2. Kernfeature end-to-end",
+          "3. Polish, Fehlerbehandlung, Export",
+          "4. Optional: NOCO Motion / Render fuer Assets"
+        ])
+      );
+      if (pro) {
+        sections.push(agentBullets("Qualitaets-Checkliste", [
+          "Mobile-first Layout",
+          "Ladezustand & leere States",
+          "Barrierefreiheit: Kontrast, Fokus, Labels"
+        ]));
+      }
+    } else if (intent === "analyze") {
+      sections.push(
+        agentBullets("Analyse-Rahmen", [
+          "Gegenstand: " + s,
+          "Methode: Strukturiert · evidenzbasiert",
+          "Output: Erkenntnisse + Empfehlungen"
+        ]),
+        agentNumbers("Analyse-Schritte", [
+          "Kontext & Fragestellung schaerfen",
+          "Daten/Quellen sammeln (Vault + eigene Notizen)",
+          "Staerken, Schwaechen, Chancen, Risiken",
+          "3 priorisierte Empfehlungen ableiten"
+        ])
+      );
+    } else if (intent === "business" || intent === "marketing") {
+      sections.push(
+        agentBullets("Marketing-Snapshot", [
+          "Kampagne: " + s,
+          "Zielgruppe + Kernbotschaft definieren",
+          "Kanal-Mix: Social · SEO · E-Mail · Events"
+        ]),
+        agentNumbers("4-Wochen-Kampagne", [
+          "**W1** — Research, Personas, Messaging",
+          "**W2** — Content erstellen (3 Formate)",
+          "**W3** — Launch + Paid/Organic Mix",
+          "**W4** — KPIs messen, A/B testen, optimieren"
+        ]),
+        agentBullets("Budget & KPIs", [
+          "Budget: Start klein (Test 50–200 EUR simuliert)",
+          "KPIs: Reichweite · Klicks · Conversion",
+          "Tools: Analytics, Canva, NOCO Render fuer Visuals"
+        ])
+      );
+    } else if (intent === "content") {
+      sections.push(
+        agentBullets("Content-Plan", [
+          "Kanal/Thema: " + s,
+          "Format: Long · Short · Live — Mix waehlen",
+          "Ziel: Reichweite + Retention + Community"
+        ]),
+        agentBullets("Upload-Rhythmus (4 Wochen)", [
+          "**W1** — 2 Videos + 3 Shorts · Intro-Serie",
+          "**W2** — 2 Videos · Trend-Thema aufgreifen",
+          "**W3** — 1 Collab/Live · Community fragen",
+          "**W4** — Best-of + Teaser naechste Serie"
+        ]),
+        agentNumbers("Video-Ideen (Start)", [
+          "Tutorial / How-to zum Kernthema",
+          "Behind the Scenes / Setup",
+          "Top 5 Liste mit starker Hook (erste 3 Sek)"
+        ])
+      );
+    } else if (intent === "travel") {
+      sections.push(
+        agentBullets("Reise-Ueberblick", [
+          "Ziel: " + s,
+          "Dauer: 5–7 Tage (anpassbar)",
+          "Stil: Kultur · Natur · City — Mix"
+        ]),
+        agentNumbers("Tagesplan (Beispiel)", [
+          "**Tag 1** — Ankunft, Orientierung, leichtes Programm",
+          "**Tag 2** — Hauptattraktion + lokales Essen",
+          "**Tag 3** — Natur/Ausflug + Pause",
+          "**Tag 4** — Museum/Markt + Abendprogramm",
+          "**Tag 5** — Freier Tag / Shopping / Strand"
+        ]),
+        agentBullets("Packliste & Budget", [
+          "Dokumente, Adapter, Apotheke, Powerbank",
+          "Budget: Transport · Unterkunft · Essen · Puffer 15 %",
+          "Tipps: Offline-Karte, Wasser, frueh buchen"
+        ])
+      );
+    } else if (intent === "meal") {
+      sections.push(
+        agentBullets("Meal-Prep Plan", [
+          "Fokus: " + s,
+          "5 Tage vorkochen · 2 Portionen/Tag",
+          "Balance: Protein · Gemuese · Komplexe Kohlenhydrate"
+        ]),
+        agentBullets("Wochenplan", [
+          "**Mo** — Haehnchen, Reis, Brokkoli",
+          "**Di** — Linsen-Curry mit Gemuese",
+          "**Mi** — Pasta mit Tomaten & Mozzarella",
+          "**Do** — Ofengemuese + Quinoa + Feta",
+          "**Fr** — Wraps mit Hack/vegan + Salat"
+        ]),
+        agentBullets("Einkaufsliste (Kern)", [
+          "Protein: Haehnchen, Eier, Linsen, Tofu",
+          "Gemuese: Brokkoli, Paprika, Spinat, Tomaten",
+          "Basics: Reis, Nudeln, Quinoa, Gewuerze, Olivenoel"
+        ])
+      );
+    } else if (intent === "resume") {
+      sections.push(
+        agentBullets("Karriere-Ziel", [
+          "Position: " + s,
+          "Lebenslauf: 1 Seite · klare Struktur",
+          "Anschreiben: Problem des Arbeitgebers loesen"
+        ]),
+        agentNumbers("Lebenslauf-Struktur", [
+          "Kopf: Name, Kontakt, LinkedIn/GitHub",
+          "Profil: 3 Saetze — Staerken + Ziel",
+          "Erfahrung: Ergebnisse mit Zahlen (wenn moeglich)",
+          "Skills: Tech + Soft Skills getrennt",
+          "Ausbildung + Zertifikate"
+        ]),
+        agentBullets("Interview-Vorbereitung", [
+          "5 STAR-Stories (Situation, Task, Action, Result)",
+          "Fragen an den Arbeitgeber vorbereiten",
+          "Probe-Interview mit Freund:in"
+        ])
+      );
+    } else if (intent === "social") {
+      sections.push(
+        agentBullets("Social-Strategie", [
+          "Kanal: " + s,
+          "Zeitraum: 30 Tage · 4 Posts/Woche",
+          "Mix: 40 % Value · 30 % Story · 20 % Promo · 10 % Fun"
+        ]),
+        agentNumbers("30-Tage-Plan (Auszug)", [
+          "**W1** — Intro + 3 Value-Posts + 1 Reel",
+          "**W2** — Tutorial + Behind the Scenes",
+          "**W3** — User-Frage + Trend-Aufgreifer",
+          "**W4** — Recap + Teaser + Community-Shoutout"
+        ]),
+        agentBullets("Wachstums-Tipps", [
+          "Hook in ersten 2 Sekunden · klare CTA",
+          "Konsistenz > Perfektion",
+          "NOCO Render fuer Thumbnails & Grafiken"
+        ])
+      );
+    } else if (intent === "home") {
+      sections.push(
+        agentBullets("Einrichtungs-Brief", [
+          "Raum: " + s,
+          "Stil: Modern · Cozy · Minimal — waehlen",
+          "Budget in 3 Stufen: Low · Mid · High"
+        ]),
+        agentNumbers("Umsetzung in 4 Phasen", [
+          "**1** — Moodboard & Mass nehmen",
+          "**2** — Farben + Lichtplan (warm/kalt)",
+          "**3** — Moebel-Layout (Zonen: Arbeit, Relax, Storage)",
+          "**4** — Deko, Pflanzen, finale Details"
+        ]),
+        agentBullets("Quick Wins", [
+          "Licht: 2–3 Lichtquellen statt einer Decke",
+          "Textilien: Kissen, Teppich, Vorhaenge",
+          "Aufraeumen: 80 % weg → Raum wirkt groesser"
+        ])
+      );
+    } else if (intent === "business") {
+      sections.push(
+        agentBullets("Business-Snapshot", [
+          "Venture: " + s,
+          "Zielgruppe + Problem + Loesung",
+          "Monetarisierung: Abo · Einmalkauf · Freemium"
+        ]),
+        agentNumbers("Go-to-Market", [
+          "MVP validieren (10 Interviews)",
+          "Landing Page + Warteliste",
+          "Erster Kanal: Social · Community · SEO",
+          "Launch in 4 Wochen — iterieren nach Feedback"
+        ])
+      );
+    } else {
+      sections.push(
+        agentBullets("Agent-Auftrag", [
+          "Thema: " + s,
+          "Modus: Vollstaendiges Deliverable — nicht nur Vault-Snippet",
+          "Struktur: Briefing → Plan → Umsetzung → Naechste Schritte"
+        ]),
+        agentNumbers("Umsetzungsplan", [
+          "Ziel in einem Satz formulieren",
+          "3 konkrete Arbeitspakete definieren",
+          "Ersten Schritt heute starten (15 Min)",
+          "Woechentlich Fortschritt pruefen"
+        ]),
+        agentBullets("Ressourcen", [
+          "NOCO Vault fuer Hintergrundwissen",
+          "NOCO Brief fuer Recherche-Tiefe",
+          "NOCO Render / Motion fuer visuelle Assets"
+        ])
+      );
+    }
+
+    return sections.join("\n\n");
+  }
+
+  function composeAgentDeliverable(input, opts) {
+    opts = opts || {};
+    if (!input || !String(input).trim()) {
+      return {
+        text: "Beschreibe deinen Auftrag — z.B. *Plane eine App-Idee*, *Erstelle einen Lernplan* oder *Baue ein Konzept fuer …*",
+        confidence: 0,
+        topic: "NOCO Agent",
+        variants: 1
+      };
+    }
+
+    var subject = extractAgentSubject(input, opts.goal);
+    var intent = detectAgentIntent(input, opts);
+    var prepared = prepareUserMessage(input);
+    var intentLabels = {
+      plan: "Strategie-Plan",
+      idea: "Ideen-Konzept",
+      build: "Build-Brief",
+      analyze: "Analyse-Report",
+      business: "Business-Plan",
+      fitness: "Fitness-Plan",
+      learning: "Lernplan",
+      project: "Projekt-Blueprint",
+      marketing: "Marketing-Plan",
+      content: "Content-Plan",
+      travel: "Reiseplan",
+      meal: "Meal-Prep",
+      resume: "Karriere-Plan",
+      social: "Social-Strategie",
+      home: "Einrichtungs-Plan",
+      deliver: "Agent-Ergebnis"
+    };
+    var proTag = opts.proMode ? " · Pro" : "";
+    var header = "**NOCO Agent — " + (intentLabels[intent] || "Ergebnis") + "**" + proTag;
+    var briefing = "**Auftrag:** " + subject + "\n**Engine:** Multi-Source Synthesis — Struktur + Vault-Zusatz";
+    var body = buildAgentBody(intent, subject, input, opts);
+    var vault = buildAgentVaultInsight(input, prepared, opts);
+    var next = buildAgentNextSteps(intent, subject);
+    var parts = [header, "", briefing, "", body];
+    if (vault) parts.push("", vault);
+    parts.push("", next);
+    parts.push("\n---\n*Agent-Modus · lokal synthetisiert · Animation zeigt Ausfuehrung — Ergebnis ist das Deliverable.*");
+    var text = parts.join("\n");
+    if (opts.proMode) opts.modelTier = "pro";
+    else if (!opts.modelTier) opts.modelTier = "flux";
+    if (!opts.skipFlavor) text = applyModelFlavor(text, opts);
+    return {
+      text: text,
+      topic: "NOCO Agent",
+      confidence: 94,
+      variants: 1,
+      agentIntent: intent
+    };
+  }
+
+  function isNocoBrandedQuery(input) {
+    return /\bnoco\b|noco os|noco ai|noco flux|noco prism|noco spark|noco exclusive|noco vault|noco render|noco motion|noco lens|noco agent|noco brief|noco echo|noco sparks|noco access|noco rush|noco inside|noco pay|keycard|firstlight|liquid glass/i.test(normalize(input));
+  }
+
+  function resolveBestVaultMatch(input) {
+    var prepared = prepareUserMessage(input);
+    var best = findBestFromCandidates(resolveQueryCandidates(input));
+
+    if (best.score < 6) {
+      var fuzzy = fuzzyTopicMatch(input);
+      if (fuzzy.score > best.score) best = fuzzy;
+      if (best.score < 6) {
+        var topicOnly = topicOnlyMatch(input);
+        if (topicOnly.score > best.score) best = topicOnly;
+      }
+      if (best.score < 6) {
+        var cascade = wordCascadeMatch(input);
+        if (cascade.score > best.score) best = cascade;
+      }
+      if (best.score < 6) {
+        best = relaxedTopicMatch(best, input);
+      }
+    }
+
+    return {
+      best: best,
+      prepared: prepared,
+      accepted: shouldAcceptVaultMatch(best, input, prepared)
+    };
+  }
+
+  var SMALLTALK_EXACT = {
+    hey: 1, hi: 1, hallo: 1, moin: 1, servus: 1, hello: 1, na: 1, yo: 1,
+    danke: 1, thanks: 1, thx: 1, ok: 1, okay: 1, lol: 1, haha: 1, cool: 1,
+    nice: 1, super: 1, perfekt: 1, "guten morgen": 1, "guten abend": 1, "guten tag": 1
+  };
+
+  var WIKI_STOP_ARTICLES = /^(ein|eine|einer|einem|einen|eines|der|die|das|dem|den|des|the|a|an)$/i;
+
+  function normSmalltalk(s) {
+    return normalize(String(s || "").replace(/[!?.…,]+$/g, "").trim());
+  }
+
+  function isSmalltalkQuery(input) {
+    var raw = String(input || "").trim();
+    if (!raw || raw.charAt(0) === "/") return false;
+    var core = normSmalltalk(stripQuestionNoise(fixCommonTypos(raw)));
+    if (!core) return true;
+    if (SMALLTALK_EXACT[core]) return true;
+    if (/^(hey|hi|hallo|moin|servus|na|yo)[,.!\s]*$/i.test(core)) return true;
+    if (/^(wie geht|wie gehts|was geht|alles klar|wie laeuft|alles fit)/.test(core)) return true;
+    if (/^(danke|thanks|thx|super|cool|nice|perfekt|genial|lol|haha)\b/.test(core) && core.split(/\s+/).length <= 4) return true;
+    if (/^(erzaehl einen witz|erzähl einen witz|witz|smalltalk|langweilig|langeweile)/.test(core)) return true;
+    if (core.split(/\s+/).length <= 2 && !/^(was|wer|wie|warum|wann|wo|welche|erklaer|definiere|tipps)\b/.test(core)) {
+      if (isSmalltalkFast(input)) return true;
+      var vault = resolveBestVaultMatch(input);
+      if (vault.accepted && vault.best.entry) {
+        var k = (vault.best.entry.keys || []).join(" ");
+        if (/hallo|witz|danke|smalltalk|wie geht|langweilig|lieblings/.test(k)) return true;
+      }
+    }
+    return false;
+  }
+
+  function isEncyclopedicQuery(input) {
+    var prepared = prepareUserMessage(input);
+    var core = stripQuestionNoise(fixCommonTypos(String(prepared || input || "")));
+    if (!core) return false;
+    if (/^(was ist|was sind|was war|was waren|wer ist|wer war|wer waren|wie funktioniert|wie ist|wie sind|warum ist|warum sind|wo ist|wo liegt|wann war|wann wurde|wann ist|was bedeutet|was heisst|was heißt|was kostet|wie gross|wie groß|wie alt|wie viele|wie viel|erklaer|erklaere|erklär|beschreib|definiere|tell me about|what is|what are|who is|define |welche bedeutung|definition von|bedeutung von)/.test(core)) return true;
+    if (/^(tipps|wie (mache|mach|kann|soll) ich)/.test(core)) return true;
+    if (/^(fakten|fakt über|fakt ueber|infos? (zu|über|ueber|zum|zur)|informationen (zu|über|ueber)|alles über|alles ueber|erzaehl mir über|erzähl mir über)/.test(core)) return true;
+    if (/^(kannst du mir (sagen|erklären|erklaeren)|sag mir|weißt du|weisst du was|kennst du)/.test(core)) return true;
+    if (/^(geschichte (von|der|des)|hauptstadt|einwohner|geographie|geografie|biografie)/.test(core)) return true;
+    if (extractTopicFromQuestion(prepared) || extractTopicFromQuestion(input)) return true;
+    return false;
+  }
+
+  function isGeneralKnowledgeQuery(input) {
+    if (isEncyclopedicQuery(input)) return true;
+    var prepared = prepareUserMessage(input);
+    var core = stripQuestionNoise(fixCommonTypos(String(prepared || input || "")));
+    if (!core) return false;
+    if (/^(welche|wieviel|wie oft|in welchem|aus welchem|typische|beispiele fuer|beispiele für|unterschied zwischen|vergleich zwischen)/.test(core)) return true;
+    if (/\b(land|stadt|planet|tier|pflanze|krankheit|chemie|physik|geschichte|krieg|präsident|kanzler|könig|koenig|museum|fluss|berg|ozean|kontinent)\b/.test(core) && core.split(/\s+/).length <= 14) return true;
+    var topic = extractTopicFromQuestion(prepared) || extractTopicFromQuestion(input);
+    if (topic && topic.length >= 3 && !isNocoBrandedQuery(input)) return true;
+    if (/^[a-zäöüß\-]{3,32}$/i.test(core) && !isSmalltalkQuery(input) && !isNocoBrandedQuery(input)) return true;
+    if (/^[a-zäöüß\-]{2,24}(,\s*[a-zäöüß\-]{2,24})+$/i.test(core.replace(/\s+/g, ""))) return true;
+    if (splitTopicList(input).length >= 2) return true;
+    return false;
+  }
+
+  function splitTopicList(input) {
+    var raw = String(input || "").trim();
+    if (!raw) return [];
+    return raw.split(/[,;|\/\n]+/).map(function (p) {
+      return cleanWikiTopic(stripQuestionNoise(fixCommonTypos(p.trim())));
+    }).filter(function (p) { return p && p.length >= 2; });
+  }
+
+  function isConfidentVaultOnly(input, vaultMatch) {
+    if (isNocoBrandedQuery(input)) return true;
+    if (isCapabilitiesQuery(input) || isBriefQuery(input)) return true;
+    if (isChatRecallQuery(prepareUserMessage(input))) return true;
+    if (isSmalltalkFast(input)) return true;
+    if (!vaultMatch || !vaultMatch.accepted || !vaultMatch.best || !vaultMatch.best.entry) return false;
+    if (isPracticalVaultQuery(input) && vaultMatch.best.score >= 8) return true;
+    var keys = (vaultMatch.best.entry.keys || []).join(" ");
+    if (/noco|keycard|exclusive|fake.?virus|liquid glass|firstlight|forge|explorer|noco pay|noco flux|noco os|workspace|noco ai|noco prism|noco spark|pwa|hallo|witz|danke|smalltalk|wie geht|langweilig|lieblings/.test(keys)) {
+      if (isStrongNocoVaultMatch(vaultMatch, input)) return true;
+      if (/hallo|witz|danke|smalltalk|wie geht|langweilig|lieblings/.test(keys)) {
+        return isSmalltalkFast(input) || vaultMatch.best.score >= 9;
+      }
+    }
+    return false;
+  }
+
+  function extractNexusWikiQuery(input) {
+    if (isSmalltalkQuery(input) || isNocoBrandedQuery(input)) return "";
+    var q = extractWikiQuery(input);
+    if (q) return q;
+    var parts = splitTopicList(input);
+    var i, p;
+    for (i = 0; i < parts.length; i++) {
+      p = parts[i];
+      if (p && isValidWikiQuery(p)) return refineWikiSearchQuery(p, input);
+    }
+    var raw = String(input || "").trim();
+    var first = cleanWikiTopic(stripQuestionNoise(fixCommonTypos(raw.split(/[,;\s|\/]+/)[0] || "")));
+    if (first && isValidWikiQuery(first)) return refineWikiSearchQuery(first, input);
+    return "";
+  }
+
+  function isStrongNocoVaultMatch(vaultMatch, input) {
+    if (!vaultMatch || !vaultMatch.accepted || !vaultMatch.best || !vaultMatch.best.entry) return false;
+    var keys = (vaultMatch.best.entry.keys || []).join(" ");
+    if (/noco|keycard|exclusive|fake.?virus|liquid glass|firstlight|forge|explorer|noco pay|noco flux|noco os|workspace|noco ai|noco prism|noco spark|pwa|keycard/.test(keys)) {
+      return vaultMatch.best.score >= 5;
+    }
+    if (/hallo|witz|danke|smalltalk|wie geht|langweilig|lieblings/.test(keys)) return true;
+    if (isNocoBrandedQuery(input)) return vaultMatch.best.score >= 5;
+    return vaultMatch.best.score >= 12;
+  }
+
+  function hasRecentWikiContext(chatHistory) {
+    if (!chatHistory || !chatHistory.length) return false;
+    var i, m;
+    for (i = chatHistory.length - 1; i >= 0 && i >= chatHistory.length - 6; i--) {
+      m = chatHistory[i];
+      if (m && m.role === "ai" && (m.wikiSource || (m.topic && /wikipedia/i.test(String(m.topic))))) return true;
+    }
+    return false;
+  }
+
+  var WIKI_DISAMBIGUATE = {
+    quelle: "Quelle (Begriffsklärung)",
+    bank: "Bank (Begriffsklärung)",
+    birne: "Birne (Begriffsklärung)",
+    hund: "Hund",
+    katze: "Katze",
+    maus: "Maus (Begriffsklärung)",
+    apple: "Apple",
+    orange: "Orange (Begriffsklärung)",
+    python: "Python (Begriffsklärung)",
+    java: "Java (Begriffsklärung)",
+    berlin: "Berlin",
+    paris: "Paris",
+    mars: "Mars (Begriffsklärung)",
+    sonne: "Sonne",
+    mond: "Mond",
+    essen: "Essen (Begriffsklärung)",
+    tor: "Tor (Begriffsklärung)",
+    arm: "Arm (Begriffsklärung)",
+    kind: "Kind",
+    see: "See (Begriffsklärung)",
+    rock: "Rock (Begriffsklärung)",
+    band: "Band (Begriffsklärung)",
+    golf: "Golf (Begriffsklärung)",
+    match: "Match (Begriffsklärung)",
+    star: "Star (Begriffsklärung)",
+    batterie: "Batterie (Begriffsklärung)",
+    kiefer: "Kiefer (Begriffsklärung)",
+    gehen: "Gehen (Begriffsklärung)"
+  };
+
+  function refineWikiSearchQuery(query, input) {
+    var q = normSmalltalk(cleanWikiTopic(query));
+    if (!q) return query;
+    if (WIKI_DISAMBIGUATE[q] && isGeneralKnowledgeQuery(input)) {
+      return WIKI_DISAMBIGUATE[q];
+    }
+    return query;
+  }
+
+  function isSmalltalkFast(input) {
+    var core = normSmalltalk(stripQuestionNoise(fixCommonTypos(String(input || "").trim())));
+    if (!core) return true;
+    if (SMALLTALK_EXACT[core]) return true;
+    if (/^(hey|hi|hallo|moin|servus|na|yo)[,.!\s]*$/i.test(core)) return true;
+    if (/^(wie geht|wie gehts|was geht|alles klar|wie laeuft|alles fit)/.test(core)) return true;
+    if (/^(danke|thanks|thx|super|cool|nice|perfekt|genial|lol|haha)\b/.test(core) && core.split(/\s+/).length <= 4) return true;
+    if (/^(erzaehl einen witz|erzähl einen witz|witz|smalltalk|langweilig|langeweile)/.test(core)) return true;
+    return false;
+  }
+
+  function isPracticalVaultQuery(input) {
+    var prepared = prepareUserMessage(input);
+    var core = stripQuestionNoise(fixCommonTypos(String(prepared || input || "")));
+    if (/^(tipps|wie (mache|mach|kann|soll) ich|rezept|anleitung|schritt fuer|schritt für|was soll ich)/.test(core)) return true;
+    if (/^(empfehlung|empfehl|vergleiche|vergleich )/.test(core)) return true;
+    if (isBriefQuery(input) || isBriefQuery(prepared)) return true;
+    if (isCompareQuery(prepared) || isCompareQuery(input)) return true;
+    return false;
+  }
+
+  function isWikiPreferredTopic(input) {
+    var prepared = prepareUserMessage(input);
+    var blob = normalize(String(prepared || input || ""));
+    if (/\b(wikipedia|wiki|nachschlagen|recherchier|faktenbuch|enzyklop)/.test(blob)) return true;
+    if (/\b(hauptstadt|einwohner|geographie|geografie|biografie|geburtsdatum|gestorben|nobelpreis|jahre vor christus)\b/.test(blob)) return true;
+    if (/\b(planet|galaxie|dinosaurier|mittelalter|antike|renaissance|weltkrieg|kaiser|koenig|königin|präsident|kanzler)\b/.test(blob)) return true;
+    if (/\b(element|periodensystem|organismus|bakterie|protein|genom|evolution|photosynthese)\b/.test(blob)) return true;
+    if (/\b(einstein|newton|darwin|shakespeare|mozart|beethoven|napoleon|cleopatra)\b/.test(blob)) return true;
+    return false;
+  }
+
+  function scoreWikiAffinity(input) {
+    var s = 0;
+    var prepared = prepareUserMessage(input);
+    var core = stripQuestionNoise(fixCommonTypos(String(prepared || input || "")));
+    if (isGeneralKnowledgeQuery(input)) s += 42;
+    if (isWikiPreferredTopic(input)) s += 38;
+    if (isEncyclopedicQuery(input)) s += 28;
+    if (/^(wer|wann|wo|was ist|was war|was sind|was bedeutet)/.test(core)) s += 22;
+    if (/\b(19|20)\d{2}\b/.test(core)) s += 14;
+    if (/\b(stadt|land|planet|ozean|fluss|berg|kontinent|insel|hauptstadt)\b/.test(core)) s += 18;
+    if (/\b(km|meter|tonnen|prozent|grad celsius|°c)\b/.test(core)) s += 12;
+    if (extractTopicFromQuestion(prepared) && !isNocoBrandedQuery(input)) s += 16;
+    return s;
+  }
+
+  function scoreVaultAffinity(input, vaultMatch) {
+    var s = 0;
+    if (isPracticalVaultQuery(input)) s += 55;
+    if (isNocoBrandedQuery(input)) s += 85;
+    if (isCapabilitiesQuery(input) || isBriefQuery(input)) s += 70;
+    if (isChatRecallQuery(prepareUserMessage(input))) s += 65;
+    if (isSmalltalkFast(input)) s += 48;
+    if (!vaultMatch) vaultMatch = resolveBestVaultMatch(input);
+    if (vaultMatch.accepted && vaultMatch.best.entry) {
+      s += Math.min(45, vaultMatch.best.score);
+      if (isStrongNocoVaultMatch(vaultMatch, input)) s += 40;
+    }
+    return s;
+  }
+
+  function classifyKnowledgeIntent(input, chatHistory, routeOpts) {
+    routeOpts = routeOpts || {};
+    chatHistory = chatHistory || [];
+    var wikiQuery, followTopic, vaultMatch, rawWord, wikiScore, vaultScore;
+
+    if (isNocoBrandedQuery(input) || isCapabilitiesQuery(input) || isBriefQuery(input) ||
+        isChatRecallQuery(prepareUserMessage(input))) {
+      return { route: "vault", reason: "noco-system", wikiQuery: "", intent: "noco", confidence: 96 };
+    }
+
+    if (isSmalltalkFast(input) && !routeOpts.vaultDisabled) {
+      return { route: "vault", reason: "smalltalk", wikiQuery: "", intent: "smalltalk", confidence: 94 };
+    }
+
+    wikiQuery = extractNexusWikiQuery(input);
+    vaultMatch = !routeOpts.vaultDisabled ? resolveBestVaultMatch(input) : null;
+    wikiScore = scoreWikiAffinity(input);
+    vaultScore = scoreVaultAffinity(input, vaultMatch);
+
+    if (isWikiPreferredTopic(input) && wikiQuery && isValidWikiQuery(wikiQuery)) {
+      wikiScore += 28;
+    }
+
+    if (isFollowUpQuery(input, chatHistory) || hasRecentWikiContext(chatHistory)) {
+      followTopic = wikiQuery || extractFollowUpTopic(chatHistory);
+      followTopic = refineWikiSearchQuery(cleanWikiTopic(followTopic), input);
+      if (isValidWikiQuery(followTopic)) {
+        return { route: "wiki", reason: "followup", wikiQuery: followTopic, intent: "wiki", confidence: 91, wikiScore: wikiScore, vaultScore: vaultScore };
+      }
+    }
+
+    if (!routeOpts.vaultDisabled && vaultMatch && isConfidentVaultOnly(input, vaultMatch)) {
+      return { route: "vault", reason: "vault-confident", wikiQuery: wikiQuery, intent: "vault", confidence: 90, wikiScore: wikiScore, vaultScore: vaultScore };
+    }
+
+    if (wikiQuery && isValidWikiQuery(wikiQuery)) {
+      if (wikiScore >= vaultScore - 8 || vaultScore < 55) {
+        return {
+          route: "wiki",
+          reason: wikiScore >= 40 ? "nexus-wiki-score" : "nexus-wiki-default",
+          wikiQuery: wikiQuery,
+          intent: "wiki",
+          confidence: Math.min(97, 58 + Math.round(wikiScore * 0.45)),
+          wikiScore: wikiScore,
+          vaultScore: vaultScore
+        };
+      }
+    }
+
+    if (!routeOpts.vaultDisabled && vaultScore >= 72 && vaultMatch && vaultMatch.accepted && isConfidentVaultOnly(input, vaultMatch)) {
+      return { route: "vault", reason: "vault-confident", wikiQuery: wikiQuery, intent: "vault", confidence: 88, wikiScore: wikiScore, vaultScore: vaultScore };
+    }
+
+    if (!wikiQuery || !isValidWikiQuery(wikiQuery)) {
+      wikiQuery = extractNexusWikiQuery(input);
+    }
+
+    if (wikiQuery && isValidWikiQuery(wikiQuery)) {
+      return { route: "wiki", reason: "nexus-wiki-default", wikiQuery: wikiQuery, intent: "wiki", confidence: 82, wikiScore: wikiScore, vaultScore: vaultScore };
+    }
+
+    rawWord = cleanWikiTopic(String(input || "").trim().split(/[,;\s|\/]+/)[0] || "");
+    if (rawWord && isValidWikiQuery(rawWord) && !isNocoBrandedQuery(input)) {
+      return {
+        route: "wiki",
+        reason: "nexus-wiki-fallback",
+        wikiQuery: refineWikiSearchQuery(rawWord, input),
+        intent: "wiki",
+        confidence: 76,
+        wikiScore: wikiScore,
+        vaultScore: vaultScore
+      };
+    }
+
+    if (!routeOpts.vaultDisabled && vaultMatch && isConfidentVaultOnly(input, vaultMatch)) {
+      return { route: "vault", reason: "vault-confident", wikiQuery: "", intent: "vault", confidence: 85, wikiScore: wikiScore, vaultScore: vaultScore };
+    }
+
+    if (!routeOpts.vaultDisabled && vaultScore >= 80 && vaultMatch && vaultMatch.accepted) {
+      return { route: "vault", reason: "vault-practical", wikiQuery: "", intent: "vault", confidence: 80, wikiScore: wikiScore, vaultScore: vaultScore };
+    }
+
+    if (!routeOpts.vaultDisabled) {
+      return { route: "vault", reason: "no-wiki-query", wikiQuery: "", intent: "vault", confidence: 45, wikiScore: wikiScore, vaultScore: vaultScore };
+    }
+
+    return { route: "wiki", reason: "vault-off", wikiQuery: rawWord, intent: "wiki", confidence: 70, wikiScore: wikiScore, vaultScore: vaultScore };
+  }
+
+  function isFollowUpQuery(input, chatHistory) {
+    if (!chatHistory || !chatHistory.length) return false;
+    var core = stripQuestionNoise(fixCommonTypos(prepareUserMessage(input)));
+    if (!core) return false;
+    if (/^(und |auch |noch |nochmal |mehr dazu|erzaehl mehr|erzähl mehr|weiter|details|ausfuehrlich|genauer|kannst du das|was meinst du)/.test(core)) return true;
+    if (/^(warum|wie|wann|wo|wer)\b/.test(core) && core.split(/\s+/).length <= 8) return true;
+    if (/^(das|dies|dieses|der |die |es )\b/.test(core) && core.split(/\s+/).length <= 10) return true;
+    return false;
+  }
+
+  function extractFollowUpTopic(chatHistory) {
+    var i, m, t;
+    for (i = chatHistory.length - 1; i >= 0; i--) {
+      m = chatHistory[i];
+      if (!m) continue;
+      if (m.role === "ai" && m.wikiSource && m.wikiSource.title) {
+        return String(m.wikiSource.title).trim();
+      }
+      if (m.role === "user" && m.text) {
+        t = extractNexusWikiQuery(m.text) || extractWikiQuery(m.text);
+        if (t && t.length >= 2) return t;
+      }
+    }
+    return "";
+  }
+
+  function cleanWikiTopic(topic) {
+    var t = String(topic || "").trim().replace(/[?!.…]+$/g, "").trim();
+    var parts, i;
+    if (!t) return "";
+    parts = t.split(/\s+/).filter(Boolean);
+    while (parts.length && WIKI_STOP_ARTICLES.test(parts[0])) parts.shift();
+    t = parts.join(" ").trim();
+    t = t.replace(/\s+(eigentlich|bitte|genau|kurz|nochmal)$/i, "").trim();
+    t = t.replace(/\s+(machen|tun|anfangen|funktioniert)$/i, "").trim();
+    return t;
+  }
+
+  function isValidWikiQuery(q) {
+    if (!q || q.length < 2) return false;
+    if (isSmalltalkQuery(q)) return false;
+    var n = normSmalltalk(q);
+    if (SMALLTALK_EXACT[n]) return false;
+    if (n.length < 3 && !/^(ki|ai|eu|os|dna|rna)$/i.test(n)) return false;
+    return true;
+  }
+
+  function extractWikiQuery(input) {
+    if (isSmalltalkQuery(input)) return "";
+    var prepared = prepareUserMessage(input);
+    var raw = String(input || "").trim();
+    var topic = extractTopicFromQuestion(prepared) || extractTopicFromQuestion(input);
+    topic = cleanWikiTopic(topic);
+    if (topic && isValidWikiQuery(topic)) return refineWikiSearchQuery(topic, input);
+    var core = cleanWikiTopic(stripQuestionNoise(fixCommonTypos(prepared)));
+    if (core && isValidWikiQuery(core) && isGeneralKnowledgeQuery(input)) {
+      return refineWikiSearchQuery(core, input);
+    }
+    core = cleanWikiTopic(stripQuestionNoise(fixCommonTypos(raw)));
+    if (core && isValidWikiQuery(core) && !isNocoBrandedQuery(input)) {
+      if (isGeneralKnowledgeQuery(input) || core.split(/\s+/).length <= 2 || splitTopicList(input).length >= 1) {
+        return refineWikiSearchQuery(core.split(/[,;|\/]/)[0] || core, input);
+      }
+    }
+    var parts, i, p;
+    parts = splitTopicList(input);
+    if (parts.length && isValidWikiQuery(parts[0])) {
+      return refineWikiSearchQuery(parts[0], input);
+    }
+    return "";
+  }
+
+  function resolveKnowledgeRoute(input, opts) {
+    opts = opts || {};
+    var c = classifyKnowledgeIntent(input, opts.chatHistory || [], opts);
+    return {
+      route: c.route,
+      reason: c.reason,
+      wikiQuery: c.wikiQuery || "",
+      intent: c.intent,
+      confidence: c.confidence || 0,
+      wikiScore: c.wikiScore,
+      vaultScore: c.vaultScore
+    };
+  }
+
+  function isNexusVaultRoute(routeInfo) {
+    if (!routeInfo || routeInfo.route !== "vault") return false;
+    return /^(vault-confident|noco-system|smalltalk|vault-practical)$/.test(routeInfo.reason || "");
+  }
+
+  function shouldAcceptVaultMatch(best, input, prepared) {
+    var topic, topicScore, topicSyn;
+    if (!best || !best.entry) return false;
+    if (best.score >= 6) return true;
+    if (best.score >= 5) {
+      topic = extractTopicFromQuestion(prepared) || extractTopicFromQuestion(input);
+      if (topic) {
+        topicScore = scoreMatch("was ist " + topic, best.entry.keys);
+        topicSyn = applyTopicSynonyms(topic);
+        if (topicSyn && topicSyn !== topic) {
+          topicScore = Math.max(topicScore, scoreMatch("was ist " + topicSyn, best.entry.keys));
+        }
+        if (topicScore >= 52) return true;
+      }
+    }
+    return false;
+  }
+
   function think(input, opts) {
     opts = opts || {};
-    var best, text, fbIdx, fbText, topic, prepared, closest, rawBest;
+    var best, text, fbIdx, fbText, topic, prepared, closest, extracted;
 
-    if (!input || !String(input).trim()) {
-      return { text: "Schreib eine Frage — kurz reicht! Oder klick **NOCO Sparks** / **Hub**.", confidence: 0, topic: "System" };
+    if (opts.adjustMode && opts.sourceText) {
+      return {
+        text: adjustAnswerText(opts.sourceText, opts.adjustMode),
+        confidence: 100,
+        topic: opts.adjustMode === "longer" ? "Ausfuehrlich" : opts.adjustMode === "shorter" ? "Kurz" : "Fokus",
+        variants: 1
+      };
+    }
+
+    if (opts.summaryMode && input && String(input).trim()) {
+      return summarizeText(input, opts);
     }
 
     if (opts.simplify && opts.sourceText) {
       return { text: simplifyText(opts.sourceText), confidence: 100, topic: "Einfach", variants: 1 };
     }
 
+    if (!input || !String(input).trim()) {
+      return { text: "Schreib eine Frage — kurz reicht! Oder klick **NOCO Sparks** / **Hub**.", confidence: 0, topic: "System" };
+    }
+
     prepared = prepareUserMessage(input);
+
+    if (opts.agentMode && !opts.adjustMode && !opts.summaryMode && !opts.simplify) {
+      return composeAgentDeliverable(input, opts);
+    }
+
+    if (opts.agentMode || opts.proMode) {
+      opts.modelTier = opts.proMode ? "pro" : (opts.modelTier || "flux");
+    }
 
     if (opts.chatHistory && isChatRecallQuery(prepared)) {
       return summarizeChatHistory(opts.chatHistory, prepared, opts);
@@ -6984,14 +11869,12 @@
       if (cmp) return buildCompareBrief(cmp.left, cmp.right, opts);
     }
 
-    best = findBestMatch(prepared);
-    if (best.score < 15) {
-      rawBest = findBestMatch(input);
-      if (rawBest.score > best.score) best = rawBest;
-    }
+    var vaultMatch = resolveBestVaultMatch(input);
+    best = vaultMatch.best;
+    prepared = vaultMatch.prepared;
 
-    if (best.score >= 8 && best.entry) {
-      text = pickAnswer(best.entry, prepared, opts);
+    if (vaultMatch.accepted) {
+      text = pickAnswer(best.entry, best.query || prepared, opts);
       if (opts.regenerate && opts.variant >= (best.entry.answers || []).length) {
         text += FALLBACK_EXTEND[opts.variant % FALLBACK_EXTEND.length];
       }
@@ -7003,10 +11886,14 @@
     fbIdx = Math.abs(hashCode(String(prepared) + String(opts.variant || 0))) % FALLBACKS.length;
     fbText = FALLBACKS[fbIdx];
     closest = getClosestSuggestions(prepared, 4);
+    if (!closest.length) {
+      extracted = extractTopicFromQuestion(prepared) || extractTopicFromQuestion(input);
+      if (extracted) closest = getClosestSuggestions(extracted, 4);
+    }
     if (closest.length) {
       fbText += "\n\n**Meinst du vielleicht:**\n• " + closest.join("\n• ");
     }
-    fbText += "\n\n*Tipp: Kurz schreiben reicht — z.B. nur \"KI\" oder \"Plan\". Schreibhilfe erscheint beim Tippen.*";
+    fbText += "\n\n*Tipp: Kurz reicht — *KI*, *Tipps zum Lernen*, *Was ist Demokratie?* · Schreibhilfe beim Tippen.*";
     if (opts.regenerate && opts.variant > 0) {
       fbText += FALLBACK_EXTEND[opts.variant % FALLBACK_EXTEND.length];
     }
@@ -7422,6 +12309,7 @@
 
   global.NocoBrain = {
     think: think,
+    composeAgentDeliverable: composeAgentDeliverable,
     parseMarkdown: parseMarkdown,
     getTermInfo: getTermInfo,
     getTermKeys: getTermKeys,
@@ -7429,6 +12317,13 @@
     getSlashHelp: getSlashHelp,
     getSystemStats: getSystemStats,
     simplifyText: simplifyText,
+    detectAnswerAdjust: detectAnswerAdjust,
+    adjustAnswerText: adjustAnswerText,
+    summarizeText: summarizeText,
+    getFeatureHints: getFeatureHints,
+    expandText: expandText,
+    shortenToKeyPoints: shortenToKeyPoints,
+    makeMoreOnTopic: makeMoreOnTopic,
     getKnowledgeCount: function () { return KNOWLEDGE.length; },
     getVersion: function () { return "3.3"; },
     prepareUserMessage: prepareUserMessage,
@@ -7447,6 +12342,28 @@
     getBrand: function () {
       return JSON.parse(JSON.stringify(NOCO_BRAND));
     },
-    getBrandGuide: getBrandGuide
+    getBrandGuide: getBrandGuide,
+    resolveBestVaultMatch: resolveBestVaultMatch,
+    probeVault: function (input) {
+      var m = resolveBestVaultMatch(input);
+      return {
+        score: m.best.score,
+        accepted: m.accepted,
+        topic: m.best.entry ? getTopicLabel(m.best.entry) : null
+      };
+    },
+    extractWikiQuery: extractWikiQuery,
+    extractNexusWikiQuery: extractNexusWikiQuery,
+    cleanWikiTopic: cleanWikiTopic,
+    isSmalltalkQuery: isSmalltalkQuery,
+    isSmalltalkFast: isSmalltalkFast,
+    classifyKnowledgeIntent: classifyKnowledgeIntent,
+    isEncyclopedicQuery: isEncyclopedicQuery,
+    isFollowUpQuery: isFollowUpQuery,
+    resolveKnowledgeRoute: resolveKnowledgeRoute,
+    isNexusVaultRoute: isNexusVaultRoute,
+    isValidWikiQuery: isValidWikiQuery,
+    isNocoBrandedQuery: isNocoBrandedQuery,
+    isCapabilitiesQuery: isCapabilitiesQuery
   };
 })(typeof window !== "undefined" ? window : this);

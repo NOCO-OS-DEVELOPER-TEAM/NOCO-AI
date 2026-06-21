@@ -1,0 +1,57 @@
+/* v4.9 — Chat-Flow Buttons · flüssiger Motion */
+
+.chat-action-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chat-action-chip {
+  padding: 0.32rem 0.62rem;
+  border-radius: 99px;
+  border: 1px solid rgba(129, 140, 248, 0.28);
+  background: rgba(129, 140, 248, 0.1);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.62rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.chat-action-chip:hover {
+  border-color: rgba(94, 234, 212, 0.45);
+  background: rgba(94, 234, 212, 0.12);
+  transform: translateY(-1px);
+}
+
+.chat-action-chip.is-primary {
+  border-color: rgba(232, 121, 249, 0.45);
+  background: linear-gradient(135deg, rgba(232, 121, 249, 0.18), rgba(129, 140, 248, 0.14));
+}
+
+.chat-action-chip.is-muted {
+  opacity: 0.75;
+}
+
+.message-bubble-has-actions {
+  padding-bottom: 0.45rem;
+}
+
+.chat-motion-canvas {
+  will-change: contents;
+}
+
+body.is-motion-mode .motion-preview-canvas {
+  filter: drop-shadow(0 0 8px rgba(232, 121, 249, 0.25));
+}
+
+.chat-flow-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.56rem;
+  color: rgba(255, 255, 255, 0.42);
+  font-family: var(--font-mono);
+}

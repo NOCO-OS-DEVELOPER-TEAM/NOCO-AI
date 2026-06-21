@@ -1,5 +1,5 @@
 NOCO AI — Vollständige Feature- & Systemübersicht
-Stand: 07.06.2026 · Build v4.1.2
+Stand: 07.06.2026 · Build v4.4.0
 ===============================================
 
 GITHUB / WEBSEITE DEPLOY — WICHTIG
@@ -13,6 +13,7 @@ Wenn nach dem Upload alte Animationen / altes Design erscheinen:
    css/noco-theme.css          ← NEU: gebündeltes Theme (Pflicht!)
    js/app.js
    js/brain.js
+   js/agent.js               ← NEU v4.2: Agent Mode
    js/pixelgen.js
    js/imgdetect.js
    js/boot-fx.js               ← Pflicht für Boot-Shard-Animation
@@ -20,11 +21,11 @@ Wenn nach dem Upload alte Animationen / altes Design erscheinen:
 
 2. Vor Upload: rebuild-theme.ps1 ausführen (erzeugt css/noco-theme.css)
 
-3. Cache: In index.html ?v=4.1.2 erhöhen (z.B. ?v=4.1.3) bei jedem Deploy
+3. Cache: In index.html ?v=4.3.0 erhöhen (z.B. ?v=4.3.1) bei jedem Deploy
 
 4. Browser: Strg+Shift+R (Hard Reload) oder Inkognito testen
 
-5. Prüfen: Oben rechts sollte v4.1.2 stehen. In DevTools → Network:
+5. Prüfen: Oben rechts sollte v4.3.0 stehen. In DevTools → Network:
    boot-fx.js und noco-theme.css müssen Status 200 haben (nicht 404).
 
 6. GitHub Pages: index.html muss im Root des Repos liegen (oder Pages-Ordner).
@@ -74,6 +75,24 @@ Jede KI-Antwort hat drei Buttons:
    👎 Daumen runter — negative Bewertung
    Hinweis: "Simulierte KI" — macht transparent, dass es kein echtes LLM ist.
    Feedback wird lokal gespeichert.
+
+   Antwort anpassen (im Chat tippen, nach einer KI-Antwort):
+   • „bitte länger“ — ausführlichere Version
+   • „bitte kürzer“ — drei Kernpunkte
+   • „mehr zum Thema“ — fokussierter
+
+
+3b. NOCO Agent Mode (v4.4 — Live Execution)
+-------------------------------------------
+• Button ⚡ Agent oder `/agent Gaming Logo für meinen Kanal`
+• Keine Sofort-Antwort: min. 12+ sichtbare Micro-Steps in Action-Blocks
+• Oben im Chat: „NOCO arbeitet…“ mit Phasen Analysiert → Erstellt → Optimiert → Finalisiert
+• Live-Panel mittig: Analyse/Creation/Optimization/Finalize Blocks mit → Ticks
+• Tool-Log sichtbar: Memory, Wissensbasis, Bildgenerator, Optimizer, Output-Engine
+• Steuerung: Stop · Skip · Plan anzeigen · Simplify (nach Fertigstellung)
+• Ergebnis wird gestreamt (Abschnitt für Abschnitt), nicht auf einmal
+• Logo-Aufträge: danach optional NOCO Render (Exclusive)
+• Simuliert lokal — kein Cloud-LLM
 
 
 4. Navigation (oben)
@@ -207,5 +226,15 @@ Plus Willkommens-Chips: Hallo!, Was ist NOCO OS?, Hilfe
 
 12. Version
 -----------
+NOCO AI v4.6 — NOCO Insight (Datei- & Textanalyse offline)
+
+NOCO Insight (v4.6):
+• Shortcut-Chip „Insight“ oder 🔬-Button links im Chat
+• Kategorien unter dem Eingabefeld: Dokument, Summary, Textprüfung, Code Review, Bildanalyse, Frag die Datei
+• 📂 Datei-Button links: PDF, TXT, DOC, Code, Bild — automatische Analyse
+• Pro 1.0: schnellere Insight-Auslieferung (~35 ms Rush)
+• Sprache: Browser Speech-to-Text → Text → Analyse
+• Alles offline/simuliert — Pattern Matching & lokale Heuristiken
+
 NOCO AI v1.1
 Liquid Glass UI · Multi-Chat · Feedback · Regenerate · NOCO OS Wissen

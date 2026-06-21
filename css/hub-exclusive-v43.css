@@ -1,0 +1,274 @@
+/* v4.3 — Agent live chat panel + centered tools */
+
+.input-row-main {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+.chat-input-tools {
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-self: center !important;
+  width: 100% !important;
+  margin-bottom: 0.45rem !important;
+  gap: 0.5rem !important;
+}
+
+/* Live agent panel — centered in chat */
+.message.agent-live-msg {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.message.agent-live-msg .message-body {
+  width: min(520px, 100%);
+  max-width: 100%;
+}
+
+.agent-chat-live {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(167, 139, 250, 0.32);
+  background:
+    linear-gradient(165deg, rgba(94, 234, 212, 0.07) 0%, rgba(129, 140, 248, 0.12) 42%, rgba(232, 121, 249, 0.08) 100%),
+    rgba(6, 10, 22, 0.88);
+  box-shadow:
+    0 0 40px rgba(129, 140, 248, 0.14),
+    0 12px 40px rgba(0, 0, 0, 0.35);
+  padding: 1rem 1.1rem 0.9rem;
+  overflow: hidden;
+}
+
+.agent-chat-live.is-done {
+  border-color: rgba(94, 234, 212, 0.35);
+  box-shadow: 0 0 32px rgba(94, 234, 212, 0.12);
+}
+
+.agent-chat-live-glow {
+  position: absolute;
+  inset: -40% -20% auto;
+  height: 70%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(232, 121, 249, 0.22) 0%, transparent 65%);
+  pointer-events: none;
+  animation: agentLiveGlow 4s ease-in-out infinite;
+}
+
+@keyframes agentLiveGlow {
+  0%, 100% { opacity: 0.55; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(6px); }
+}
+
+.agent-chat-live-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.agent-chat-live-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 1.15rem;
+  background: linear-gradient(135deg, rgba(232, 121, 249, 0.22), rgba(129, 140, 248, 0.2));
+  border: 1px solid rgba(167, 139, 250, 0.38);
+  box-shadow: 0 0 18px rgba(167, 139, 250, 0.25);
+  animation: agentIconPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes agentIconPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 18px rgba(167, 139, 250, 0.25); }
+  50% { transform: scale(1.04); box-shadow: 0 0 28px rgba(232, 121, 249, 0.4); }
+}
+
+.agent-chat-live-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-chat-live-title {
+  display: block;
+  font-size: 0.82rem;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.agent-chat-live-sub {
+  display: block;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 0.1rem;
+}
+
+.agent-chat-live-pct {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: rgba(167, 139, 250, 0.95);
+  font-variant-numeric: tabular-nums;
+}
+
+.agent-chat-live-phase {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin-bottom: 0.65rem;
+  min-height: 1.4rem;
+}
+
+.agent-chat-live-phase-label {
+  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(94, 234, 212, 0.8);
+  flex-shrink: 0;
+}
+
+.agent-chat-live-phase-name {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.92);
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.agent-chat-live-phase-name.is-pulse {
+  animation: agentPhasePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes agentPhasePulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+.agent-chat-live-result {
+  min-height: 4.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.agent-chat-live-result-card {
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(4, 8, 18, 0.55);
+  padding: 0.55rem 0.65rem;
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+}
+
+.agent-chat-live-result-card.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.acl-result-tag {
+  display: inline-block;
+  font-size: 0.52rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(232, 121, 249, 0.9);
+  margin-bottom: 0.25rem;
+}
+
+.acl-result-title {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.acl-result-detail {
+  margin: 0.2rem 0 0;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.45;
+}
+
+.agent-chat-live-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.3rem;
+  margin-bottom: 0.65rem;
+}
+
+.agent-chat-live-step {
+  font-size: 0.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.28);
+  padding: 0.28rem 0.15rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.4s var(--ease-out);
+  line-height: 1.25;
+}
+
+.agent-chat-live-step.is-active {
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(167, 139, 250, 0.35);
+  background: rgba(129, 140, 248, 0.12);
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.15);
+}
+
+.agent-chat-live-step.is-done {
+  color: rgba(94, 234, 212, 0.88);
+  border-color: rgba(94, 234, 212, 0.2);
+  background: rgba(94, 234, 212, 0.06);
+}
+
+.agent-chat-live-bar {
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.agent-chat-live-bar > span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9, #5eead4);
+  background-size: 200% 100%;
+  animation: agentBarShine 2.8s linear infinite;
+  transition: width 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes agentBarShine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.agent-chat-live-footer {
+  margin-top: 0.55rem;
+  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  color: rgba(94, 234, 212, 0.75);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.agent-chat-live.is-done .agent-chat-live-footer {
+  opacity: 1;
+}
+
+body.is-agent-running .typing-indicator {
+  opacity: 0.85;
+}
+
+body.is-agent-running .typing-label {
+  background: linear-gradient(90deg, #5eead4, #818cf8, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

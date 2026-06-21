@@ -9,13 +9,68 @@
   var FEEDBACK_KEY = "noco-ai-feedback-v1";
   var QUOTA_KEY = "noco-ai-quota-v1";
   var EXCLUSIVE_KEY = "noco-ai-exclusive-v1";
+  var PAY_KEY = "noco-ai-pay-v1";
   var TOS_KEY = "noco-ai-tos-v1";
   var SAVED_KEY = "noco-ai-saved-v1";
   var IMAGE_QUOTA_KEY = "noco-ai-image-quota-v1";
   var PIXEL_GALLERY_KEY = "noco-ai-pixel-gallery-v1";
   var PIXEL_STATS_KEY = "noco-ai-pixel-stats-v1";
   var GUIDE_KEY = "noco-ai-guide-seen-v1";
-  var FEATURE_BANNER_KEY = "noco-ai-feature-banner-v36";
+  var WIKI_QUOTA_KEY = "noco-ai-wiki-quota-v1";
+  var PRO_QUOTA_KEY = "noco-ai-pro-quota-v1";
+  var NEXUS_QUOTA_KEY = "noco-ai-nexus-quota-v1";
+  var MOTION_QUOTA_KEY = "noco-ai-motion-quota-v1";
+  var FEATURE_DISMISS_KEY = "noco-ai-feature-never-v1";
+  var WIKI_LEGAL_KEY = "noco-ai-wiki-legal-v1";
+
+  var PLAN_LIMITS = {
+    free: {
+      messages: 30,
+      pro: 1,
+      images: 3,
+      wiki: 5,
+      nexus: 1,
+      videos: 1
+    },
+    exclusive: {
+      messages: Infinity,
+      pro: 10,
+      images: 30,
+      wiki: 100,
+      nexus: Infinity,
+      videos: 10
+    }
+  };
+
+  var WIKI_FREE_DAILY = PLAN_LIMITS.free.wiki;
+  var FREE_RENDER_DAILY = PLAN_LIMITS.free.images;
+  var FREE_MSG_DAILY = PLAN_LIMITS.free.messages;
+
+  var KNOWLEDGE_SOURCE_LABELS = {
+    noco: "NOCO-Wissen",
+    wiki: "Wiki-API 1.1",
+    auto: "NOCO Nexus-Auto"
+  };
+
+  var KNOWLEDGE_SOURCE_HINTS = {
+    noco: "Offline · Vault",
+    wiki: "Online · Wikipedia",
+    auto: "Vault + Wiki · Nexus-Auto"
+  };
+
+  var NEXUS_ROUTE_LABELS = {
+    followup: "Follow-up",
+    definitional: "Definition",
+    encyclopedic: "Wikipedia",
+    "wiki-topic": "Wikipedia",
+    "fallback-wiki": "Wikipedia",
+    "vault-weak-wiki": "Wikipedia",
+    "nexus-wiki-score": "Wikipedia",
+    "nexus-wiki-default": "Wikipedia",
+    "nexus-wiki-fallback": "Wikipedia",
+    "vault-practical": "Vault",
+    "vault-off": "Wikipedia"
+  };
 
   var bootScreen = document.getElementById("bootScreen");
   var bootStatus = document.getElementById("bootStatus");
@@ -49,7 +104,7 @@
   var sidebarNewChat = document.getElementById("sidebarNewChat");
   var navPills = document.querySelectorAll(".nav-pill[data-view]");
   var viewPanels = document.querySelectorAll(".view-panel");
-  var exclusiveCard = document.getElementById("exclusiveCard");
+  var exclusiveCard = null;
   var exclusiveTopBtn = document.getElementById("exclusiveTopBtn");
   var exclusiveBadge = document.getElementById("exclusiveBadge");
   var modelLabel = document.getElementById("modelLabel");
@@ -150,6 +205,11 @@
   var discoverHintBtn = document.getElementById("discoverHintBtn");
   var discoverHintClose = document.getElementById("discoverHintClose");
   var nocoFeatureBanner = document.getElementById("nocoFeatureBanner");
+  var nocoFeatureDialog = document.getElementById("nocoFeatureDialog");
+  var usageDialog = document.getElementById("usageDialog");
+  var usageBtn = document.getElementById("usageBtn");
+  var closeUsage = document.getElementById("closeUsage");
+  var usageResetBtn = document.getElementById("usageResetBtn");
   var nfbClose = document.getElementById("nfbClose");
   var planDiscoverBtn = document.getElementById("planDiscoverBtn");
   var planSpeedBadge = document.getElementById("planSpeedBadge");
@@ -163,6 +223,8 @@
   var inputHintDiscover = document.getElementById("inputHintDiscover");
   var sparkFilterTabs = document.getElementById("sparkFilterTabs");
   var sparkSearch = document.getElementById("sparkSearch");
+  var sparksCountLabel = document.getElementById("sparksCountLabel");
+  var sparkCategoryHead = document.getElementById("sparkCategoryHead");
   var sidebarHubBtn = document.getElementById("sidebarHubBtn");
   var hubOpenDialogBtn = document.getElementById("hubOpenDialogBtn");
   var hubSparkTabs = document.getElementById("hubSparkTabs");
@@ -183,7 +245,7 @@
   var glowPrismMeter = document.getElementById("glowPrismMeter");
   var glowPrismChips = document.getElementById("glowPrismChips");
   var quickWrite = document.getElementById("quickWrite");
-  var chatImageBtn = document.getElementById("chatImageBtn");
+  var chatImageBtn = document.getElementById("nocoCreateBtn") || document.getElementById("chatImageBtn");
   var inputGlass = document.getElementById("inputGlass");
   var inputSuggestions = document.getElementById("inputSuggestions");
   var inputSuggestionsRow = document.getElementById("inputSuggestionsRow");
@@ -194,14 +256,122 @@
   var writeAssistIndex = -1;
   var writeAssistItems = [];
   var imageModeActive = false;
+  var agentModeActive = false;
+  var summaryModeActive = false;
+  var insightModeActive = false;
+  var motionModeActive = false;
+  var isRenderingMotion = false;
+  var motionPlaybackStops = [];
+  var insightCategory = "document";
+  var insightPayload = null;
+  var proModeSelected = false;
+  var agentRunning = false;
+  var chatAgentBtn = document.getElementById("nocoAgentBtn") || document.getElementById("chatAgentBtn");
+  var chatInsightBtn = document.getElementById("nocoInsideBtn") || document.getElementById("chatInsightBtn");
+  var nocoMotionBtn = document.getElementById("nocoMotionBtn");
+  var motionPanel = document.getElementById("motionPanel");
+  var motionProgressWrap = document.getElementById("motionProgressWrap");
+  var motionProgressFill = document.getElementById("motionProgressFill");
+  var motionProgressLabel = document.getElementById("motionProgressLabel");
+  var motionChips = document.getElementById("motionChips");
+  var motionTheatre = document.getElementById("motionTheatre");
+  var motionPreviewCanvas = document.getElementById("motionPreviewCanvas");
+  var motionPipeline = document.getElementById("motionPipeline");
+  var motionPreviewScan = document.getElementById("motionPreviewScan");
+  var motionTimelineBlock = document.getElementById("motionTimelineBlock");
+  var motionKeyframeRow = document.getElementById("motionKeyframeRow");
+  var motionExportActions = document.getElementById("motionExportActions");
+  var motionTheatreCopy = document.getElementById("motionTheatreCopy");
+  var motionTheatreSave = document.getElementById("motionTheatreSave");
+  var motionCancelFn = null;
+  var lastMotionExportMeta = null;
+  var motionGenStartedAt = 0;
+  var motionGenTotalMs = 98000;
+  var motionProgressRaf = null;
+  var activeMotionMsgId = null;
+  var activeMotionMsgEl = null;
+  var chatFlow = null;
+  var agentDialog = document.getElementById("agentDialog");
+  var closeAgent = document.getElementById("closeAgent");
+  var agentPrompt = document.getElementById("agentPrompt");
+  var agentRunBtn = document.getElementById("agentRunBtn");
+  var agentTaskGrid = document.getElementById("agentTaskGrid");
+  var agentConsole = document.getElementById("agentConsole");
+  var agentSteps = document.getElementById("agentSteps");
+  var agentInterim = document.getElementById("agentInterim");
+  var agentProgressFill = document.getElementById("agentProgressFill");
+  var agentConsoleTitle = document.getElementById("agentConsoleTitle");
+  var agentLiveRoot = null;
+  var agentSession = null;
+  var agentWorkStrip = document.getElementById("agentWorkStrip");
+  var agentLastResult = "";
+  var agentLastFullPlan = "";
+  var proModeBtn = document.getElementById("proModeBtn");
+  var knowledgeSourceSwitch = document.getElementById("knowledgeSourceSwitch");
+  var knowledgeSourceMobile = document.getElementById("knowledgeSourceMobile");
+  var fusionSwitchBtn = document.getElementById("fusionSwitchBtn");
+  var fusionSwitchBtnMobile = document.getElementById("fusionSwitchBtnMobile");
+  var nocoFusionToggle = document.getElementById("nocoFusionToggle");
+  var nocoFusionToggleMobile = document.getElementById("nocoFusionToggleMobile");
+  var vaultPowerBtn = document.getElementById("vaultPowerBtn");
+  var vaultPowerBtnMobile = document.getElementById("vaultPowerBtnMobile");
+  var vaultEnabledToggle = document.getElementById("vaultEnabledToggle");
+  var suggestionsMessagesToggle = document.getElementById("suggestionsMessagesToggle");
+  var suggestionsInputToggle = document.getElementById("suggestionsInputToggle");
+  var suggestionsAllToggle = document.getElementById("suggestionsAllToggle");
+  var suggestionsWelcomeToggle = document.getElementById("suggestionsWelcomeToggle");
+  var suggestionsSparksToggle = document.getElementById("suggestionsSparksToggle");
+  var settingsSuggestionSubs = document.getElementById("settingsSuggestionSubs");
+  var composeMoreFold = document.getElementById("composeMoreFold");
+  var cleanModeToggle = document.getElementById("cleanModeToggle");
+  var featureGlowToggle = document.getElementById("featureGlowToggle");
+  var featureEchoToggle = document.getElementById("featureEchoToggle");
+  var featureMotionToggle = document.getElementById("featureMotionToggle");
+  var featureAgentToggle = document.getElementById("featureAgentToggle");
+  var featureInsideToggle = document.getElementById("featureInsideToggle");
+  var featureBriefToggle = document.getElementById("featureBriefToggle");
+  var featureSummaryToggle = document.getElementById("featureSummaryToggle");
+  var featureLensToggle = document.getElementById("featureLensToggle");
+  var settingsQuotaResetBtn = document.getElementById("settingsQuotaResetBtn");
+  var wikiLegalDialog = document.getElementById("wikiLegalDialog");
+  var wikiLegalAcceptBtn = document.getElementById("wikiLegalAcceptBtn");
+  var wikiLegalCancelBtn = document.getElementById("wikiLegalCancelBtn");
+  var closeWikiLegal = document.getElementById("closeWikiLegal");
+  var wikiLegalPending = null;
+  var exclusiveCheckoutDialog = document.getElementById("exclusiveCheckoutDialog");
+  var exclusiveManagePanel = document.getElementById("exclusiveManagePanel");
+  var exclusiveSubscribeBlock = document.getElementById("exclusiveSubscribeBlock");
+  var exclusiveManagePlan = document.getElementById("exclusiveManagePlan");
+  var exclusiveManageUntil = document.getElementById("exclusiveManageUntil");
+  var exclusiveManagePay = document.getElementById("exclusiveManagePay");
+  var exclusiveManageTx = document.getElementById("exclusiveManageTx");
+  var exclusiveManageChangeBtn = document.getElementById("exclusiveManageChangeBtn");
+  var exclusiveManageCancelBtn = document.getElementById("exclusiveManageCancelBtn");
+  var exCheckoutAgree = document.getElementById("exCheckoutAgree");
+  var exCheckoutPayBtn = document.getElementById("exCheckoutPayBtn");
+  var exPayBalance = document.getElementById("exPayBalance");
+  var exCheckoutProcessLabel = document.getElementById("exCheckoutProcessLabel");
+  var exCheckoutProcessBar = document.getElementById("exCheckoutProcessBar");
+  var checkoutState = { plan: "trial", payMethod: "wallet", reason: "" };
+  var inputModelHint = document.getElementById("inputModelHint");
+  var insightFileBtn = document.getElementById("insightFileBtn");
+  var insightFileInput = document.getElementById("insightFileInput");
+  var insightCategories = document.getElementById("insightCategories");
+  var insightFileBadge = document.getElementById("insightFileBadge");
+  var insightVoiceBtn = document.getElementById("insightVoiceBtn");
+  var insightHint = document.getElementById("insightHint");
+  var insightSpeechRec = null;
   var inputSuggestionsTimer = null;
   var glowPrismTimer = null;
-  var INPUT_SUGGESTION_COUNT = 3;
+  var INPUT_SUGGESTION_COUNT = 6;
   var savedAnswers = loadSaved();
   var lastPixelResult = null;
   var isGeneratingPixel = false;
   var activeChatId = null;
   var isTyping = false;
+  var chatListRefreshTimer = null;
+  var scrollBottomPending = false;
+  var liquidPausedForBusy = false;
   var isRenderingChatImage = false;
   var settings = loadSettings();
   var animFrameId = null;
@@ -209,8 +379,10 @@
   var pendingTermQuery = null;
 
   var speedMap = { fast: 280, normal: 580 };
-  var exclusiveSpeedMap = { fast: 55, normal: 140 };
+  var exclusiveSpeedMap = { fast: 45, normal: 95 };
+  var proSpeedMap = { fast: 18, normal: 38 };
   var EXCLUSIVE_SPEED_MS = "~90";
+  var PRO_SPEED_MS = "~25";
   var FREE_SPEED_MS = "~500";
 
   var THUMB_UP_SVG = '<svg class="noco-thumb noco-thumb-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
@@ -218,22 +390,31 @@
 
   var sparkFilterId = "recommended";
   var sparkSearchQuery = "";
+  var sparksShuffleSeed = 0;
   var hubSparkFilterId = "recommended";
   var featureTipIndex = 0;
 
   var RECOMMENDED_SPARKS = [
     "Was kann ich dich fragen?",
+    "Was ist neu in NOCO?",
     "Was sind die NOCO Modell-Namen?",
-    "Was ist NOCO Echo?",
+    "Was ist NOCO Agent?",
+    "Was ist NOCO Motion?",
     "Was ist NOCO Render?",
     "Was ist kuenstliche Intelligenz?",
+    "Was ist ein Hund?",
+    "Was ist Mathe?",
+    "Was ist die Sonne?",
     "Was ist ChatGPT?",
     "Wie funktioniert das Internet?",
     "Was ist Demokratie?",
     "Was ist Blockchain?",
     "Tipps fuer gesunden Schlaf",
     "Was ist Genetik?",
-    "Was sind Menschenrechte?"
+    "Was sind Menschenrechte?",
+    "Was ist ein Computer?",
+    "Was ist Fussball?",
+    "Was ist Familie?"
   ];
 
   var FEATURE_TIPS = [
@@ -245,11 +426,18 @@
     { icon: "⚡", text: "Tipp: <strong>NOCO Rush</strong> — Exclusive antwortet spuerbar schneller (~90 ms)", action: "exclusive" }
   ];
 
+  var EXCLUSIVE_PLANS = {
+    trial: { name: "Testphase", detail: "1 Tag gratis testen", price: 0, priceLabel: "0,00 €", days: 1 },
+    "1": { name: "1 Monat", detail: "Monatsabo NOCO Flux", price: 12, priceLabel: "12,00 €", months: 1 },
+    "12": { name: "12 Monate", detail: "Jahresabo · spare vs. Monat", price: 99, priceLabel: "99,00 €", months: 12 },
+    "90": { name: "90 Monate", detail: "Max-Abo · NOCO OS Power-User", price: 599, priceLabel: "599,00 €", months: 90 }
+  };
+
   var bootSteps = [
-    "NOCO AI v4.0 startet…",
+    "NOCO AI v4.7 startet…",
     "Rainbow Sheen wird geladen…",
     "3600 Render-Motive laden…",
-    "NOCO Vault · Echo · Glow bereit…",
+    "NOCO Motion · Build Suite bereit…",
     "Rainbow-Shards initialisieren…",
     "Willkommen."
   ];
@@ -260,12 +448,17 @@
     { cmd: "/clear", desc: "Aktuellen Chat leeren" },
     { cmd: "/model", desc: "Plan & Modell" },
     { cmd: "/summary", desc: "Chat-Zusammenfassung" },
+    { cmd: "/inside", desc: "NOCO Inside — Datei & Textanalyse" },
+    { cmd: "/motion", desc: "NOCO Motion — 4s Video aus 3600 Motiven" },
+    { cmd: "/agent", desc: "NOCO Agent aktivieren" },
     { cmd: "/pixel", desc: "Bild im Chat erstellen" },
     { cmd: "/detect", desc: "KI-Bild erkennen (Datei)" },
     { cmd: "/search", desc: "Im Chat suchen (z.B. /search NOCO)" },
     { cmd: "/topics", desc: "System-Ansicht oeffnen" },
     { cmd: "/saved", desc: "Gespeicherte Antworten anzeigen" },
     { cmd: "/random", desc: "Zufalls-Frage aus NOCO Sparks" },
+    { cmd: "/wiki", desc: "Wissensquelle Wiki-API 1.0 aktivieren" },
+    { cmd: "/vault", desc: "Wissensquelle NOCO-Wissen aktivieren" },
     { cmd: "/hub", desc: "NOCO Hub oeffnen" }
   ];
 
@@ -324,13 +517,13 @@
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
-  function loadQuota() {
+  function loadDailyQuota(key) {
     try {
-      var raw = localStorage.getItem(QUOTA_KEY);
+      var raw = localStorage.getItem(key);
       var data = raw ? JSON.parse(raw) : { date: getTodayKey(), used: 0 };
       if (data.date !== getTodayKey()) {
         data = { date: getTodayKey(), used: 0 };
-        saveQuota(data);
+        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e2) { /* */ }
       }
       return data;
     } catch (e) {
@@ -338,8 +531,25 @@
     }
   }
 
+  function saveDailyQuota(key, data) {
+    try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { /* */ }
+  }
+
+  function getPlanLimits() {
+    return isExclusiveActive() ? PLAN_LIMITS.exclusive : PLAN_LIMITS.free;
+  }
+
+  function quotaLeft(used, limit) {
+    if (limit === Infinity || limit == null) return Infinity;
+    return Math.max(0, limit - used);
+  }
+
+  function loadQuota() {
+    return loadDailyQuota(QUOTA_KEY);
+  }
+
   function saveQuota(data) {
-    try { localStorage.setItem(QUOTA_KEY, JSON.stringify(data)); } catch (e) { /* */ }
+    saveDailyQuota(QUOTA_KEY, data);
     updateModelUI();
   }
 
@@ -362,9 +572,377 @@
     if (!ex.active) return false;
     if (ex.until && Date.now() > ex.until) {
       saveExclusive({ active: false });
+      applyKnowledgeSource("noco");
       return false;
     }
     return true;
+  }
+
+  function canUseAutomation() {
+    if (isExclusiveActive()) return true;
+    return loadNexusQuota().used < PLAN_LIMITS.free.nexus;
+  }
+
+  function loadNexusQuota() { return loadDailyQuota(NEXUS_QUOTA_KEY); }
+  function saveNexusQuota(data) { saveDailyQuota(NEXUS_QUOTA_KEY, data); updateModelUI(); }
+  function incrementNexusQuota() {
+    if (isExclusiveActive()) return;
+    var q = loadNexusQuota();
+    q.used++;
+    saveNexusQuota(q);
+  }
+  function getNexusQuotaLeft() {
+    if (isExclusiveActive()) return Infinity;
+    return quotaLeft(loadNexusQuota().used, PLAN_LIMITS.free.nexus);
+  }
+
+  function loadProQuota() { return loadDailyQuota(PRO_QUOTA_KEY); }
+  function saveProQuota(data) { saveDailyQuota(PRO_QUOTA_KEY, data); updateModelUI(); }
+  function incrementProQuota() {
+    var q = loadProQuota();
+    q.used++;
+    saveProQuota(q);
+  }
+  function getProQuotaLeft() {
+    return quotaLeft(loadProQuota().used, getPlanLimits().pro);
+  }
+  function canUseProToday() {
+    var limit = getPlanLimits().pro;
+    if (limit === Infinity) return true;
+    return loadProQuota().used < limit;
+  }
+
+  function loadMotionQuota() { return loadDailyQuota(MOTION_QUOTA_KEY); }
+  function saveMotionQuota(data) { saveDailyQuota(MOTION_QUOTA_KEY, data); updateModelUI(); }
+  function incrementMotionQuota() {
+    var q = loadMotionQuota();
+    q.used++;
+    saveMotionQuota(q);
+  }
+  function getMotionQuotaLeft() {
+    return quotaLeft(loadMotionQuota().used, getPlanLimits().videos);
+  }
+  function canGenerateMotion() {
+    var limit = getPlanLimits().videos;
+    if (limit === Infinity) return true;
+    return loadMotionQuota().used < limit;
+  }
+
+  function resetAllDailyQuotas() {
+    var fresh = { date: getTodayKey(), used: 0 };
+    saveQuota(fresh);
+    saveWikiQuota(fresh);
+    saveImageQuota(fresh);
+    saveProQuota(fresh);
+    saveNexusQuota(fresh);
+    saveMotionQuota(fresh);
+    updateUsageDialog();
+    showToast("Tageslimits zurueckgesetzt");
+  }
+
+  function canUseWikiApi() {
+    return typeof NocoWiki !== "undefined";
+  }
+
+  function loadWikiQuota() {
+    return loadDailyQuota(WIKI_QUOTA_KEY);
+  }
+
+  function saveWikiQuota(data) {
+    saveDailyQuota(WIKI_QUOTA_KEY, data);
+    updateInputModeHint();
+    updateModelUI();
+  }
+
+  function getWikiQuotaLeft() {
+    var limit = getPlanLimits().wiki;
+    if (limit === Infinity) return Infinity;
+    return quotaLeft(loadWikiQuota().used, limit);
+  }
+
+  function canUseWikiToday() {
+    var limit = getPlanLimits().wiki;
+    if (limit === Infinity) return true;
+    return loadWikiQuota().used < limit;
+  }
+
+  function incrementWikiQuota() {
+    var q = loadWikiQuota();
+    q.used++;
+    saveWikiQuota(q);
+  }
+
+  function getWikiFetchDelay(cached) {
+    return getNexusWikiFetchDelay(!!cached);
+  }
+
+  function getNexusWikiFetchDelay(cached) {
+    if (cached) return isProSelected() ? 8 : (isExclusiveActive() ? 12 : 18);
+    if (isProSelected()) return 28;
+    if (isExclusiveActive()) return 36 + Math.random() * 24;
+    return 55 + Math.random() * 45;
+  }
+
+  function getNexusVaultDelay() {
+    if (isProSelected()) return 26 + Math.random() * 14;
+    if (isExclusiveActive()) return 38 + Math.random() * 28;
+    return Math.min(200, speedMap[settings.speed] || speedMap.normal) + Math.random() * 60;
+  }
+
+  function getNexusWikiAltQueries(query, text) {
+    var alts = [];
+    var seen = {};
+    var q = String(query || "").trim();
+    function push(v) {
+      v = String(v || "").trim();
+      if (!v || v === q || seen[v]) return;
+      seen[v] = true;
+      alts.push(v);
+    }
+    if (!q || typeof NocoBrain === "undefined") return alts;
+    if (NocoBrain.cleanWikiTopic) push(NocoBrain.cleanWikiTopic(q));
+    if (q.charAt(0).toUpperCase() + q.slice(1) !== q) push(q.charAt(0).toUpperCase() + q.slice(1));
+    if (NocoBrain.extractWikiQuery && text) push(NocoBrain.extractWikiQuery(text));
+    if (NocoBrain.extractNexusWikiQuery && text) push(NocoBrain.extractNexusWikiQuery(text));
+    return alts.slice(0, 3);
+  }
+
+  function getNexusWikiLabel(routeInfo, wikiQuery) {
+    var q = String(wikiQuery || "").trim();
+    var tag = NEXUS_ROUTE_LABELS[routeInfo && routeInfo.reason] || "Wikipedia";
+    if (q && tag !== "Follow-up") return "Nexus-Auto · " + tag + " · „" + q + "“…";
+    if (tag === "Follow-up") return "Nexus-Auto · Follow-up · Wikipedia…";
+    return "Nexus-Auto · " + tag + "…";
+  }
+
+  function isCreativeOrToolPayload(text) {
+    if (!text) return false;
+    if (imageModeActive || motionModeActive || agentModeActive || insightModeActive || summaryModeActive) return true;
+    if (typeof NocoPixel !== "undefined") {
+      if (NocoPixel.isMotionRequest && NocoPixel.isMotionRequest(text)) return true;
+      if (NocoPixel.isImageRequest && NocoPixel.isImageRequest(text)) return true;
+    }
+    return false;
+  }
+
+  function loadPayWallet() {
+    try {
+      var raw = localStorage.getItem(PAY_KEY);
+      var data = raw ? JSON.parse(raw) : null;
+      if (!data) data = { balance: 50, cardLast4: "4242", cardName: "NOCO Nutzer", history: [] };
+      return data;
+    } catch (e) {
+      return { balance: 50, cardLast4: "4242", cardName: "NOCO Nutzer", history: [] };
+    }
+  }
+
+  function savePayWallet(data) {
+    try { localStorage.setItem(PAY_KEY, JSON.stringify(data)); } catch (e) { /* */ }
+    updatePayWalletUI();
+  }
+
+  function updatePayWalletUI() {
+    var w = loadPayWallet();
+    if (exPayBalance) exPayBalance.textContent = w.balance.toFixed(2).replace(".", ",") + " €";
+  }
+
+  function formatExclusiveUntil(ts) {
+    if (!ts) return "—";
+    var d = new Date(ts);
+    return d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" }) +
+      " · " + d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function getExclusivePlanMeta(planType) {
+    return EXCLUSIVE_PLANS[planType] || EXCLUSIVE_PLANS.trial;
+  }
+
+  function setCheckoutPanel(panelId) {
+    document.querySelectorAll(".ex-checkout-panel").forEach(function (p) {
+      var on = p.getAttribute("data-ex-panel") === panelId;
+      p.classList.toggle("is-active", on);
+      p.hidden = !on;
+    });
+    document.querySelectorAll(".ex-checkout-step").forEach(function (s) {
+      var step = s.getAttribute("data-ex-step");
+      var on = (panelId === "plan" && step === "plan") ||
+        (panelId === "payment" && step === "payment") ||
+        ((panelId === "confirm" || panelId === "processing" || panelId === "success") && step === "confirm");
+      s.classList.toggle("is-active", on);
+      s.classList.toggle("is-done", (panelId === "payment" && step === "plan") ||
+        ((panelId === "confirm" || panelId === "processing" || panelId === "success") && (step === "plan" || step === "payment")));
+    });
+  }
+
+  function fillCheckoutPlanUI(planType) {
+    var meta = getExclusivePlanMeta(planType);
+    var elName = document.getElementById("exCheckoutPlanName");
+    var elDetail = document.getElementById("exCheckoutPlanDetail");
+    var elPrice = document.getElementById("exCheckoutPlanPrice");
+    var elSumPlan = document.getElementById("exSummaryPlan");
+    var elSumTotal = document.getElementById("exSummaryTotal");
+    if (elName) elName.textContent = meta.name;
+    if (elDetail) elDetail.textContent = meta.detail;
+    if (elPrice) elPrice.textContent = meta.priceLabel;
+    if (elSumPlan) elSumPlan.textContent = meta.name + " · " + meta.detail;
+    if (elSumTotal) elSumTotal.textContent = meta.priceLabel;
+  }
+
+  function updateCheckoutSummaryPay() {
+    var el = document.getElementById("exSummaryPay");
+    if (!el) return;
+    if (checkoutState.payMethod === "wallet") {
+      el.textContent = "NOCO Pay Wallet";
+    } else {
+      el.textContent = "NOCO Card •••• " + (loadPayWallet().cardLast4 || "4242");
+    }
+  }
+
+  function openExclusiveCheckout(planType, opts) {
+    opts = opts || {};
+    checkoutState.plan = planType || "trial";
+    checkoutState.payMethod = "wallet";
+    checkoutState.reason = opts.reason || "";
+    fillCheckoutPlanUI(checkoutState.plan);
+    updateCheckoutSummaryPay();
+    updatePayWalletUI();
+    if (exCheckoutAgree) exCheckoutAgree.checked = false;
+    if (exCheckoutPayBtn) exCheckoutPayBtn.disabled = true;
+    var cardForm = document.getElementById("exPayCardForm");
+    if (cardForm) cardForm.hidden = true;
+    document.querySelectorAll(".ex-pay-method").forEach(function (m) {
+      m.classList.toggle("is-active", m.getAttribute("data-pay-method") === "wallet");
+    });
+    var sub = document.getElementById("exCheckoutSub");
+    if (sub) {
+      sub.textContent = opts.reason === "wiki"
+        ? "Wiki-API 1.0 braucht NOCO Exclusive"
+        : "Exclusive Abonnement · NOCO OS";
+    }
+    setCheckoutPanel("plan");
+    if (exclusiveDialog && exclusiveDialog.open) closeExclusiveDialog({ instant: true });
+    showCenteredDialog(exclusiveCheckoutDialog);
+  }
+
+  function closeExclusiveCheckoutDialog() {
+    if (!exclusiveCheckoutDialog) return;
+    if (typeof exclusiveCheckoutDialog.close === "function") exclusiveCheckoutDialog.close();
+    else exclusiveCheckoutDialog.removeAttribute("open");
+  }
+
+  function runCheckoutProcessing(onDone) {
+    setCheckoutPanel("processing");
+    var steps = [
+      { label: "Verbindung zu NOCO Pay…", pct: 22 },
+      { label: "Zahlung wird autorisiert (simuliert)…", pct: 55 },
+      { label: "NOCO Exclusive wird aktiviert…", pct: 82 },
+      { label: "Flux · Rush · Wiki-API freischalten…", pct: 100 }
+    ];
+    var i = 0;
+    function tick() {
+      if (i >= steps.length) {
+        if (onDone) onDone();
+        return;
+      }
+      if (exCheckoutProcessLabel) exCheckoutProcessLabel.textContent = steps[i].label;
+      if (exCheckoutProcessBar) exCheckoutProcessBar.style.width = steps[i].pct + "%";
+      i++;
+      setTimeout(tick, i === 1 ? 700 : 850);
+    }
+    if (exCheckoutProcessBar) exCheckoutProcessBar.style.width = "0%";
+    tick();
+  }
+
+  function completeExclusiveCheckout() {
+    var planType = checkoutState.plan;
+    var meta = getExclusivePlanMeta(planType);
+    var wallet = loadPayWallet();
+    var txId = "NOCO-" + Date.now().toString(36).toUpperCase();
+    var payLabel = checkoutState.payMethod === "wallet" ? "NOCO Pay Wallet" : "NOCO Card •••• " + wallet.cardLast4;
+
+    if (meta.price > 0) {
+      if (checkoutState.payMethod === "wallet" && wallet.balance < meta.price) {
+        showToast("NOCO Pay Guthaben zu niedrig — Testphase waehlen oder aufladen (simuliert)");
+        setCheckoutPanel("payment");
+        return;
+      }
+      if (checkoutState.payMethod === "wallet") wallet.balance = Math.round((wallet.balance - meta.price) * 100) / 100;
+    }
+
+    wallet.history = wallet.history || [];
+    wallet.history.push({
+      id: txId,
+      plan: planType,
+      amount: meta.price,
+      method: checkoutState.payMethod,
+      at: Date.now()
+    });
+    wallet.history = wallet.history.slice(-30);
+    savePayWallet(wallet);
+
+    var ex = {
+      active: true,
+      plan: planType,
+      since: Date.now(),
+      label: meta.name,
+      pricePaid: meta.price,
+      paymentMethod: checkoutState.payMethod,
+      paymentLabel: payLabel,
+      transactionId: txId
+    };
+    if (planType === "trial") {
+      ex.until = Date.now() + 86400000;
+      ex.label = "Testphase 1 Tag";
+    } else {
+      var months = parseInt(planType, 10) || 1;
+      ex.until = Date.now() + months * 30 * 86400000;
+      ex.label = meta.name;
+    }
+    saveExclusive(ex);
+
+    runCheckoutProcessing(function () {
+      var successText = document.getElementById("exCheckoutSuccessText");
+      var successTx = document.getElementById("exCheckoutSuccessTx");
+      if (successText) {
+        successText.textContent = "NOCO Flux · Rush · Render · Motion · Wiki-API 1.0 sind freigeschaltet.";
+      }
+      if (successTx) successTx.textContent = "Transaktion: " + txId + " · " + payLabel;
+      setCheckoutPanel("success");
+      playRainbowBurst(exclusiveTopBtn, { count: 56, duration: 2800 });
+      document.body.classList.add("exclusive-activated");
+      setTimeout(function () { document.body.classList.remove("exclusive-activated"); }, 1400);
+      updateModelUI();
+      updateExclusiveStats();
+      updateExclusiveSidebar();
+    });
+  }
+
+  function cancelExclusiveSubscription() {
+    if (!isExclusiveActive()) return;
+    var ex = loadExclusive();
+    if (!window.confirm(
+      "NOCO Exclusive wirklich beenden?\n\n" +
+      "Flux · Rush · Render · Motion · Wiki-API werden gesperrt.\n" +
+      "Simuliert — kein echtes Geld wird zurueckerstattet."
+    )) return;
+    saveExclusive({ active: false, cancelledAt: Date.now(), previousPlan: ex.plan });
+    applyKnowledgeSource("noco");
+    showToast("Exclusive beendet — NOCO Access Free aktiv");
+    updateModelUI();
+    updateExclusiveStats();
+    updateExclusiveSidebar();
+  }
+
+  function updateExclusiveManagePanel() {
+    var ex = loadExclusive();
+    var active = isExclusiveActive();
+    if (exclusiveManagePanel) exclusiveManagePanel.hidden = !active;
+    if (exclusiveSubscribeBlock) exclusiveSubscribeBlock.hidden = active;
+    if (!active) return;
+    if (exclusiveManagePlan) exclusiveManagePlan.textContent = ex.label || ex.plan || "Exclusive";
+    if (exclusiveManageUntil) exclusiveManageUntil.textContent = formatExclusiveUntil(ex.until);
+    if (exclusiveManagePay) exclusiveManagePay.textContent = ex.paymentLabel || "NOCO Pay";
+    if (exclusiveManageTx) exclusiveManageTx.textContent = ex.transactionId || "—";
   }
 
   function getBrand() {
@@ -376,13 +954,42 @@
         spark: { name: "NOCO Spark", tagline: "Kompakt · Kurz" }
       },
       plans: {
-        free:      { name: "NOCO Access Free", short: "Access Free" },
-        exclusive: { name: "NOCO Exclusive",   short: "Exclusive" }
+        free:      { name: "NOCO Free",      short: "NOCO Free" },
+        exclusive: { name: "NOCO Exclusive", short: "Exclusive" }
       },
       features: {
         rush: { name: "NOCO Rush", desc: "Priority ~90 ms" }
       }
     };
+  }
+
+  function isProSelected() {
+    return proModeSelected && canUseProToday();
+  }
+
+  function consumeProForSend() {
+    var was = isProSelected();
+    if (was) incrementProQuota();
+    if (proModeSelected) {
+      proModeSelected = false;
+      updateModelUI();
+    }
+    return was;
+  }
+
+  function getEffectiveModelTier() {
+    if (isProSelected()) {
+      var brand = getBrand();
+      return {
+        id: "pro",
+        name: brand.models.pro ? brand.models.pro.name : "NOCO AI Pro 1.0",
+        tagline: brand.models.pro ? brand.models.pro.tagline : "Ultra Rush",
+        unlimited: true,
+        exclusive: true,
+        pro: true
+      };
+    }
+    return getModelTier();
   }
 
   function getModelTier() {
@@ -392,43 +999,50 @@
       return { id: "flux", name: m.flux.name, tagline: m.flux.tagline, unlimited: true, exclusive: true };
     }
     var used = loadQuota().used;
-    if (used < 10) {
-      return { id: "prism", name: m.prism.name, tagline: m.prism.tagline, limited: true, remaining: 10 - used };
+    if (used < Math.ceil(FREE_MSG_DAILY / 2)) {
+      return { id: "prism", name: m.prism.name, tagline: m.prism.tagline, limited: true, remaining: Math.ceil(FREE_MSG_DAILY / 2) - used };
     }
     return { id: "spark", name: m.spark.name, tagline: m.spark.tagline };
   }
 
   function loadImageQuota() {
-    try {
-      var raw = localStorage.getItem(IMAGE_QUOTA_KEY);
-      var data = raw ? JSON.parse(raw) : { date: getTodayKey(), used: 0 };
-      if (data.date !== getTodayKey()) {
-        data = { date: getTodayKey(), used: 0 };
-        saveImageQuota(data);
-      }
-      return data;
-    } catch (e) {
-      return { date: getTodayKey(), used: 0 };
-    }
+    return loadDailyQuota(IMAGE_QUOTA_KEY);
   }
 
   function saveImageQuota(data) {
-    try { localStorage.setItem(IMAGE_QUOTA_KEY, JSON.stringify(data)); } catch (e) { /* */ }
+    saveDailyQuota(IMAGE_QUOTA_KEY, data);
     updatePixelMeta();
+    updateModelUI();
+  }
+
+  function getImageQuotaLeft() {
+    var limit = getPlanLimits().images;
+    if (limit === Infinity) return Infinity;
+    return quotaLeft(loadImageQuota().used, limit);
   }
 
   function canGenerateImage() {
-    return isExclusiveActive();
+    var limit = getPlanLimits().images;
+    if (limit === Infinity) return true;
+    return loadImageQuota().used < limit;
   }
 
   function isChatImageRendering() {
-    return isRenderingChatImage || !!activeChatImageAnimCancel;
+    return isRenderingChatImage || isRenderingMotion || !!activeChatImageAnimCancel;
   }
 
   function setChatRenderLock(on) {
     document.body.classList.toggle("is-chat-render-locked", !!on);
     var strip = document.getElementById("renderLockStrip");
-    if (strip) strip.hidden = !on;
+    if (strip) {
+      strip.hidden = !on;
+      var stripText = strip.querySelector(".render-lock-text");
+      if (stripText) {
+        stripText.textContent = isRenderingMotion
+          ? "NOCO Motion synthetisiert dein Video — bitte warten…"
+          : "NOCO Render laeuft — bitte warten…";
+      }
+    }
     if (chatInput) chatInput.disabled = !!on;
     if (sendBtn) sendBtn.disabled = !!on || !(chatInput && chatInput.value.trim());
   }
@@ -467,9 +1081,40 @@
   }
 
   function closeAllDialogs(except) {
-    var list = [exclusiveDialog, settingsDialog, discoverDialog, termDialog, pixelDialog, briefDialog, tosDialog];
+    var list = [
+      exclusiveDialog, exclusiveCheckoutDialog, settingsDialog, discoverDialog,
+      termDialog, pixelDialog, briefDialog, tosDialog, wikiLegalDialog
+    ];
     list.forEach(function (d) {
-      if (d && d !== except && d.open) d.close();
+      if (!d || d === except) return;
+      try {
+        if (d.open) d.close();
+        else d.removeAttribute("open");
+      } catch (e) {
+        d.removeAttribute("open");
+      }
+    });
+  }
+
+  function dismissStuckOverlays() {
+    if (bootScreen) {
+      bootScreen.classList.add("hidden", "is-handoff");
+      bootScreen.classList.remove("is-booting", "is-exiting", "is-stuck-recovery", "is-boot-error");
+      bootScreen.setAttribute("aria-hidden", "true");
+    }
+    document.body.classList.add("noco-ui-ready");
+    document.body.classList.remove("noco-booting", "boot-handoff-active");
+    if (appShell) {
+      appShell.classList.add("ready");
+      appShell.classList.remove("is-boot-handoff");
+    }
+    document.querySelectorAll("dialog[open]").forEach(function (d) {
+      try {
+        if (d.open) d.close();
+        else d.removeAttribute("open");
+      } catch (e) {
+        d.removeAttribute("open");
+      }
     });
   }
 
@@ -483,7 +1128,10 @@
   }
 
   function setupDialogDismiss() {
-    var dialogs = [exclusiveDialog, settingsDialog, discoverDialog, termDialog, pixelDialog, briefDialog];
+    var dialogs = [
+      exclusiveDialog, exclusiveCheckoutDialog, settingsDialog, discoverDialog,
+      termDialog, pixelDialog, briefDialog, wikiLegalDialog, nocoFeatureDialog, usageDialog
+    ];
     dialogs.forEach(function (d) {
       if (!d) return;
       d.addEventListener("cancel", function (e) {
@@ -500,8 +1148,1140 @@
     return 1 - Math.pow(1 - Math.min(1, Math.max(0, p)), 2.5);
   }
 
+  function buildChatActionChips(actions) {
+    if (!actions || !actions.length) return null;
+    var row = document.createElement("div");
+    row.className = "chat-action-chips";
+    row.setAttribute("role", "toolbar");
+    actions.forEach(function (a) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "chat-action-chip" + (a.primary ? " is-primary" : "") + (a.muted ? " is-muted" : "");
+      btn.setAttribute("data-chat-action", a.id);
+      if (a.payload != null) btn.setAttribute("data-chat-payload", typeof a.payload === "string" ? a.payload : JSON.stringify(a.payload));
+      btn.textContent = a.label;
+      row.appendChild(btn);
+    });
+    return row;
+  }
+
+  function askInChat(text, actions, opts) {
+    opts = opts || {};
+    appendMessage("ai", text, { chatActions: actions, topic: opts.topic || "NOCO" });
+    if (chatInput) {
+      chatInput.focus();
+      updateChatPlaceholder();
+    }
+  }
+
+  function clearChatFlow() {
+    chatFlow = null;
+    if (chatInput) updateChatPlaceholder();
+  }
+
+  function motifNeedsClarify(resolved) {
+    if (!resolved || !resolved.supported) return false;
+    if (resolved.needsConfirm === false) return false;
+    if (resolved.matchType === "exact" && (resolved.matchPct || 0) >= 95) return false;
+    return true;
+  }
+
+  function motionNeedsClarify(resolved) {
+    return motifNeedsClarify(resolved);
+  }
+
+  function imageNeedsClarify(resolved) {
+    return motifNeedsClarify(resolved);
+  }
+
+  function buildMotifConfirmActions(resolved, mode) {
+    var mapped = (resolved && (resolved.mappedLabel || resolved.label)) || "Motiv";
+    var actions = [
+      {
+        id: mode === "video" ? "motion-yes" : "image-yes",
+        label: mode === "video" ? "✓ Ja, Video starten" : "Ja, Bild starten",
+        primary: true
+      }
+    ];
+    if (resolved && resolved.alternateLabel) {
+      actions.push({
+        id: mode === "video" ? "motion-alt" : "image-alt",
+        label: "Alternativ: " + resolved.alternateLabel,
+        payload: resolved.alternateLabel
+      });
+    }
+    actions.push({
+      id: mode === "video" ? "motion-no" : "image-no",
+      label: "✗ Anderes Motiv",
+      muted: true
+    });
+    return actions;
+  }
+
+  function buildMotifConfirmText(resolved, mode) {
+    if (typeof NocoPixel !== "undefined" && NocoPixel.buildMotifClarifyMessage) {
+      return NocoPixel.buildMotifClarifyMessage(resolved, mode);
+    }
+    var mapped = resolved.mappedLabel || resolved.label || "Motiv";
+    var pct = resolved.matchPct || 0;
+    return "Du wolltest **" + (resolved.userAsked || "") + "** — ich nutze **" + mapped + "** (" + pct + "% Ähnlichkeit).\n\n**Passt das?**";
+  }
+
+  function attachChatActionsToBody(body, msg) {
+    if (!body || !msg || !msg.chatActions || !msg.chatActions.length) return;
+    var chips = buildChatActionChips(msg.chatActions);
+    if (chips) body.appendChild(chips);
+  }
+
+  function handleChatAction(actionId, payloadStr) {
+    var payload = null;
+    if (payloadStr) {
+      try { payload = JSON.parse(payloadStr); } catch (e) { payload = payloadStr; }
+    }
+
+    if (actionId === "motion-yes" && chatFlow && chatFlow.kind === "motion-confirm") {
+      var f = chatFlow;
+      clearChatFlow();
+      handleMotionRequest(f.text, {
+        displayText: f.displayText,
+        usedPro: f.opts && f.opts.usedPro,
+        skipClarify: true,
+        confirmed: true
+      });
+      return;
+    }
+    if (actionId === "motion-alt" && chatFlow && chatFlow.kind === "motion-confirm") {
+      var altText = payload || (chatFlow.resolved && chatFlow.resolved.alternateLabel);
+      if (altText) {
+        clearChatFlow();
+        handleMotionRequest("Erstelle ein Video von " + altText, { skipClarify: true, confirmed: true });
+      }
+      return;
+    }
+    if (actionId === "motion-no" && chatFlow && chatFlow.kind === "motion-confirm") {
+      clearChatFlow();
+      chatFlow = { kind: "motion-retry" };
+      askInChat(
+        "**Welches Motiv genau?**\n\nSchreib es unten — z.B. *Katze*, *Apfel*, *Drache* …",
+        [
+          { id: "fill-motion", label: "🎞 Motion-Modus", primary: true },
+          { id: "hub-create", label: "◇ Stattdessen Bild" }
+        ],
+        { topic: "Motion" }
+      );
+      setMotionMode(true);
+      return;
+    }
+    if (actionId === "image-yes" && chatFlow && chatFlow.kind === "image-confirm") {
+      var fi = chatFlow;
+      clearChatFlow();
+      handleImageChatRequest(fi.text, { displayText: fi.displayText, skipClarify: true, confirmed: true });
+      return;
+    }
+    if (actionId === "image-alt" && chatFlow && chatFlow.kind === "image-confirm") {
+      var altImg = payload || (chatFlow.resolved && chatFlow.resolved.alternateLabel);
+      if (altImg) {
+        clearChatFlow();
+        handleImageChatRequest(altImg, { skipClarify: true, confirmed: true });
+      }
+      return;
+    }
+    if (actionId === "image-no" && chatFlow && chatFlow.kind === "image-confirm") {
+      clearChatFlow();
+      chatFlow = { kind: "image-retry" };
+      askInChat(
+        "**Welches Motiv soll das Bild zeigen?**\n\nEinfach unten eingeben.",
+        [{ id: "mode-create", label: "◇ Bild-Modus", primary: true }],
+        { topic: "Create" }
+      );
+      setImageMode(true);
+      return;
+    }
+    if (actionId === "mode-motion") { setMotionMode(true); askInChat("**Motion aktiv** — Was soll animiert werden?", [{ id: "fill-motion", label: "Beispiel: Video von Katze", payload: "Erstelle ein Video von einer Katze" }]); return; }
+    if (actionId === "mode-create" || actionId === "hub-create") { setImageMode(true); setMotionMode(false); askInChat("**Bild-Modus** — Welches Motiv?", [{ id: "hub-img", label: "Katze", payload: "Katze" }, { id: "hub-img", label: "Apfel", payload: "Apfel" }]); return; }
+    if (actionId === "mode-inside") { setInsightMode(true); askInChat("**Inside aktiv** — Text einfügen oder **📂 Datei** links.", [{ id: "inside-paste", label: "Text einfügen (unten)" }]); return; }
+    if (actionId === "mode-agent") { setAgentMode(true); askInChat("**Agent aktiv** — Beschreibe deinen Auftrag unten.", []); return; }
+    if (actionId === "hub-img" && payload) { setImageMode(true); chatInput.value = "Mach ein Bild von " + payload; autoResizeInput(); sendBtn.disabled = false; chatInput.focus(); return; }
+    if (actionId === "fill-motion" && payload) {
+      setMotionMode(true);
+      if (typeof payload === "string") {
+        handleMotionRequest(payload, { displayText: payload, skipClarify: true, confirmed: true });
+      }
+      return;
+    }
+    if (actionId === "inside-paste") { setInsightMode(true); if (chatInput) chatInput.focus(); return; }
+    if (actionId === "hub-random") { fireRandomSpark(); return; }
+    if (actionId === "inside-file-hint") { setInsightMode(true); triggerInsightFilePicker(); return; }
+  }
+
+  function openHubInChat() {
+    switchView("chat");
+    closeAllDialogs();
+    closeOverlayMenus();
+    askInChat(
+      "**NOCO Hub** — alles direkt im Chat.\n\nWähle oder schreib unten:",
+      [
+        { id: "mode-create", label: "◇ Bild erstellen", primary: true },
+        { id: "mode-motion", label: "🎞 Motion" },
+        { id: "mode-inside", label: "🔬 Inside" },
+        { id: "mode-agent", label: "⚡ Agent" },
+        { id: "hub-random", label: "✦ Zufalls-Frage", muted: true }
+      ],
+      { topic: "Hub" }
+    );
+  }
+
+  function setInsightMode(on) {
+    insightModeActive = !!on;
+    if (on) {
+      setImageMode(false);
+      setAgentMode(false);
+      setSummaryMode(false);
+      setMotionMode(false);
+    } else {
+      insightPayload = null;
+      if (insightFileBadge) insightFileBadge.hidden = true;
+    }
+    document.body.classList.toggle("is-insight-mode", insightModeActive);
+    if (chatInsightBtn) {
+      chatInsightBtn.classList.toggle("is-active", insightModeActive);
+      chatInsightBtn.setAttribute("aria-pressed", insightModeActive ? "true" : "false");
+    }
+    var insightSc = document.querySelector("[data-shortcut='inside']") || document.querySelector("[data-shortcut='insight']");
+    if (insightSc) insightSc.classList.toggle("is-active", insightModeActive);
+    if (insightModeActive) renderInsightCategories();
+    updateChatPlaceholder();
+    updateInputModeHint();
+  }
+
+  function setInsightCategory(id) {
+    insightCategory = id || "document";
+    if (insightCategories) {
+      insightCategories.querySelectorAll(".insight-cat-btn").forEach(function (btn) {
+        btn.classList.toggle("is-active", btn.getAttribute("data-insight-cat") === insightCategory);
+      });
+    }
+    if (insightHint && typeof NocoInsight !== "undefined") {
+      var cat = NocoInsight.CATEGORIES.filter(function (c) { return c.id === insightCategory; })[0];
+      if (cat) insightHint.textContent = cat.hint + " · Pro 1.0 fuer Rush";
+    }
+    updateChatPlaceholder();
+  }
+
+  function renderInsightCategories() {
+    if (!insightCategories || typeof NocoInsight === "undefined") return;
+    insightCategories.innerHTML = "";
+    NocoInsight.CATEGORIES.forEach(function (cat) {
+      if (cat.id === "voice") return;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "insight-cat-btn" + (cat.id === insightCategory ? " is-active" : "");
+      btn.setAttribute("data-insight-cat", cat.id);
+      btn.textContent = cat.icon + " " + cat.label;
+      btn.title = cat.hint;
+      insightCategories.appendChild(btn);
+    });
+  }
+
+  function updateInsightFileBadge(name) {
+    if (!insightFileBadge) return;
+    if (name) {
+      insightFileBadge.textContent = "📂 " + name;
+      insightFileBadge.hidden = false;
+    } else {
+      insightFileBadge.hidden = true;
+    }
+  }
+
+  function deliverInsightResult(text, topic, userLabel, usedPro) {
+    if (userLabel) appendMessage("user", userLabel);
+    document.body.classList.add("is-inside-analyzing");
+    setTyping(true);
+    var delay = usedPro ? 35 : getDelay() * 0.5;
+    setTimeout(function () {
+      document.body.classList.remove("is-inside-analyzing");
+      setTyping(false);
+      incrementQuota();
+      appendMessage("ai", text, { animate: true, topic: topic || "NOCO Inside", related: [], insightRun: true });
+      showToast("NOCO Inside fertig", { rainbow: true, duration: 2600 });
+      updateModelUI();
+      scrollToBottom(true);
+    }, delay + getDelayJitter());
+  }
+
+  function runInsightAnalysis(payload, category, question) {
+    if (typeof NocoInsight === "undefined") return;
+    var usedPro = consumeProForSend();
+    category = category || insightCategory;
+    var opts = {
+      question: question || (chatInput && chatInput.value.trim()) || "Worum geht es?",
+      summarizeFn: NocoBrain.summarizeText ? function (t, o) { return NocoBrain.summarizeText(t, Object.assign({ proMode: usedPro }, o || {})); } : null
+    };
+
+    if (payload.kind === "image" && payload.file && typeof NocoImageDetect !== "undefined") {
+      setTyping(true);
+      NocoImageDetect.analyzeFile(payload.file, getDetectSources()).then(function (dr) {
+        opts.detectResult = {
+          nocoMatch: dr.isNocoAI || dr.looksLikePixelArt,
+          pixelLike: dr.looksLikePixelArt,
+          blocky: dr.looksLikePixelArt,
+          motifLabel: dr.motifLabel
+        };
+        var result = NocoInsight.analyze(payload, "image", opts);
+        deliverInsightResult(result.text, result.topic, "Insight · Bild: " + payload.name, usedPro);
+      }).catch(function () {
+        var result = NocoInsight.analyze(payload, "image", opts);
+        deliverInsightResult(result.text, result.topic, "Insight · Bild: " + payload.name, usedPro);
+      });
+      return;
+    }
+
+    if (category === "ask" && !question && chatInput && !chatInput.value.trim()) {
+      showToast("Frag die Datei — stelle eine Frage im Eingabefeld");
+      if (chatInput) chatInput.focus();
+      return;
+    }
+
+    var result = NocoInsight.analyze(payload, category, opts);
+    var label = "Insight · " + (payload.name || "Text");
+    if (category === "ask" && opts.question) label = "Insight · Frage: " + opts.question;
+    deliverInsightResult(result.text, result.topic, label, usedPro);
+  }
+
+  function handleInsightFile(file) {
+    if (!file || typeof NocoInsight === "undefined") return;
+    if (!canSendMessage()) {
+      showToast("Tageslimit erreicht");
+      openExclusiveDialog();
+      return;
+    }
+    if (!insightModeActive) setInsightMode(true);
+    switchView("chat");
+    setTyping(true);
+    NocoInsight.readFileContent(file).then(function (payload) {
+      insightPayload = payload;
+      updateInsightFileBadge(payload.name);
+      var cat = NocoInsight.pickCategoryForFile(payload.kind, insightCategory);
+      setInsightCategory(cat);
+      setTyping(false);
+      showToast("Insight analysiert: " + payload.name);
+      runInsightAnalysis(payload, cat);
+    }).catch(function (err) {
+      setTyping(false);
+      showToast(err.message || "Datei konnte nicht gelesen werden");
+    });
+  }
+
+  function triggerInsightFilePicker() {
+    if (insightFileInput) insightFileInput.click();
+    else if (insightFileBtn) insightFileBtn.click();
+  }
+
+  function toggleInsightVoice() {
+    if (!insightModeActive) setInsightMode(true);
+    var SR = global.SpeechRecognition || global.webkitSpeechRecognition;
+    if (!SR) {
+      showToast("Sprache nicht unterstuetzt in diesem Browser");
+      return;
+    }
+    if (insightSpeechRec) {
+      insightSpeechRec.stop();
+      insightSpeechRec = null;
+      if (insightVoiceBtn) insightVoiceBtn.classList.remove("is-recording");
+      return;
+    }
+    var rec = new SR();
+    rec.lang = "de-DE";
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+    insightSpeechRec = rec;
+    if (insightVoiceBtn) insightVoiceBtn.classList.add("is-recording");
+    showToast("Sprich jetzt…");
+    rec.onresult = function (ev) {
+      var text = ev.results[0][0].transcript;
+      if (chatInput) {
+        chatInput.value = text;
+        autoResizeInput();
+        sendBtn.disabled = !text.trim();
+      }
+      if (insightVoiceBtn) insightVoiceBtn.classList.remove("is-recording");
+      insightSpeechRec = null;
+      showToast("Sprache erkannt — Enter zum Analysieren");
+      if (insightPayload) {
+        runInsightAnalysis(insightPayload, insightCategory === "voice" ? "ask" : insightCategory, text);
+      } else if (text.length > 20) {
+        var payload = { kind: "text", name: "Spracheingabe", text: text };
+        insightPayload = payload;
+        runInsightAnalysis(payload, insightCategory);
+      }
+    };
+    rec.onerror = function () {
+      if (insightVoiceBtn) insightVoiceBtn.classList.remove("is-recording");
+      insightSpeechRec = null;
+      showToast("Spracherkennung fehlgeschlagen");
+    };
+    rec.onend = function () {
+      if (insightVoiceBtn) insightVoiceBtn.classList.remove("is-recording");
+      insightSpeechRec = null;
+    };
+    rec.start();
+  }
+
+  function setMotionMode(on) {
+    motionModeActive = !!on;
+    if (on) {
+      setImageMode(false);
+      setAgentMode(false);
+      setSummaryMode(false);
+      setInsightMode(false);
+    } else {
+      resetMotionTheatre();
+    }
+    document.body.classList.toggle("is-motion-mode", motionModeActive);
+    if (nocoMotionBtn) {
+      nocoMotionBtn.classList.toggle("is-active", motionModeActive);
+      nocoMotionBtn.setAttribute("aria-pressed", motionModeActive ? "true" : "false");
+    }
+    var motionSc = document.querySelector("[data-shortcut='motion']");
+    if (motionSc) motionSc.classList.toggle("is-active", motionModeActive);
+    updateChatPlaceholder();
+    updateInputModeHint();
+  }
+
+  function stopMotionProgressClock() {
+    if (motionProgressRaf) {
+      cancelAnimationFrame(motionProgressRaf);
+      motionProgressRaf = null;
+    }
+  }
+
+  function applyMotionProgressBar(p) {
+    var pct = Math.round(Math.min(1, Math.max(0, p)) * 100);
+    if (motionProgressWrap) motionProgressWrap.hidden = false;
+    if (motionProgressFill) motionProgressFill.style.width = pct + "%";
+    if (motionTheatre) motionTheatre.style.setProperty("--motion-live-progress", String(Math.min(1, p)));
+  }
+
+  function startMotionProgressClock(totalMs) {
+    stopMotionProgressClock();
+    motionGenStartedAt = performance.now();
+    motionGenTotalMs = totalMs || 98000;
+    applyMotionProgressBar(0.01);
+    function tick() {
+      if (!isRenderingMotion) return;
+      var elapsed = performance.now() - motionGenStartedAt;
+      var p = Math.min(0.985, elapsed / motionGenTotalMs);
+      applyMotionProgressBar(p);
+      motionProgressRaf = requestAnimationFrame(tick);
+    }
+    motionProgressRaf = requestAnimationFrame(tick);
+  }
+
+  function hideMotionProgress() {
+    stopMotionProgressClock();
+    if (motionProgressWrap) motionProgressWrap.hidden = true;
+    if (motionProgressLabel) motionProgressLabel.hidden = true;
+    if (motionProgressFill) motionProgressFill.style.width = "0%";
+    if (motionTheatre) motionTheatre.style.setProperty("--motion-live-progress", "0");
+    document.body.classList.remove("is-motion-generating");
+    if (motionPreviewScan) motionPreviewScan.hidden = false;
+  }
+
+  function clearMotionPreview() {
+    if (motionPreviewCanvas) {
+      var ctx = motionPreviewCanvas.getContext("2d");
+      if (ctx) ctx.clearRect(0, 0, motionPreviewCanvas.width, motionPreviewCanvas.height);
+    }
+  }
+
+  function clearMotionKeyframeRow() {
+    if (!motionKeyframeRow || typeof NocoMotion === "undefined") return;
+    var count = NocoMotion.KEYFRAME_COUNT || 8;
+    var i, slot, canvas, ctx;
+    for (i = 0; i < count; i++) {
+      slot = motionKeyframeRow.children[i];
+      if (!slot) continue;
+      slot.classList.remove("is-filled");
+      canvas = slot.querySelector(".motion-kf-canvas");
+      if (canvas) {
+        ctx = canvas.getContext("2d");
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+  }
+
+  function resetMotionTheatre() {
+    hideMotionProgress();
+    clearMotionPreview();
+    clearMotionKeyframeRow();
+    if (motionTheatre) {
+      motionTheatre.hidden = true;
+      motionTheatre.classList.remove("is-active", "is-keyframe-pulse");
+    }
+    if (motionPipeline) motionPipeline.hidden = false;
+    if (motionTimelineBlock) motionTimelineBlock.hidden = true;
+    if (motionExportActions) motionExportActions.hidden = true;
+    renderMotionPipeline(null);
+    lastMotionExportMeta = null;
+    if (motionCancelFn) { motionCancelFn(); motionCancelFn = null; }
+  }
+
+  function finishMotionGenerationUI() {
+    stopMotionProgressClock();
+    resetMotionTheatre();
+    if (motionModeActive) setMotionMode(false);
+    else document.body.classList.remove("is-motion-generating");
+    if (sendBtn) sendBtn.disabled = isTyping || !canSendMessage() || !(chatInput && chatInput.value.trim());
+    updateChatPlaceholder();
+  }
+
+  function initMotionKeyframeRow() {
+    if (!motionKeyframeRow || typeof NocoMotion === "undefined") return;
+    var count = NocoMotion.KEYFRAME_COUNT || 8;
+    motionKeyframeRow.innerHTML = "";
+    var i;
+    for (i = 0; i < count; i++) {
+      var slot = document.createElement("div");
+      slot.className = "motion-kf-slot";
+      slot.setAttribute("role", "listitem");
+      var canvas = document.createElement("canvas");
+      canvas.className = "motion-kf-canvas";
+      canvas.width = 36;
+      canvas.height = 36;
+      canvas.setAttribute("aria-label", "Keyframe " + (i + 1));
+      var label = document.createElement("span");
+      label.className = "motion-kf-label";
+      label.textContent = String(i + 1);
+      slot.appendChild(canvas);
+      slot.appendChild(label);
+      motionKeyframeRow.appendChild(slot);
+    }
+  }
+
+  function paintMotionKeyframeThumb(index, pixels) {
+    if (!motionKeyframeRow || typeof NocoMotion === "undefined") return;
+    var slot = motionKeyframeRow.children[index];
+    if (!slot) return;
+    var canvas = slot.querySelector(".motion-kf-canvas");
+    if (canvas && pixels && NocoMotion.drawFramePixels) {
+      NocoMotion.drawFramePixels(pixels, 36, canvas, 4);
+      slot.classList.add("is-filled");
+    }
+  }
+
+  function fillMotionKeyframeRowFromMeta(meta) {
+    if (!meta || !motionKeyframeRow || typeof NocoMotion === "undefined") return;
+    var count = meta.keyframeCount || NocoMotion.KEYFRAME_COUNT || 8;
+    var i;
+    for (i = 0; i < count; i++) {
+      if (meta.keyframes && meta.keyframes[i]) {
+        paintMotionKeyframeThumb(i, meta.keyframes[i]);
+      } else if (NocoMotion.exportKeyframeCanvas) {
+        var thumb = NocoMotion.exportKeyframeCanvas(meta, i, 4);
+        var slot = motionKeyframeRow.children[i];
+        if (slot && thumb) {
+          var canvas = slot.querySelector(".motion-kf-canvas");
+          var ctx = canvas && canvas.getContext("2d");
+          if (ctx) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(thumb, 0, 0);
+            slot.classList.add("is-filled");
+          }
+        }
+      }
+    }
+  }
+
+  function buildChatMotionKeyframeRow(meta) {
+    var row = document.createElement("div");
+    row.className = "motion-keyframe-row chat-motion-keyframes";
+    row.setAttribute("role", "list");
+    row.setAttribute("aria-label", "Keyframe-Vorschau");
+    if (!meta || typeof NocoMotion === "undefined") return row;
+    var count = meta.keyframeCount || NocoMotion.KEYFRAME_COUNT || 8;
+    var i;
+    for (i = 0; i < count; i++) {
+      var slot = document.createElement("div");
+      slot.className = "motion-kf-slot is-filled";
+      slot.setAttribute("role", "listitem");
+      var canvas = document.createElement("canvas");
+      canvas.className = "motion-kf-canvas";
+      canvas.width = 36;
+      canvas.height = 36;
+      var label = document.createElement("span");
+      label.className = "motion-kf-label";
+      label.textContent = String(i + 1);
+      if (NocoMotion.exportKeyframeCanvas) {
+        var thumb = NocoMotion.exportKeyframeCanvas(meta, i, 4);
+        var ctx = canvas.getContext("2d");
+        if (ctx && thumb) {
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(thumb, 0, 0);
+        }
+      }
+      slot.appendChild(canvas);
+      slot.appendChild(label);
+      row.appendChild(slot);
+    }
+    return row;
+  }
+
+  function motionExportFilename(meta, ext) {
+    var base = (meta && (meta.motifLabel || meta.mappedLabel)) ? String(meta.motifLabel || meta.mappedLabel) : "noco-motion";
+    base = base.toLowerCase().replace(/[^a-z0-9äöüß]+/gi, "-").replace(/^-+|-+$/g, "") || "noco-motion";
+    return base + ext;
+  }
+
+  function copyMotionMeta(meta) {
+    if (!meta || typeof NocoMotion === "undefined" || !NocoMotion.exportMotionSpriteSheet) return;
+    var canvas = NocoMotion.exportMotionSpriteSheet(meta, 6);
+    canvas.toBlob(function (blob) {
+      if (!blob) {
+        showToast("Kopieren fehlgeschlagen");
+        return;
+      }
+      if (navigator.clipboard && window.ClipboardItem) {
+        navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]).then(function () {
+          showToast("Sprite-Sheet kopiert (" + (meta.clipFrameCount || ((meta.keyframeCount || 8) + 7 * 3)) + " Frames)");
+        }).catch(function () {
+          downloadCanvasPng(canvas, motionExportFilename(meta, "-sprites.png"));
+          showToast("Clipboard blockiert — PNG heruntergeladen");
+        });
+      } else {
+        downloadCanvasPng(canvas, motionExportFilename(meta, "-sprites.png"));
+        showToast("Als PNG heruntergeladen");
+      }
+    }, "image/png");
+  }
+
+  function saveMotionMeta(meta) {
+    if (!meta || typeof NocoMotion === "undefined") return;
+    if (NocoMotion.recordMotionWebm) {
+      showToast("Video wird encodiert…");
+      NocoMotion.recordMotionWebm(meta, 10, function (blob, err) {
+        if (blob) {
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = motionExportFilename(meta, ".webm");
+          a.click();
+          URL.revokeObjectURL(a.href);
+          showToast("Motion-Video gespeichert");
+          return;
+        }
+        if (NocoMotion.exportMotionSpriteSheet) {
+          downloadCanvasPng(NocoMotion.exportMotionSpriteSheet(meta, 8), motionExportFilename(meta, "-sprites.png"));
+          showToast(err === "no-recorder" ? "WebM nicht verfügbar — Sprite-Sheet gespeichert" : "Als Sprite-Sheet gespeichert");
+        }
+      });
+      return;
+    }
+    if (NocoMotion.exportMotionSpriteSheet) {
+      downloadCanvasPng(NocoMotion.exportMotionSpriteSheet(meta, 8), motionExportFilename(meta, "-sprites.png"));
+      showToast("Sprite-Sheet gespeichert");
+    }
+  }
+
+  function copyChatMotion(msgId) {
+    var msg = getMessageById(msgId);
+    if (!msg || !msg.motion) { showToast("Motion nicht gefunden"); return; }
+    copyMotionMeta(msg.motion);
+  }
+
+  function saveChatMotion(msgId) {
+    var msg = getMessageById(msgId);
+    if (!msg || !msg.motion) return;
+    saveMotionMeta(msg.motion);
+  }
+
+  function renderMotionPipeline(activeStage) {
+    if (!motionPipeline || typeof NocoMotion === "undefined") return;
+    if (!activeStage) {
+      motionPipeline.querySelectorAll(".motion-pipe-step").forEach(function (el) {
+        el.classList.remove("is-active", "is-done");
+      });
+      return;
+    }
+    if (!motionPipeline._built) {
+      motionPipeline.innerHTML = "";
+      NocoMotion.PIPELINE.forEach(function (step) {
+        var el = document.createElement("div");
+        el.className = "motion-pipe-step";
+        el.setAttribute("data-pipe", step.id);
+        el.innerHTML = '<span class="motion-pipe-dot"></span><span>' + step.label + "</span>";
+        motionPipeline.appendChild(el);
+      });
+      motionPipeline._built = true;
+    }
+    motionPipeline.querySelectorAll(".motion-pipe-step").forEach(function (el) {
+      var id = el.getAttribute("data-pipe");
+      el.classList.remove("is-active", "is-done");
+      if (id === activeStage) el.classList.add("is-active");
+      else {
+        var pipeOrder = ["parse", "map", "frameBase", "frameProp", "keyframes", "interp", "loop", "done"];
+        var activeIdx = pipeOrder.indexOf(activeStage);
+        if (activeIdx < 0) activeIdx = pipeOrder.length;
+        if (pipeOrder.indexOf(id) < activeIdx) el.classList.add("is-done");
+      }
+    });
+  }
+
+  function showMotionTheatre(on) {
+    if (!motionTheatre) return;
+    motionTheatre.hidden = !on;
+    if (on) {
+      motionTheatre.classList.add("is-active");
+      document.body.classList.add("is-motion-generating");
+      if (motionPipeline) motionPipeline.hidden = false;
+      if (motionTimelineBlock) motionTimelineBlock.hidden = false;
+      if (motionExportActions) motionExportActions.hidden = true;
+      if (motionPreviewScan) motionPreviewScan.hidden = false;
+      initMotionKeyframeRow();
+      clearMotionPreview();
+      renderMotionPipeline("parse");
+    }
+  }
+
+  function updateMotionProgress(progress, label, extra) {
+    extra = extra || {};
+    if (motionProgressWrap) motionProgressWrap.hidden = false;
+    if (progress >= 1 || (extra && extra.stage === "done")) {
+      applyMotionProgressBar(1);
+    }
+    if (motionProgressLabel) {
+      motionProgressLabel.hidden = !label;
+      motionProgressLabel.textContent = label || "";
+    }
+    if (extra.stage) renderMotionPipeline(extra.stage);
+    if (extra.previewPixels && motionPreviewCanvas && typeof NocoMotion !== "undefined" && NocoMotion.drawFramePixels) {
+      NocoMotion.drawFramePixels(extra.previewPixels, 36, motionPreviewCanvas, 4);
+    }
+    if (extra.resolved && extra.resolved.mappingNote && motionProgressLabel && extra.stage === "map") {
+      motionProgressLabel.textContent = extra.resolved.userAsked + " → " + extra.resolved.mappedLabel;
+    }
+    if (extra.stage === "keyframes" && motionTimelineBlock) {
+      motionTimelineBlock.hidden = false;
+      if (typeof extra.keyframeIndex === "number" && extra.previewPixels) {
+        paintMotionKeyframeThumb(extra.keyframeIndex, extra.previewPixels);
+      }
+      if (extra.keyframesReady && extra.keyframes) {
+        var ki;
+        for (ki = 0; ki < extra.keyframes.length; ki++) {
+          paintMotionKeyframeThumb(ki, extra.keyframes[ki]);
+        }
+      }
+    }
+    if (extra.previewPixels && motionPreviewCanvas) {
+      motionPreviewCanvas.classList.add("is-frame-flash");
+      window.setTimeout(function () {
+        if (motionPreviewCanvas) motionPreviewCanvas.classList.remove("is-frame-flash");
+      }, 180);
+    }
+    var chatBarP = progress;
+    if (motionGenStartedAt && motionGenTotalMs > 0) {
+      chatBarP = Math.min(0.985, (performance.now() - motionGenStartedAt) / motionGenTotalMs);
+      if (progress >= 1 || extra.stage === "done") chatBarP = 1;
+    }
+    updateActiveMotionChat(chatBarP, label, extra);
+  }
+
+  function handleMotionRequest(text, opts) {
+    opts = opts || {};
+    switchView("chat");
+    if (typeof NocoMotion === "undefined") {
+      showToast("NOCO Motion nicht geladen");
+      return;
+    }
+    if (isRenderingMotion || isChatImageRendering()) {
+      showToast("Render laeuft — bitte warten");
+      return;
+    }
+    if (!canSendMessage()) {
+      showToast("Tageslimit erreicht — schreib **exclusive** im Chat");
+      return;
+    }
+    if (!canGenerateMotion()) {
+      showToast("Video-Limit heute erreicht — morgen 0:00 oder Exclusive.");
+      return;
+    }
+
+    var preview = NocoMotion.resolveMotionPrompt(text);
+    if (!preview.supported) {
+      chatFlow = { kind: "motion-retry" };
+      askInChat(
+        preview.message || "**Was soll animiert werden?**",
+        [{ id: "fill-motion", label: "Beispiel: Video von Katze", payload: "Erstelle ein Video von einer Katze", primary: true }],
+        { topic: "Motion" }
+      );
+      setMotionMode(true);
+      return;
+    }
+
+    if (!opts.skipClarify && !opts.confirmed && motionNeedsClarify(preview)) {
+      chatFlow = {
+        kind: "motion-confirm",
+        text: text,
+        displayText: opts.displayText,
+        resolved: preview,
+        opts: { usedPro: opts.usedPro }
+      };
+      if (!opts.skipUserAppend) appendMessage("user", opts.displayText || text);
+      askInChat(
+        buildMotifConfirmText(preview, "video"),
+        buildMotifConfirmActions(preview, "video"),
+        { topic: "Motion" }
+      );
+      return;
+    }
+
+    runMotionGeneration(text, opts);
+  }
+
+  function runMotionGeneration(text, opts) {
+    opts = opts || {};
+    if (typeof NocoMotion === "undefined") {
+      showToast("NOCO Motion nicht geladen");
+      return;
+    }
+    if (isRenderingMotion || isChatImageRendering()) {
+      showToast("Render laeuft — bitte warten");
+      return;
+    }
+    if (!canSendMessage()) {
+      showToast("Tageslimit erreicht — schreib **exclusive** im Chat");
+      return;
+    }
+    if (!canGenerateMotion()) {
+      showToast("Video-Limit heute erreicht — morgen 0:00 oder Exclusive.");
+      return;
+    }
+    var usedPro = opts.usedPro !== undefined ? opts.usedPro : consumeProForSend();
+    switchView("chat");
+    if (!opts.skipUserAppend) appendMessage("user", opts.displayText || ("Motion: " + text));
+    appendPendingMotionMessage(text);
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+    sendBtn.disabled = true;
+    setTyping(true);
+    if (typingLabel) typingLabel.textContent = usedPro ? "NOCO Pro Motion…" : "NOCO Motion synthetisiert…";
+    isRenderingMotion = true;
+    setChatRenderLock(true);
+    var motionDurationMs = typeof NocoMotion.getGenDuration === "function"
+      ? NocoMotion.getGenDuration(usedPro)
+      : (usedPro ? 36000 : 98000);
+    showMotionTheatre(true);
+    startMotionProgressClock(motionDurationMs);
+    updateMotionProgress(0.02, "NOCO Motion Engine startet…", { stage: "parse" });
+
+    motionCancelFn = NocoMotion.generateSequence(text, { proMode: usedPro }, function (ev) {
+      updateMotionProgress(ev.progress, ev.label, {
+        stage: ev.stage,
+        previewPixels: ev.previewPixels,
+        resolved: ev.resolved,
+        keyframeIndex: ev.keyframeIndex,
+        keyframesReady: ev.keyframesReady,
+        keyframes: ev.keyframes
+      });
+    }, function (result) {
+      setTyping(false);
+      isRenderingMotion = false;
+      setChatRenderLock(false);
+      motionCancelFn = null;
+      if (typingLabel) typingLabel.textContent = "NOCO AI denkt…";
+      if (result.error) {
+        finishMotionGenerationUI();
+        if (activeMotionMsgId) {
+          var failEl = activeMotionMsgEl || getMessageElById(activeMotionMsgId);
+          if (failEl) failEl.remove();
+          var failChat = getActiveChat();
+          if (failChat) {
+            failChat.messages = failChat.messages.filter(function (m) { return m.id !== activeMotionMsgId; });
+            saveChats();
+          }
+          activeMotionMsgId = null;
+          activeMotionMsgEl = null;
+        }
+        appendMessage("ai", result.message || "Motion fehlgeschlagen.");
+        return;
+      }
+      applyMotionProgressBar(1);
+      finalizeMotionChatMessage(result.meta, result);
+      finishMotionGenerationUI();
+      incrementQuota();
+      incrementMotionQuota();
+      updateModelUI();
+      var toastExtra = result.mappingNote
+        ? " · " + result.userAsked + " → " + result.motifLabel
+        : "";
+      showToast(
+        "<strong>🎬 Video fertig</strong> — " + escapeHtml(result.motifLabel || text) + toastExtra + " · 4s Epic Loop im Chat",
+        { rainbow: true, duration: 4200 }
+      );
+    });
+  }
+
+  function getMessageElById(msgId) {
+    var byId = findMessageElById(msgId);
+    if (byId) return byId;
+    if (!msgId || !chatMessages) return null;
+    var el = chatMessages.querySelector('.chat-motion-canvas[data-msg-id="' + msgId + '"]');
+    if (el) return el.closest(".message");
+    el = chatMessages.querySelector('.chat-motion-copy[data-msg-id="' + msgId + '"]');
+    if (el) return el.closest(".message");
+    el = chatMessages.querySelector('.chat-image-canvas[data-msg-id="' + msgId + '"]');
+    if (el) return el.closest(".message");
+    return null;
+  }
+
+  function buildChatMotionRenderStatus(wrap) {
+    if (!wrap || wrap.querySelector(".chat-motion-render-status")) return;
+    var status = document.createElement("div");
+    status.className = "chat-motion-render-status liquid-glass liquid-glass-prism";
+    status.setAttribute("aria-live", "polite");
+    status.innerHTML =
+      '<p class="chat-motion-render-text">NOCO Motion synthetisiert…</p>' +
+      '<span class="chat-motion-render-step">Keyframe 0/8</span>' +
+      '<div class="chat-motion-render-bar"><span class="chat-motion-render-fill"></span></div>';
+    wrap.appendChild(status);
+  }
+
+  function updateActiveMotionChat(progress, label, extra) {
+    extra = extra || {};
+    var el = activeMotionMsgEl;
+    if (!el && activeMotionMsgId) el = getMessageElById(activeMotionMsgId);
+    if (!el) return;
+    activeMotionMsgEl = el;
+    var wrap = el.querySelector(".chat-motion-wrap");
+    var frame = el.querySelector(".chat-motion-frame");
+    var canvas = el.querySelector(".chat-motion-canvas");
+    var status = el.querySelector(".chat-motion-render-status");
+    var fill = status && status.querySelector(".chat-motion-render-fill");
+    var stepEl = status && status.querySelector(".chat-motion-render-step");
+    var textEl = status && status.querySelector(".chat-motion-render-text");
+    var pct = Math.round((progress || 0) * 100);
+
+    if (wrap) {
+      wrap.classList.add("is-motion-rendering");
+      wrap.style.setProperty("--motion-progress", String(Math.min(1, progress || 0)));
+    }
+    if (frame) frame.classList.add("is-rendering");
+    if (fill) fill.style.width = pct + "%";
+    if (textEl && label) textEl.textContent = label;
+    if (stepEl) {
+      if (extra.stage === "keyframes" && typeof extra.keyframeIndex === "number") {
+        stepEl.textContent = "Keyframe " + (extra.keyframeIndex + 1) + "/8";
+      } else if (extra.stage) {
+        stepEl.textContent = extra.stage;
+      }
+    }
+    if (extra.previewPixels && canvas && typeof NocoMotion !== "undefined" && NocoMotion.drawFramePixels) {
+      NocoMotion.drawFramePixels(extra.previewPixels, 36, canvas, 10);
+    }
+    if (extra.stage === "keyframes" && typeof extra.keyframeIndex === "number" && extra.previewPixels) {
+      var row = el.querySelector(".chat-motion-keyframes");
+      if (row) paintMotionKeyframeThumbOnRow(row, extra.keyframeIndex, extra.previewPixels);
+    }
+    if (extra.keyframesReady && extra.keyframes) {
+      var rowReady = el.querySelector(".chat-motion-keyframes");
+      if (rowReady) {
+        var ki;
+        for (ki = 0; ki < extra.keyframes.length; ki++) {
+          paintMotionKeyframeThumbOnRow(rowReady, ki, extra.keyframes[ki]);
+        }
+      }
+    }
+    if (motionTheatre) motionTheatre.classList.toggle("is-keyframe-pulse", extra.stage === "keyframes");
+    scrollToBottom(false);
+  }
+
+  function paintMotionKeyframeThumbOnRow(row, index, pixels) {
+    if (!row || typeof NocoMotion === "undefined") return;
+    var slot = row.children[index];
+    if (!slot) return;
+    var canvas = slot.querySelector(".motion-kf-canvas");
+    if (canvas && pixels && NocoMotion.drawFramePixels) {
+      NocoMotion.drawFramePixels(pixels, 36, canvas, 4);
+      slot.classList.add("is-filled");
+    }
+  }
+
+  function appendPendingMotionMessage(promptText) {
+    hideWelcome();
+    var chat = getActiveChat();
+    if (!chat) return null;
+    var msg = {
+      id: uid(),
+      role: "ai",
+      text: "NOCO Motion synthetisiert dein Video…",
+      time: Date.now(),
+      feedback: null,
+      type: "motion",
+      motion: null,
+      motionPending: true,
+      topic: "NOCO Motion",
+      motionRun: true
+    };
+    chat.messages.push(msg);
+    chat.updated = Date.now();
+    saveChats();
+    activeMotionMsgId = msg.id;
+    var idx = chat.messages.length - 1;
+    var built = upsertMessageEl(msg, idx, { renderPending: true, urgent: true });
+    activeMotionMsgEl = built ? built.el : null;
+    ensureChatDomSynced();
+    return msg.id;
+  }
+
+  function finalizeMotionChatMessage(meta, result) {
+    var chat = getActiveChat();
+    if (!chat || !meta) {
+      appendMotionMessage(meta, result);
+      return;
+    }
+    var msg = activeMotionMsgId ? getMessageById(activeMotionMsgId) : null;
+    var report = typeof NocoMotion !== "undefined" && NocoMotion.formatMotionReport
+      ? NocoMotion.formatMotionReport(meta)
+      : "NOCO Motion";
+
+    if (!msg) {
+      appendMotionMessage(meta, result);
+      activeMotionMsgId = null;
+      activeMotionMsgEl = null;
+      return;
+    }
+
+    msg.motionPending = false;
+    msg.motion = meta;
+    msg.text = report;
+    chat.updated = Date.now();
+    saveChats();
+
+    var idx = chat.messages.indexOf(msg);
+    var built = upsertMessageEl(msg, idx >= 0 ? idx : chat.messages.length - 1, { urgent: true });
+    var fresh = built ? built.el : null;
+    if (!fresh) {
+      ensureChatDomSynced();
+      activeMotionMsgId = null;
+      activeMotionMsgEl = null;
+      return;
+    }
+    activeMotionMsgEl = fresh;
+    fresh.classList.add("is-motion-finish");
+    document.body.classList.add("is-motion-finish-flash");
+    window.setTimeout(function () {
+      document.body.classList.remove("is-motion-finish-flash");
+      fresh.classList.remove("is-motion-finish");
+    }, 1600);
+
+    var mCanvas = fresh.querySelector(".chat-motion-canvas");
+    if (mCanvas && typeof NocoMotion !== "undefined" && NocoMotion.startPlayback) {
+      window.setTimeout(function () {
+        if (mCanvas._motionStop) try { mCanvas._motionStop(); } catch (e) { /* ignore */ }
+        var stop = NocoMotion.startPlayback(meta, mCanvas, { scale: 10 });
+        mCanvas._motionStop = stop;
+        motionPlaybackStops.push(stop);
+      }, 80);
+    }
+    scrollToBottom(true);
+    ensureChatDomSynced();
+    activeMotionMsgId = null;
+    activeMotionMsgEl = null;
+  }
+
+  function appendMotionMessage(meta, result) {
+    hideWelcome();
+    var chat = getActiveChat();
+    if (!chat || !meta) return;
+    var report = typeof NocoMotion !== "undefined" && NocoMotion.formatMotionReport
+      ? NocoMotion.formatMotionReport(meta)
+      : "NOCO Motion";
+    var msg = {
+      id: uid(),
+      role: "ai",
+      text: report,
+      time: Date.now(),
+      feedback: null,
+      type: "motion",
+      motion: meta,
+      topic: "NOCO Motion",
+      motionRun: true
+    };
+    chat.messages.push(msg);
+    chat.updated = Date.now();
+    saveChats();
+    var idx = chat.messages.length - 1;
+    upsertMessageEl(msg, idx, { urgent: true });
+    ensureChatDomSynced();
+  }
+
+  function setAgentMode(on) {
+    agentModeActive = !!on;
+    if (on) {
+      setImageMode(false);
+      setSummaryMode(false);
+      setInsightMode(false);
+      setMotionMode(false);
+    }
+    document.body.classList.toggle("is-agent-mode", agentModeActive);
+    if (chatAgentBtn) {
+      chatAgentBtn.classList.toggle("is-active", agentModeActive);
+      chatAgentBtn.setAttribute("aria-pressed", agentModeActive ? "true" : "false");
+    }
+    var agentPresetStrip = document.getElementById("agentPresetStrip");
+    if (agentPresetStrip) agentPresetStrip.hidden = !agentModeActive;
+    renderAgentPresets();
+    updateChatPlaceholder();
+    updateInputModeHint();
+  }
+
+  function renderAgentPresets() {
+    var scroll = document.getElementById("agentPresetScroll");
+    if (!scroll || typeof NocoAgent === "undefined" || !NocoAgent.getPresets) return;
+    scroll.innerHTML = "";
+    if (!agentModeActive) return;
+    NocoAgent.getPresets().forEach(function (preset) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "agent-preset-chip";
+      btn.setAttribute("role", "listitem");
+      btn.setAttribute("data-agent-preset", preset.id);
+      btn.title = preset.prompt;
+      btn.innerHTML = '<span class="agent-preset-icon">' + preset.icon + '</span><span class="agent-preset-label">' + escapeHtml(preset.title) + '</span>';
+      btn.addEventListener("click", function () {
+        if (!canSendMessage()) {
+          showToast("Tageslimit erreicht");
+          openExclusiveDialog();
+          return;
+        }
+        setAgentMode(true);
+        runAgentJob(preset.prompt);
+      });
+      scroll.appendChild(btn);
+    });
+  }
+
+  function setSummaryMode(on) {
+    summaryModeActive = !!on;
+    if (on) {
+      setImageMode(false);
+      setAgentMode(false);
+      setInsightMode(false);
+      setMotionMode(false);
+    }
+    document.body.classList.toggle("is-summary-mode", summaryModeActive);
+    var summaryBtn = document.querySelector("[data-shortcut='summary']");
+    if (summaryBtn) summaryBtn.classList.toggle("is-active", summaryModeActive);
+    updateChatPlaceholder();
+    updateInputModeHint();
+  }
+
   function setImageMode(on) {
     imageModeActive = !!on;
+    if (on) {
+      setAgentMode(false);
+      setSummaryMode(false);
+      setInsightMode(false);
+      setMotionMode(false);
+    }
     document.body.classList.toggle("is-image-render-mode", imageModeActive);
     if (chatImageBtn) {
       chatImageBtn.classList.toggle("is-active", imageModeActive);
@@ -514,12 +2294,79 @@
 
   function updateChatPlaceholder() {
     if (!chatInput || chatInput.disabled) return;
-    if (imageModeActive) {
-      chatInput.placeholder = "Motiv — z.B. Katze, Drache, Sonne";
+    if (motionModeActive) {
+      chatInput.placeholder = "🎬 Epic Video — z.B. Erstelle ein Video von einer Katze im Regen…";
       return;
     }
-    var left = Math.max(0, 20 - loadQuota().used);
-    chatInput.placeholder = isExclusiveActive() ? "Nachricht…" : ("Nachricht… · " + left + "/20");
+    if (insightModeActive) {
+      if (insightCategory === "ask" && insightPayload) {
+        chatInput.placeholder = "Frag die Datei — z.B. Worum geht es?";
+      } else {
+        chatInput.placeholder = "NOCO Inside — Text einfügen oder Frage stellen…";
+      }
+      return;
+    }
+    if (summaryModeActive) {
+      chatInput.placeholder = "Summary — langen Text einfuegen (5 Stichpunkte)…";
+      return;
+    }
+    if (agentModeActive) {
+      chatInput.placeholder = "Agent aktiv — frag alles, z.B. Gaming Logo, Lernplan, Idee…";
+      return;
+    }
+    if (imageModeActive) {
+      chatInput.placeholder = "NOCO Build Create — Motiv z.B. Katze, Drache, Sonne";
+      return;
+    }
+    var left = Math.max(0, FREE_MSG_DAILY - loadQuota().used);
+    chatInput.placeholder = isExclusiveActive() ? "Nachricht…" : ("Nachricht… · " + left + "/" + FREE_MSG_DAILY);
+  }
+
+  function updateInputModeHint() {
+    if (!inputModelHint) return;
+    var tier = getEffectiveModelTier();
+    var parts = ["Modell: " + tier.name];
+    var ks = getKnowledgeSource();
+    parts.push(KNOWLEDGE_SOURCE_LABELS[ks] || "NOCO-Wissen");
+    if (ks === "noco") parts.push("nur Vault");
+    else if (ks === "wiki") parts.push("nur Wiki");
+    else if (ks === "auto") parts.push("Nexus-Auto");
+    if (!isVaultEnabled()) parts.push("Vault aus");
+    if (!isExclusiveActive() && (ks === "wiki" || ks === "auto")) {
+      parts.push("Wiki " + getWikiQuotaLeft() + "/" + WIKI_FREE_DAILY);
+    }
+    if (agentModeActive) parts.push("Agent");
+    if (motionModeActive) parts.push("Video");
+    if (insightModeActive) parts.push("Inside");
+    if (summaryModeActive) parts.push("Summary");
+    if (imageModeActive) parts.push("Bild");
+    if (isProSelected()) parts.push("Pro Rush");
+    inputModelHint.textContent = parts.join(" · ");
+  }
+
+  function updateProModeUI() {
+    if (!proModeBtn) return;
+    var canPro = canUseProToday();
+    proModeBtn.classList.toggle("is-active", isProSelected());
+    proModeBtn.classList.toggle("is-locked", !canPro);
+    proModeBtn.setAttribute("aria-pressed", isProSelected() ? "true" : "false");
+    proModeBtn.title = canPro
+      ? (isExclusiveActive()
+        ? "NOCO AI Pro 1.0 — " + getProQuotaLeft() + " Pro heute"
+        : "NOCO Pro — " + getProQuotaLeft() + "/Tag · fuer diese Nachricht")
+      : "Pro-Limit heute — Reset um 0:00";
+    document.body.classList.toggle("is-pro-armed", isProSelected());
+    updateInputModeHint();
+  }
+
+  function toggleProMode() {
+    if (!canUseProToday()) {
+      showToast("Pro-Limit heute erreicht — Reset 0:00");
+      return;
+    }
+    proModeSelected = !proModeSelected;
+    updateModelUI();
+    showToast(proModeSelected ? "Pro fuer naechste Eingabe aktiv" : "Pro deaktiviert");
   }
 
   function pickInputSuggestions(count, imageBias) {
@@ -602,6 +2449,10 @@
   }
 
   function renderInputSuggestions() {
+    if (!isSuggestionsOn("input")) {
+      hideInputSuggestions();
+      return;
+    }
     if (!inputSuggestions || !inputSuggestionsRow || !chatInput) return;
     if (chatInput.value.trim() || isTyping || chatInput.disabled) {
       hideInputSuggestions();
@@ -627,6 +2478,10 @@
   function renderWelcomeChips() {
     var container = welcomeChips || (welcomeBlock && welcomeBlock.querySelector(".welcome-chips"));
     if (!container) return;
+    if (!isSuggestionsOn("welcome")) {
+      container.innerHTML = "";
+      return;
+    }
     var chips = pickInputSuggestions(INPUT_SUGGESTION_COUNT, false);
     container.innerHTML = "";
     chips.forEach(function (c) {
@@ -642,22 +2497,67 @@
     });
   }
 
-  function focusChatImagePrompt() {
+  function activateImageModeInChat() {
     switchView("chat");
-    if (!chatInput) return;
+    closeAllDialogs();
     if (isChatImageRendering()) {
       showToast("Bild wird noch gerendert — gleich wieder moeglich.");
       return;
     }
     if (!canGenerateImage()) {
-      showToast("Bilder nur mit NOCO Exclusive / Flux.");
-      openExclusiveDialog();
+      askInChat(
+        "**Render-Limit heute erreicht.** Exclusive = unbegrenzt Bild & Video:",
+        [{ id: "mode-agent", label: "Weiter chatten", primary: true }],
+        { topic: "Create" }
+      );
       return;
     }
     setImageMode(true);
-    chatInput.value = "";
-    chatInput.focus();
-    autoResizeInput();
+    askInChat(
+      "**Bild-Modus** — Was soll gezeichnet werden?\n\nFrei formulieren oder waehlen:",
+      [
+        { id: "hub-img", label: "Katze", payload: "Katze" },
+        { id: "hub-img", label: "Apfel", payload: "Apfel" },
+        { id: "hub-img", label: "Drache", payload: "Drache" },
+        { id: "mode-motion", label: "Stattdessen Motion", muted: true }
+      ],
+      { topic: "Create" }
+    );
+    if (chatInput) chatInput.focus();
+  }
+
+  function activateMotionModeInChat() {
+    switchView("chat");
+    closeAllDialogs();
+    setMotionMode(true);
+    askInChat(
+      "**NOCO Motion** — Was soll animiert werden?\n\nZ.B. *Video von einer Katze*",
+      [
+        { id: "fill-motion", label: "Beispiel: Katze", payload: "Erstelle ein Video von einer Katze", primary: true },
+        { id: "hub-create", label: "Stattdessen Bild", muted: true }
+      ],
+      { topic: "Motion" }
+    );
+    if (chatInput) chatInput.focus();
+  }
+
+  function activateInsideModeInChat() {
+    switchView("chat");
+    closeAllDialogs();
+    setInsightMode(true);
+    askInChat(
+      "**NOCO Inside** — Text einfuegen oder Datei laden.\n\nWas soll analysiert werden?",
+      [
+        { id: "inside-file-hint", label: "Datei waehlen", primary: true },
+        { id: "inside-paste", label: "Text unten einfuegen" }
+      ],
+      { topic: "Inside" }
+    );
+    if (chatInput) chatInput.focus();
+  }
+
+  function focusChatImagePrompt() {
+    activateImageModeInChat();
   }
 
   var LENS_PHASES = [
@@ -760,14 +2660,16 @@
   }
 
   function incrementImageQuota() {
-    if (isExclusiveActive()) return;
     var q = loadImageQuota();
     q.used++;
     saveImageQuota(q);
   }
 
   function getPixelSize() { return isExclusiveActive() ? 52 : 40; }
-  function getPixelDuration() { return isExclusiveActive() ? 35000 : 60000; }
+  function getPixelDuration() {
+    if (isProSelected()) return 4500;
+    return isExclusiveActive() ? 35000 : 60000;
+  }
 
   function getRenderPhaseStart(durationMs) {
     durationMs = durationMs || getPixelDuration();
@@ -883,7 +2785,6 @@
     if (wrap) {
       wrap.classList.add("is-render-active");
       wrap.style.setProperty("--render-progress", String(Math.min(1, barP)));
-      scrollImageRenderIntoView(wrap);
     }
 
     if (lastIdx !== String(info.index)) {
@@ -957,7 +2858,7 @@
 
   function canSendMessage() {
     if (isExclusiveActive()) return true;
-    return loadQuota().used < 20;
+    return loadQuota().used < FREE_MSG_DAILY;
   }
 
   function getChatHistoryForBrain() {
@@ -974,28 +2875,30 @@
   }
 
   function updateModelUI() {
-    var tier = getModelTier();
+    var tier = getEffectiveModelTier();
     var exclusive = isExclusiveActive();
     var quota = loadQuota();
+    var displayName = tier.name;
 
-    if (modelLabel) modelLabel.textContent = tier.name;
-    if (modelStatus) modelStatus.textContent = tier.name.replace("NOCO ", "");
+    if (modelLabel) modelLabel.textContent = displayName;
+    if (modelStatus) modelStatus.textContent = displayName.replace("NOCO ", "").replace("NOCO AI ", "");
 
     if (exclusiveBadge) {
       exclusiveBadge.textContent = exclusive ? "EXCLUSIVE" : "FREE";
       exclusiveBadge.classList.toggle("is-exclusive", exclusive);
     }
-    if (exclusiveCard) exclusiveCard.classList.toggle("active-exclusive", exclusive);
     if (exclusiveTopBtn) exclusiveTopBtn.classList.toggle("is-active", exclusive);
     document.body.classList.toggle("exclusive-active", exclusive);
 
     if (quotaLabel) {
       if (exclusive) {
-        quotaLabel.textContent = "Exclusive · " + tier.name + " · Rush";
+        quotaLabel.textContent = isProSelected()
+          ? "Exclusive · " + displayName + " · Pro Rush"
+          : "Exclusive · " + displayName + " · Rush";
       } else {
-        var left = Math.max(0, 20 - quota.used);
-        var prismLeft = Math.max(0, 10 - quota.used);
-        quotaLabel.textContent = "Access Free · " + left + "/20 · " + prismLeft + "x Prism";
+        var left = Math.max(0, FREE_MSG_DAILY - quota.used);
+        var wikiLeft = getWikiQuotaLeft();
+        quotaLabel.textContent = "NOCO Free · " + left + "/" + FREE_MSG_DAILY + " · Wiki " + wikiLeft + "/" + WIKI_FREE_DAILY;
       }
     }
     updatePlanBar(tier, exclusive, quota);
@@ -1003,13 +2906,119 @@
     updatePixelMeta();
     updateInputGate();
     updateExclusiveSidebar();
+    updateProModeUI();
+    updateInputModeHint();
+    updateUsageDialog();
+  }
+
+  function usageMeterPct(used, limit) {
+    if (limit === Infinity) return used > 0 ? 12 : 4;
+    if (!limit) return 0;
+    return Math.min(100, Math.round((used / limit) * 100));
+  }
+
+  function usageMeterLabel(used, limit) {
+    if (limit === Infinity) return used + " genutzt · unbegrenzt";
+    var left = Math.max(0, limit - used);
+    return used + " / " + limit + " · " + left + " frei";
+  }
+
+  function paintUsageRow(rowId, used, limit, note) {
+    var row = document.getElementById(rowId);
+    if (!row) return;
+    var fill = row.querySelector(".usage-meter-fill");
+    var val = row.querySelector(".usage-meter-val");
+    var noteEl = row.querySelector(".usage-meter-note");
+    var infinite = limit === Infinity;
+    row.classList.toggle("is-infinite", infinite);
+    row.classList.toggle("is-full", !infinite && used >= limit);
+    if (fill) fill.style.width = usageMeterPct(used, limit) + "%";
+    if (val) val.textContent = usageMeterLabel(used, limit);
+    if (noteEl && note) noteEl.textContent = note;
+  }
+
+  function updateUsageDialog() {
+    var exclusive = isExclusiveActive();
+    var limits = getPlanLimits();
+    var badge = document.getElementById("usagePlanBadge");
+    var title = document.getElementById("usagePlanTitle");
+    var sub = document.getElementById("usagePlanSub");
+    var resetNote = document.getElementById("usageResetNote");
+
+    if (badge) {
+      badge.textContent = exclusive ? "NOCO Exclusive" : "NOCO Free";
+      badge.classList.toggle("is-exclusive", exclusive);
+    }
+    if (title) title.textContent = exclusive ? "Exclusive — erweiterte Limits" : "NOCO Free — Tageskontingente";
+    if (sub) {
+      sub.textContent = exclusive
+        ? "Nachrichten, Vault & Nexus-Auto unbegrenzt · Pro, Bilder, Wiki & Videos mit Tagesbalken · Reset 0:00"
+        : "Limits resetten taeglich 0:00 · Nexus-Auto 1× · Pro 1× · Video Standard-Qualitaet";
+    }
+    if (resetNote) resetNote.textContent = "Stand: " + getTodayKey() + " · automatischer Reset um Mitternacht";
+
+    paintUsageRow("usageRowMessages", loadQuota().used, limits.messages,
+      exclusive ? "Chat-Nachrichten unbegrenzt" : "Normale Chat-Antworten");
+    paintUsageRow("usageRowPro", loadProQuota().used, limits.pro,
+      exclusive ? "NOCO Pro 1.0 Rush" : "1 Pro-Nachricht mit Rush-Speed");
+    paintUsageRow("usageRowImages", loadImageQuota().used, limits.images, "NOCO Render · Bilder im Chat");
+    paintUsageRow("usageRowWiki", loadWikiQuota().used, limits.wiki,
+      exclusive ? "Wiki-API 1.1 · de.wikipedia.org" : "Wikipedia live");
+    paintUsageRow("usageRowNexus", loadNexusQuota().used, limits.nexus,
+      exclusive ? "Vault + Wiki ultra-intelligent" : "1× Nexus-Auto / Tag");
+    paintUsageRow("usageRowVideos", loadMotionQuota().used, limits.videos,
+      exclusive ? "NOCO Motion · Epic Video" : "1× Video · Standard-Qualitaet");
+
+    var featList = document.getElementById("usageFeatureList");
+    if (featList) {
+      featList.innerHTML = exclusive
+        ? "<li><strong>∞</strong> Nachrichten, Vault, Nexus-Auto, Rush</li><li><strong>" + limits.pro + "</strong> NOCO Pro / Tag</li><li><strong>" + limits.images + "</strong> Bilder / Tag</li><li><strong>" + limits.wiki + "</strong> Wikipedia / Tag</li><li><strong>" + limits.videos + "</strong> Videos / Tag</li>"
+        : "<li><strong>" + limits.messages + "</strong> Nachrichten / Tag</li><li><strong>" + limits.pro + "</strong> NOCO Pro / Tag</li><li><strong>" + limits.images + "</strong> Bilder / Tag</li><li><strong>" + limits.wiki + "</strong> Wikipedia / Tag</li><li><strong>" + limits.nexus + "</strong> Nexus-Auto / Tag</li><li><strong>" + limits.videos + "</strong> Video (Standard) / Tag</li><li>Vault offline · kostenlos</li>";
+    }
+    if (usageBtn) {
+      var msgLeft = exclusive ? "∞" : Math.max(0, FREE_MSG_DAILY - loadQuota().used);
+      usageBtn.setAttribute("title", "Nutzung · " + (exclusive ? "Exclusive" : msgLeft + "/" + FREE_MSG_DAILY + " Msg"));
+    }
+  }
+
+  function openUsageDialog() {
+    updateUsageDialog();
+    if (!usageDialog) return;
+    showCenteredDialog(usageDialog);
+  }
+
+  function isFeatureEnabled(id) {
+    if (settings.cleanMode) {
+      return id === "image" || id === "hub" || id === "motion" || id === "agent";
+    }
+    var map = {
+      glow: "featureGlow", echo: "featureEcho", motion: "featureMotion", agent: "featureAgent",
+      inside: "featureInside", brief: "featureBrief", summary: "featureSummary",
+      detect: "featureLens", lens: "featureLens"
+    };
+    var sk = map[id];
+    if (sk && settings[sk] === false) return false;
+    return true;
+  }
+
+  function applyFeatureVisibility() {
+    document.body.classList.toggle("clean-mode", !!settings.cleanMode);
+    document.body.classList.toggle("feature-off-glow", settings.featureGlow === false || !!settings.cleanMode);
+    document.body.classList.toggle("feature-off-echo", settings.featureEcho === false || !!settings.cleanMode);
+    document.body.classList.toggle("feature-off-motion", settings.featureMotion === false);
+    document.body.classList.toggle("feature-off-agent", settings.featureAgent === false);
+    document.body.classList.toggle("feature-off-inside", settings.featureInside === false || !!settings.cleanMode);
+    document.body.classList.toggle("feature-off-brief", settings.featureBrief === false || !!settings.cleanMode);
+    document.body.classList.toggle("feature-off-summary", settings.featureSummary === false || !!settings.cleanMode);
+    document.body.classList.toggle("feature-off-lens", settings.featureLens === false || !!settings.cleanMode);
+    if (!isFeatureEnabled("glow")) { hideGlowPrism(); hideWriteAssist(); }
   }
 
   function updatePlanBar(tier, exclusive, quota) {
     exclusive = exclusive !== undefined ? exclusive : isExclusiveActive();
-    tier = tier || getModelTier();
+    tier = tier || getEffectiveModelTier();
     quota = quota || loadQuota();
-    var left = Math.max(0, 20 - quota.used);
+    var left = Math.max(0, FREE_MSG_DAILY - quota.used);
 
     var plans = getBrand().plans;
     if (planBadge) {
@@ -1018,19 +3027,22 @@
     }
     if (planModelText) {
       planModelText.textContent = "Modell: " + tier.name;
+      planModelText.hidden = false;
     }
     if (planQuotaText) {
       if (exclusive) {
-        planQuotaText.textContent = "Unbegrenzt · Rush " + EXCLUSIVE_SPEED_MS + " ms";
+        planQuotaText.textContent = "Pro " + getProQuotaLeft() + " · Bilder " + getImageQuotaLeft() + "/" + PLAN_LIMITS.exclusive.images + " · Wiki " + getWikiQuotaLeft() + "/" + PLAN_LIMITS.exclusive.wiki;
       } else {
-        planQuotaText.textContent = left + "/20 · " + tier.name;
+        planQuotaText.textContent = left + "/" + FREE_MSG_DAILY + " · Wiki " + getWikiQuotaLeft() + "/" + WIKI_FREE_DAILY;
       }
     }
     if (planStatusLine) {
       if (exclusive) {
-        planStatusLine.innerHTML = "<strong>Flux</strong> · Rush " + EXCLUSIVE_SPEED_MS + " ms · ∞";
+        planStatusLine.innerHTML = isProSelected()
+          ? "<strong>Exclusive</strong> · Pro 1.0 · Ultra Rush"
+          : "<strong>Exclusive</strong> · Flux · Rush " + EXCLUSIVE_SPEED_MS + " ms · ∞";
       } else {
-        planStatusLine.innerHTML = "<strong>" + tier.name.replace("NOCO ", "") + "</strong> · " + left + "/20";
+        planStatusLine.innerHTML = "<strong>NOCO Free</strong> · " + left + "/" + FREE_MSG_DAILY + " · Wiki " + getWikiQuotaLeft() + "/" + WIKI_FREE_DAILY;
       }
     }
     if (planSpeedBadge) {
@@ -1039,7 +3051,7 @@
     if (inputHintPlan) {
       inputHintPlan.textContent = exclusive
         ? plans.exclusive.short + " · " + tier.name
-        : plans.free.short + " · " + tier.name + " · " + left + "/20";
+        : plans.free.short + " · " + tier.name + " · " + left + "/" + FREE_MSG_DAILY;
     }
     if (aiBadge) {
       aiBadge.textContent = exclusive
@@ -1052,7 +3064,7 @@
     exclusive = exclusive !== undefined ? exclusive : isExclusiveActive();
     tier = tier || getModelTier();
     quota = quota || loadQuota();
-    var left = Math.max(0, 20 - quota.used);
+    var left = Math.max(0, FREE_MSG_DAILY - quota.used);
 
     var plans = getBrand().plans;
     if (settingsPlanBadge) {
@@ -1066,15 +3078,15 @@
       if (exclusive) {
         settingsPlanDetail.textContent = "NOCO Flux · NOCO Rush · NOCO Lens · NOCO Render";
       } else if (tier.id === "prism" && tier.remaining !== undefined) {
-        settingsPlanDetail.textContent = left + "/20 heute · " + tier.remaining + "x NOCO Prism · dann Spark · Reset 0:00";
+        settingsPlanDetail.textContent = left + "/" + FREE_MSG_DAILY + " heute · " + tier.remaining + "x NOCO Prism · dann Spark · Reset 0:00";
       } else {
-        settingsPlanDetail.textContent = left + "/20 heute · NOCO Spark aktiv · Exclusive = Flux + Rush";
+        settingsPlanDetail.textContent = left + "/" + FREE_MSG_DAILY + " heute · NOCO Spark aktiv · Exclusive = Flux + Rush";
       }
     }
     if (settingsExclusiveHint) {
       settingsExclusiveHint.textContent = exclusive
-        ? "Exclusive aktiv: " + tier.name + " · NOCO Rush · unbegrenzt"
-        : "Du nutzt Access Free (" + tier.name + "). Exclusive = Flux, Rush, Lens, Render.";
+        ? "Exclusive aktiv: " + tier.name + " · Rush · Wiki " + PLAN_LIMITS.exclusive.wiki + "/Tag · Nexus-Auto ∞"
+        : "NOCO Free — " + FREE_MSG_DAILY + " Msg · " + PLAN_LIMITS.free.images + " Bilder · " + WIKI_FREE_DAILY + " Wiki · 1 Nexus-Auto/Tag.";
     }
   }
 
@@ -1084,7 +3096,10 @@
     if (exclusiveUnlockBanner) exclusiveUnlockBanner.hidden = ex;
     if (exclusiveSpeedActive) exclusiveSpeedActive.hidden = !ex;
     if (exclusiveSpeedHero) exclusiveSpeedHero.hidden = ex;
+    if (exclusiveDialog) exclusiveDialog.classList.toggle("is-exclusive-user", ex);
     document.body.classList.toggle("exclusive-active", ex);
+    updateExclusiveManagePanel();
+    updatePayWalletUI();
   }
 
   function animateExclusiveSpeedBars() {
@@ -1271,7 +3286,8 @@
 
   function initSidebarCollapsible() {
     document.querySelectorAll(".sidebar-collapse-head").forEach(function (btn) {
-      btn.addEventListener("click", function () {
+      btn.addEventListener("click", function (e) {
+        if (e.target.closest(".sidebar-mini-btn-inline")) return;
         var section = btn.closest(".sidebar-collapsible");
         if (!section) return;
         var collapsed = section.classList.toggle("is-collapsed");
@@ -1281,6 +3297,87 @@
         }
       });
     });
+    if (sidebarHubBtn) {
+      sidebarHubBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openHubInChat();
+      });
+    }
+  }
+
+  function initComposeToolbar() {
+    var shell = document.querySelector(".input-compose-shell");
+    if (!shell) return;
+    shell.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-shortcut]");
+      if (!btn || !shell.contains(btn)) return;
+      if (isChatImageRendering()) {
+        showToast("NOCO Render laeuft — bitte warten…");
+        return;
+      }
+      var sc = btn.getAttribute("data-shortcut");
+      var featureKey = sc === "inside" || sc === "insight" ? "inside" : (sc === "detect" ? "lens" : sc);
+      if (sc !== "hub" && sc !== "new" && sc !== "help" && !isFeatureEnabled(featureKey)) {
+        showToast("In Einstellungen deaktiviert — oder Clean Mode aktiv");
+        return;
+      }
+      if (sc === "hub") openHubInChat();
+      else if (sc === "brief") handleQuickAction("brief");
+      else if (sc === "glow") handleQuickAction("glow");
+      else if (sc === "echo") handleQuickAction("echo");
+      else if (sc === "image") focusChatImagePrompt();
+      else if (sc === "detect") triggerImageDetectPicker();
+      else if (sc === "summary") {
+        setAgentMode(false);
+        setImageMode(false);
+        setInsightMode(false);
+        setMotionMode(false);
+        setSummaryMode(!summaryModeActive);
+        if (summaryModeActive && chatInput) {
+          chatInput.focus();
+          showToast("Summary Mode — langen Text einfuegen");
+        }
+      }
+      else if (sc === "inside" || sc === "insight") {
+        setAgentMode(false);
+        setImageMode(false);
+        setSummaryMode(false);
+        setMotionMode(false);
+        if (insightModeActive) {
+          setInsightMode(false);
+          if (chatInput) chatInput.focus();
+        } else {
+          activateInsideModeInChat();
+        }
+      }
+      else if (sc === "motion") {
+        setAgentMode(false);
+        setImageMode(false);
+        setSummaryMode(false);
+        setInsightMode(false);
+        if (motionModeActive) {
+          setMotionMode(false);
+          if (chatInput) chatInput.focus();
+        } else {
+          activateMotionModeInChat();
+        }
+      }
+      else if (sc === "agent") {
+        setImageMode(false);
+        setSummaryMode(false);
+        setInsightMode(false);
+        setMotionMode(false);
+        setAgentMode(!agentModeActive);
+        if (agentModeActive && chatInput) {
+          chatInput.focus();
+          showToast("Agent aktiv — frag alles");
+        }
+      }
+      else if (sc === "new" && newChatBtn) newChatBtn.click();
+      else if (sc === "help") {
+        sendMessage("Was kann ich dich fragen?");
+      }
+    });
   }
 
   function maybeShowDiscoverHint() {
@@ -1289,16 +3386,25 @@
   }
 
   function maybeShowFeatureBanner() {
-    if (!nocoFeatureBanner) return;
     try {
-      if (localStorage.getItem(FEATURE_BANNER_KEY)) return;
-    } catch (e) { return; }
-    nocoFeatureBanner.hidden = false;
+      if (localStorage.getItem(FEATURE_DISMISS_KEY) === "1") return;
+    } catch (e) { /* */ }
+    if (nocoFeatureDialog) {
+      window.setTimeout(function () {
+        showCenteredDialog(nocoFeatureDialog);
+      }, 280);
+      return;
+    }
+    if (nocoFeatureBanner) nocoFeatureBanner.hidden = false;
   }
 
   function dismissFeatureBanner() {
+    var never = document.getElementById("nfdNeverAgain");
+    if (never && never.checked) {
+      try { localStorage.setItem(FEATURE_DISMISS_KEY, "1"); } catch (e) { /* */ }
+    }
+    if (nocoFeatureDialog && nocoFeatureDialog.open) nocoFeatureDialog.close();
     if (nocoFeatureBanner) nocoFeatureBanner.hidden = true;
-    try { localStorage.setItem(FEATURE_BANNER_KEY, String(Date.now())); } catch (e) { /* */ }
   }
 
   function handleDiscoverAction(action) {
@@ -1389,7 +3495,7 @@
     if (chatInput) {
       chatInput.disabled = !canChat;
       if (!canChat) {
-        chatInput.placeholder = "Tageslimit 20/20 — Exclusive oder Reset um 0:00";
+        chatInput.placeholder = "Tageslimit " + FREE_MSG_DAILY + "/" + FREE_MSG_DAILY + " — Exclusive oder Reset um 0:00";
         hideInputSuggestions();
       } else {
         updateChatPlaceholder();
@@ -1398,7 +3504,7 @@
     if (inputExclusiveGate) {
       inputExclusiveGate.hidden = canChat;
       if (inputGateText && !canChat) {
-        inputGateText.innerHTML = "Tageslimit <strong>20/20</strong> erreicht — <strong>NOCO Exclusive</strong> fuer unbegrenzt";
+        inputGateText.innerHTML = "Tageslimit <strong>" + FREE_MSG_DAILY + "/" + FREE_MSG_DAILY + "</strong> erreicht — <strong>NOCO Exclusive</strong> oder Nutzung pruefen";
       }
     }
     if (sendBtn) sendBtn.disabled = !canChat || isTyping || !(chatInput && chatInput.value.trim());
@@ -1490,9 +3596,8 @@
     };
     chat.messages.push(msg);
     saveChats();
-    hideWelcome();
-    chatMessages.appendChild(createMessageEl(msg, chat.messages.length - 1).el);
-    scrollToBottom();
+    upsertMessageEl(msg, chat.messages.length - 1);
+    ensureChatDomSynced();
   }
 
   function updateTopicCount() {
@@ -1599,6 +3704,11 @@
 
   /* ── Boot ── */
 
+  var bootFinished = false;
+  var bootFailsafeTimer = null;
+  var bootStepInterval = null;
+  var bootShardCancel = null;
+
   function setBootProgress(step, total) {
     var bar = bootScreen && bootScreen.querySelector(".boot-progress-bar");
     if (!bar || !total) return;
@@ -1623,17 +3733,51 @@
     }, 1700);
   }
 
+  function ensureAppVisible() {
+    bootFinished = true;
+    window.__nocoBootDone = true;
+    if (typeof window.__nocoUnlockApp === "function") {
+      window.__nocoUnlockApp();
+    }
+    if (bootFailsafeTimer) {
+      clearTimeout(bootFailsafeTimer);
+      bootFailsafeTimer = null;
+    }
+    if (bootStepInterval) {
+      clearInterval(bootStepInterval);
+      bootStepInterval = null;
+    }
+    if (bootShardCancel) {
+      bootShardCancel();
+      bootShardCancel = null;
+    }
+    dismissStuckOverlays();
+    closeAllDialogs();
+  }
+
   function finishBootSequence(logoWrap) {
+    if (bootFinished && appShell && appShell.classList.contains("ready")) return;
+    bootFinished = true;
+    window.__nocoBootDone = true;
+    if (bootFailsafeTimer) {
+      clearTimeout(bootFailsafeTimer);
+      bootFailsafeTimer = null;
+    }
+    if (bootStepInterval) {
+      clearInterval(bootStepInterval);
+      bootStepInterval = null;
+    }
+    if (bootShardCancel) {
+      bootShardCancel();
+      bootShardCancel = null;
+    }
     if (bootScreen) {
       bootScreen.classList.add("hidden");
-      bootScreen.classList.remove("is-booting", "is-exiting", "is-handoff");
+      bootScreen.classList.remove("is-booting", "is-exiting", "is-handoff", "is-stuck-recovery");
+      bootScreen.setAttribute("aria-hidden", "true");
     }
     if (logoWrap) logoWrap.classList.remove("is-lit", "is-shatter");
-    document.body.classList.remove("boot-handoff-active");
-    if (appShell) {
-      appShell.classList.add("ready");
-      appShell.classList.remove("is-boot-handoff");
-    }
+    ensureAppVisible();
     if (discoverHint) discoverHint.hidden = true;
     closeAllDialogs();
     maybeShowFeatureBanner();
@@ -1642,29 +3786,77 @@
     }, 1600);
   }
 
+  function forceBootComplete(logoWrap) {
+    if (!bootScreen) {
+      ensureAppVisible();
+      return;
+    }
+    if (bootFinished && appShell && appShell.classList.contains("ready")) return;
+    if (typeof window.__nocoForceBoot === "function") {
+      window.__nocoForceBoot();
+      bootFinished = true;
+      ensureAppVisible();
+      return;
+    }
+    triggerBootHandoff();
+    finishBootSequence(logoWrap);
+  }
+
   function boot() {
+    if (window.__nocoBootDone || bootFinished) {
+      ensureAppVisible();
+      return;
+    }
+    if (typeof window.__nocoForceBoot === "function") {
+      return;
+    }
     if (!bootScreen) {
       if (appShell) appShell.classList.add("ready");
       maybeShowFeatureBanner();
       return;
     }
+    bootFinished = false;
     var logoWrap = bootScreen.querySelector(".boot-logo");
     var dots = bootScreen.querySelectorAll(".boot-dot");
     var step = 0;
     var totalSteps = bootSteps.length;
+    var fastBoot = !settings.animations || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var stepMs = fastBoot ? 220 : 520;
+    var shardDuration = fastBoot ? 1400 : 5800;
+    var shardCount = fastBoot ? 36 : 96;
+
     bootScreen.classList.add("is-booting");
-    bootScreen.classList.remove("hidden", "is-handoff", "is-exiting");
+    bootScreen.classList.remove("hidden", "is-handoff", "is-exiting", "is-boot-error");
+    document.body.classList.toggle("is-booting-fast", fastBoot);
     if (appShell) {
       appShell.classList.remove("ready", "is-boot-handoff");
     }
     document.body.classList.remove("boot-handoff-active");
     setBootProgress(-1, totalSteps);
 
+    if (!bootScreen._skipBound) {
+      bootScreen._skipBound = true;
+      bootScreen.addEventListener("click", function () {
+        forceBootComplete(logoWrap);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (bootFinished) return;
+        if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
+          e.preventDefault();
+          forceBootComplete(logoWrap);
+        }
+      });
+    }
+
+    bootFailsafeTimer = setTimeout(function () {
+      forceBootComplete(logoWrap);
+    }, fastBoot ? 3200 : 6500);
+
     window.setTimeout(function () {
       if (logoWrap) logoWrap.classList.add("is-lit");
-    }, 480);
+    }, fastBoot ? 120 : 480);
 
-    var interval = setInterval(function () {
+    bootStepInterval = setInterval(function () {
       if (step < totalSteps) {
         if (bootStatus) bootStatus.textContent = bootSteps[step];
         setBootProgress(step, totalSteps);
@@ -1675,19 +3867,25 @@
         if (dots[step + 1]) dots[step + 1].classList.add("active");
         step++;
       } else {
-        clearInterval(interval);
+        clearInterval(bootStepInterval);
+        bootStepInterval = null;
         if (bootStatus) bootStatus.textContent = "Willkommen im Chat…";
         setBootProgress(totalSteps - 1, totalSteps);
         bootScreen.classList.add("is-exiting");
         if (logoWrap) logoWrap.classList.add("is-shatter");
         var mark = bootScreen.querySelector(".logo-mark-boot");
         var rect = mark ? mark.getBoundingClientRect() : null;
-        if (typeof NocoBootFX !== "undefined") {
-          NocoBootFX.playShardBurst({
+        if (fastBoot) {
+          triggerBootHandoff();
+          window.setTimeout(function () {
+            finishBootSequence(logoWrap);
+          }, 380);
+        } else if (typeof NocoBootFX !== "undefined") {
+          bootShardCancel = NocoBootFX.playShardBurst({
             x: rect ? rect.left + rect.width / 2 : window.innerWidth * 0.5,
             y: rect ? rect.top + rect.height / 2 : window.innerHeight * 0.42,
-            count: 96,
-            duration: 5800,
+            count: shardCount,
+            duration: shardDuration,
             handoffAt: 0.4,
             onHandoff: triggerBootHandoff
           }, function () {
@@ -1700,20 +3898,58 @@
           }, 900);
         }
       }
-    }, 520);
+    }, stepMs);
   }
 
+  window.addEventListener("pageshow", function (ev) {
+    if (bootFinished || !bootScreen || bootScreen.classList.contains("hidden")) return;
+    if (ev.persisted || bootScreen.classList.contains("is-booting")) {
+      var lw = bootScreen.querySelector(".boot-logo");
+      if (bootStatus) bootStatus.textContent = "Willkommen — Einstieg…";
+      bootScreen.classList.add("is-stuck-recovery");
+      forceBootComplete(lw);
+    }
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden || bootFinished || !bootScreen || bootScreen.classList.contains("hidden")) return;
+    window.setTimeout(function () {
+      if (!bootFinished && bootScreen && !bootScreen.classList.contains("hidden")) {
+        forceBootComplete(bootScreen.querySelector(".boot-logo"));
+      }
+    }, 1200);
+  });
+
   /* ── Settings ── */
+
+  function isSuggestionsOn(kind) {
+    if (settings.suggestionsAll === false) return false;
+    if (kind === "messages") return settings.suggestionsMessages !== false;
+    if (kind === "input") return settings.suggestionsInput !== false;
+    if (kind === "welcome") return settings.suggestionsWelcome !== false;
+    if (kind === "sparks") return settings.suggestionsSparks !== false;
+    return true;
+  }
 
   function loadSettings() {
     try {
       var raw = localStorage.getItem(SETTINGS_KEY);
       return raw ? JSON.parse(raw) : {
         animations: true, speed: "normal", typewriter: true,
-        glass: "high", compact: false, sound: true
+        glass: "high", compact: false, sound: true, knowledgeSource: "noco",
+        vaultEnabled: true, suggestionsAll: true, suggestionsMessages: true,
+        suggestionsInput: true, suggestionsWelcome: true, suggestionsSparks: true,
+        cleanMode: false, featureGlow: true, featureEcho: true, featureMotion: true,
+        featureAgent: true, featureInside: true, featureBrief: true, featureSummary: true, featureLens: true
       };
     } catch (e) {
-      return { animations: true, speed: "normal", typewriter: true, glass: "high", compact: false, sound: true };
+      return {
+        animations: true, speed: "normal", typewriter: true, glass: "high", compact: false, sound: true,
+        knowledgeSource: "noco", vaultEnabled: true, suggestionsAll: true, suggestionsMessages: true,
+        suggestionsInput: true, suggestionsWelcome: true, suggestionsSparks: true,
+        cleanMode: false, featureGlow: true, featureEcho: true, featureMotion: true,
+        featureAgent: true, featureInside: true, featureBrief: true, featureSummary: true, featureLens: true
+      };
     }
   }
 
@@ -1736,6 +3972,33 @@
     if (glassSelect) glassSelect.value = settings.glass || "normal";
     if (compactToggle) compactToggle.checked = !!settings.compact;
     if (soundToggle) soundToggle.checked = settings.sound !== false;
+    if (vaultEnabledToggle) vaultEnabledToggle.checked = settings.vaultEnabled !== false;
+    if (suggestionsAllToggle) suggestionsAllToggle.checked = settings.suggestionsAll !== false;
+    if (suggestionsMessagesToggle) suggestionsMessagesToggle.checked = settings.suggestionsMessages !== false;
+    if (suggestionsInputToggle) suggestionsInputToggle.checked = settings.suggestionsInput !== false;
+    if (suggestionsWelcomeToggle) suggestionsWelcomeToggle.checked = settings.suggestionsWelcome !== false;
+    if (suggestionsSparksToggle) suggestionsSparksToggle.checked = settings.suggestionsSparks !== false;
+    if (settingsSuggestionSubs) {
+      settingsSuggestionSubs.classList.toggle("is-disabled", settings.suggestionsAll === false);
+    }
+    if (cleanModeToggle) cleanModeToggle.checked = !!settings.cleanMode;
+    if (featureGlowToggle) featureGlowToggle.checked = settings.featureGlow !== false;
+    if (featureEchoToggle) featureEchoToggle.checked = settings.featureEcho !== false;
+    if (featureMotionToggle) featureMotionToggle.checked = settings.featureMotion !== false;
+    if (featureAgentToggle) featureAgentToggle.checked = settings.featureAgent !== false;
+    if (featureInsideToggle) featureInsideToggle.checked = settings.featureInside !== false;
+    if (featureBriefToggle) featureBriefToggle.checked = settings.featureBrief !== false;
+    if (featureSummaryToggle) featureSummaryToggle.checked = settings.featureSummary !== false;
+    if (featureLensToggle) featureLensToggle.checked = settings.featureLens !== false;
+
+    document.body.classList.toggle("vault-disabled", settings.vaultEnabled === false);
+    document.body.classList.toggle("no-suggestions-all", settings.suggestionsAll === false);
+    document.body.classList.toggle("no-msg-suggestions", !isSuggestionsOn("messages"));
+    document.body.classList.toggle("no-input-suggestions", !isSuggestionsOn("input"));
+    document.body.classList.toggle("no-welcome-suggestions", !isSuggestionsOn("welcome"));
+    document.body.classList.toggle("no-spark-suggestions", !isSuggestionsOn("sparks"));
+    updateVaultPowerUI();
+    applyFeatureVisibility();
 
     if (!settings.animations && animFrameId) {
       cancelAnimationFrame(animFrameId);
@@ -1753,25 +4016,42 @@
       if (raw) {
         var data = JSON.parse(raw);
         chats = data.chats || [];
-        activeChatId = data.activeChatId || null;
       }
     } catch (e) {
       chats = [];
-      activeChatId = null;
     }
-    if (chats.length === 0) createChat(false);
-    if (!activeChatId || !getActiveChat()) activeChatId = chats[0].id;
+    createChat(true, true);
     renderChatList();
     renderAllMessages();
     updateMsgCount();
   }
 
-  function saveChats() {
+  function saveChats(immediate) {
     try {
       localStorage.setItem(CHATS_KEY, JSON.stringify({ chats: chats, activeChatId: activeChatId }));
     } catch (e) { /* */ }
-    renderChatList();
-    updateMsgCount();
+    scheduleChatListRefresh(!!immediate);
+  }
+
+  function scheduleChatListRefresh(immediate) {
+    clearTimeout(chatListRefreshTimer);
+    if (immediate) {
+      renderChatList();
+      updateMsgCount();
+      return;
+    }
+    chatListRefreshTimer = setTimeout(function () {
+      renderChatList();
+      updateMsgCount();
+    }, 350);
+  }
+
+  function patchChatListTitle(chat) {
+    if (!chat) return;
+    if (chatTitle) chatTitle.textContent = chat.title;
+    if (!chatList) return;
+    var li = chatList.querySelector('.chat-list-item[data-chat-id="' + chat.id + '"] .chat-list-title');
+    if (li) li.textContent = chat.title;
   }
 
   function createChat(switchTo, silent) {
@@ -1787,7 +4067,7 @@
       activeChatId = chat.id;
       resetWelcome();
     }
-    saveChats();
+    saveChats(true);
     if (switchTo !== false) {
       switchView("chat");
       if (!silent) showToast("Neuer Chat erstellt");
@@ -1804,7 +4084,7 @@
       if (activeChatId === id) activeChatId = chats[0].id;
       showToast("Chat geloescht");
     }
-    saveChats();
+    saveChats(true);
     renderAllMessages();
   }
 
@@ -1832,7 +4112,10 @@
     if (chat.title === "Neuer Chat" || chat.messages.length <= 2) {
       chat.title = title;
       chat.updated = Date.now();
-      saveChats();
+      try {
+        localStorage.setItem(CHATS_KEY, JSON.stringify({ chats: chats, activeChatId: activeChatId }));
+      } catch (e) { /* */ }
+      patchChatListTitle(chat);
     }
   }
 
@@ -2018,6 +4301,46 @@
     return div.innerHTML;
   }
 
+  function escapeAttr(str) {
+    return String(str || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  }
+
+  function buildWikiAnswerHtml(wiki) {
+    if (!wiki) return "";
+    var main = escapeHtml(wiki.main || "").replace(/\n/g, "<br>");
+    var title = escapeHtml(wiki.title || "Wikipedia");
+    var query = escapeHtml(wiki.query || "—");
+    var url = escapeAttr(wiki.url || "https://de.wikipedia.org");
+    var ver = escapeHtml(wiki.apiVersion || "1.1");
+    var routeLabel = wiki.route === "followup" ? "Nexus-Auto · Follow-up"
+      : wiki.route === "encyclopedic" || wiki.route === "wiki-topic" || wiki.route === "fallback-wiki" ? "Nexus-Auto · Wikipedia"
+      : "Wiki-API " + ver;
+
+    return (
+      '<div class="wiki-answer">' +
+        '<div class="wiki-answer-main">' + main + "</div>" +
+        '<details class="wiki-source-fold">' +
+          '<summary class="wiki-source-summary">' +
+            '<span class="wiki-source-icon" aria-hidden="true">🌐</span>' +
+            '<span class="wiki-source-summary-text">Quelle · Wikipedia · Wiki-API ' + ver + "</span>" +
+          "</summary>" +
+          '<div class="wiki-source-body">' +
+            '<p class="wiki-source-flow">' +
+              '<span class="wiki-flow-step">NOCO formuliert</span> ' +
+              '<span class="wiki-flow-query">«' + query + "»</span> " +
+              '<span class="wiki-flow-arrow">→</span> ' +
+              '<span class="wiki-flow-step">Wikipedia antwortet</span>' +
+            "</p>" +
+            '<p class="wiki-source-article"><strong>' + title + "</strong></p>" +
+            '<a class="wiki-source-link" href="' + url + '" target="_blank" rel="noopener noreferrer">Originalartikel auf Wikipedia öffnen</a>' +
+            '<p class="wiki-source-route">' + routeLabel + " · Externe Quelle — nicht von NOCO AI</p>" +
+            '<p class="wiki-source-legal">CC BY-SA 4.0 · Wikimedia Foundation &amp; Autor:innen. Kein offizieller Wikipedia-Dienst.</p>' +
+          "</div>" +
+        "</details>" +
+      "</div>"
+    );
+  }
+
   function getWelcomeHtml() {
     return (
       '<div class="welcome-render-mark" aria-hidden="true">' +
@@ -2107,11 +4430,46 @@
     return actions;
   }
 
+  function findMessageElById(msgId) {
+    if (!msgId || !chatMessages) return null;
+    return chatMessages.querySelector('.message[data-msg-id="' + msgId + '"]');
+  }
+
+  function upsertMessageEl(msg, msgIndex, opts) {
+    opts = opts || {};
+    hideWelcome();
+    if (!chatMessages || !msg) return null;
+    var built = createMessageEl(msg, msgIndex, opts.contentHtml || "", !!opts.renderPending);
+    var el = built.el;
+    var existing = findMessageElById(msg.id);
+    if (existing && existing.parentNode) {
+      existing.replaceWith(el);
+    } else {
+      chatMessages.appendChild(el);
+    }
+    if (opts.scroll !== false) scrollToBottom(!!opts.urgent);
+    return built;
+  }
+
+  function ensureChatDomSynced() {
+    var messages = getMessages();
+    if (!chatMessages || !messages.length) return;
+    var i, el;
+    for (i = 0; i < messages.length; i++) {
+      el = findMessageElById(messages[i].id);
+      if (!el || !el.isConnected) {
+        renderAllMessages();
+        return;
+      }
+    }
+  }
+
   function createMessageEl(msg, msgIndex, contentHtml, renderPending) {
     var el = document.createElement("div");
-    el.className = "message " + msg.role + (msg.type === "image" ? " image" : "");
+    el.className = "message " + msg.role + (msg.type === "image" ? " image" : "") + (msg.type === "motion" ? " motion-msg" : "") + (msg.agentRun ? " agent-run" : "") + (msg.insightRun ? " insight-run" : "");
     el.setAttribute("role", "article");
     el.setAttribute("data-msg-index", msgIndex);
+    if (msg.id) el.setAttribute("data-msg-id", msg.id);
 
     var avatar = buildMessageAvatar(msg.role, msg.type === "image");
 
@@ -2177,6 +4535,104 @@
       wrap.appendChild(actRow);
       bubble.classList.add("message-bubble-image");
       bubble.appendChild(wrap);
+    } else if (msg.type === "motion" && typeof NocoMotion !== "undefined") {
+      var motionBadge = document.createElement("span");
+      motionBadge.className = "motion-badge";
+      motionBadge.textContent = (msg.motionPending || renderPending) ? "🎞️ NOCO Motion · Render…" : "🎞️ NOCO Motion";
+      bubble.appendChild(motionBadge);
+      var mWrap = document.createElement("div");
+      mWrap.className = "chat-motion-wrap" + ((msg.motionPending || renderPending) ? " is-motion-rendering" : "");
+      var mFrame = document.createElement("div");
+      mFrame.className = "chat-motion-frame" + ((msg.motionPending || renderPending) ? " is-rendering" : "");
+      var mCanvas = document.createElement("canvas");
+      mCanvas.className = "chat-motion-canvas";
+      mCanvas.setAttribute("data-msg-id", msg.id);
+      mCanvas.width = 360;
+      mCanvas.height = 360;
+      if (msg.motionPending || renderPending) {
+        var mScan = document.createElement("div");
+        mScan.className = "chat-motion-scan";
+        mScan.setAttribute("aria-hidden", "true");
+        mFrame.appendChild(mCanvas);
+        mFrame.appendChild(mScan);
+      } else {
+        mFrame.appendChild(mCanvas);
+      }
+      mWrap.appendChild(mFrame);
+      if (msg.motion && !msg.motionPending && !renderPending) {
+        var mMeta = document.createElement("p");
+        mMeta.className = "chat-motion-meta";
+        mMeta.textContent = (msg.motion.motifLabel || "Motiv") + " · " + (msg.motion.duration || 4) + "s · " + (msg.motion.fps || 20) + " FPS · " + (msg.motion.keyframeCount || 8) + " Keyframes";
+        mWrap.appendChild(mMeta);
+        mWrap.appendChild(buildChatMotionKeyframeRow(msg.motion));
+        var mActRow = document.createElement("div");
+        mActRow.className = "chat-motion-actions liquid-glass liquid-glass-prism";
+        var mCopyBtn = document.createElement("button");
+        mCopyBtn.type = "button";
+        mCopyBtn.className = "chat-motion-action chat-motion-copy";
+        mCopyBtn.setAttribute("data-msg-id", msg.id);
+        mCopyBtn.innerHTML = '<span class="cia-icon">⧉</span><span>Kopieren</span>';
+        var mSaveBtn = document.createElement("button");
+        mSaveBtn.type = "button";
+        mSaveBtn.className = "chat-motion-action chat-motion-save";
+        mSaveBtn.setAttribute("data-msg-id", msg.id);
+        mSaveBtn.innerHTML = '<span class="cia-icon">↓</span><span>Speichern</span>';
+        mActRow.appendChild(mCopyBtn);
+        mActRow.appendChild(mSaveBtn);
+        mWrap.appendChild(mActRow);
+      } else {
+        var mKfRow = document.createElement("div");
+        mKfRow.className = "motion-keyframe-row chat-motion-keyframes";
+        mKfRow.setAttribute("role", "list");
+        var kfi, kfSlot, kfCanvas, kfLabel;
+        for (kfi = 0; kfi < (NocoMotion.KEYFRAME_COUNT || 8); kfi++) {
+          kfSlot = document.createElement("div");
+          kfSlot.className = "motion-kf-slot";
+          kfCanvas = document.createElement("canvas");
+          kfCanvas.className = "motion-kf-canvas";
+          kfCanvas.width = 36;
+          kfCanvas.height = 36;
+          kfLabel = document.createElement("span");
+          kfLabel.className = "motion-kf-label";
+          kfLabel.textContent = String(kfi + 1);
+          kfSlot.appendChild(kfCanvas);
+          kfSlot.appendChild(kfLabel);
+          mKfRow.appendChild(kfSlot);
+        }
+        mWrap.appendChild(mKfRow);
+        buildChatMotionRenderStatus(mWrap);
+      }
+      var mText = document.createElement("div");
+      mText.className = "chat-motion-report";
+      if (msg.motionPending || renderPending) {
+        mText.innerHTML = "<p><strong>🎬 Epic Video wird synthetisiert…</strong> 8 Keyframes · Pixel-Morph · Loop-Engine</p>";
+      } else {
+        mText.innerHTML = renderAiHtml(msg.text || "");
+      }
+      mWrap.appendChild(mText);
+      bubble.appendChild(mWrap);
+      if (msg.motion && !msg.motionPending && !renderPending && typeof NocoMotion.drawFrameToCanvas === "function") {
+        NocoMotion.drawFrameToCanvas(msg.motion, 0, mCanvas, 10);
+        window.setTimeout(function () {
+          if (mCanvas._motionStop) {
+            try { mCanvas._motionStop(); } catch (e) { /* ignore */ }
+          }
+          if (typeof NocoMotion.startPlayback === "function") {
+            var stop = NocoMotion.startPlayback(msg.motion, mCanvas, { scale: 10 });
+            mCanvas._motionStop = stop;
+            motionPlaybackStops.push(stop);
+          }
+        }, 60);
+      }
+    } else if (msg.role === "ai" && msg.wikiSource) {
+      bubble.classList.add("message-bubble-wiki");
+      bubble.innerHTML = buildWikiAnswerHtml(msg.wikiSource);
+      if (msg.topic) {
+        var wikiTopicBadge = document.createElement("span");
+        wikiTopicBadge.className = "message-wiki-badge";
+        wikiTopicBadge.textContent = msg.topic;
+        bubble.insertBefore(wikiTopicBadge, bubble.firstChild);
+      }
     } else {
       var html = contentHtml;
       if (!html) {
@@ -2185,6 +4641,18 @@
         else html = escapeHtml(msg.text).replace(/\n/g, "<br>");
       }
       bubble.innerHTML = html;
+      if (msg.role === "ai" && msg.agentRun) {
+        var agentBadgeEl = document.createElement("span");
+        agentBadgeEl.className = "agent-badge";
+        agentBadgeEl.textContent = "NOCO Agent";
+        bubble.insertBefore(agentBadgeEl, bubble.firstChild);
+      }
+      if (msg.role === "ai" && msg.insightRun) {
+        var insightBadgeEl = document.createElement("span");
+        insightBadgeEl.className = "insight-badge";
+        insightBadgeEl.textContent = "🔬 NOCO Inside";
+        bubble.insertBefore(insightBadgeEl, bubble.firstChild);
+      }
       if (msg.role === "ai" && msg.topic) {
         var prismBadge = document.createElement("span");
         prismBadge.className = "message-prism-badge";
@@ -2211,10 +4679,15 @@
 
     body.appendChild(bubble);
 
+    if (msg.chatActions && msg.chatActions.length) {
+      bubble.classList.add("message-bubble-has-actions");
+      attachChatActionsToBody(body, msg);
+    }
+
     var actions = msg.type === "image" ? null : buildActions(msg, msgIndex);
     if (actions) body.appendChild(actions);
 
-    if (contentHtml !== "" && msg.role === "ai" && msg.related && msg.related.length && isLatestAiMessage(msgIndex)) {
+    if (contentHtml !== "" && msg.role === "ai" && msg.related && msg.related.length && isLatestAiMessage(msgIndex) && isSuggestionsOn("messages")) {
       var rel = document.createElement("div");
       rel.className = "related-chips";
       rel.setAttribute("aria-label", "Weitere Fragen");
@@ -2236,6 +4709,14 @@
 
   function renderAllMessages() {
     var messages = getMessages();
+    activeMotionMsgId = null;
+    activeMotionMsgEl = null;
+    motionPlaybackStops.forEach(function (stop) {
+      if (typeof stop === "function") {
+        try { stop(); } catch (e) { /* ignore */ }
+      }
+    });
+    motionPlaybackStops = [];
     chatMessages.querySelectorAll(".message").forEach(function (m) { m.remove(); });
     if (messages.length === 0) {
       resetWelcome();
@@ -2264,7 +4745,11 @@
       variant: opts.variant || 0,
       topic: opts.topic || null,
       related: opts.related || null,
-      brief: opts.brief || null
+      chatActions: opts.chatActions || null,
+      brief: opts.brief || null,
+      agentRun: opts.agentRun || false,
+      insightRun: opts.insightRun || false,
+      wikiSource: opts.wikiSource || null
     };
     chat.messages.push(msg);
     chat.updated = Date.now();
@@ -2273,44 +4758,57 @@
 
     var idx = chat.messages.length - 1;
 
-    if (role === "ai" && settings.typewriter && opts.animate) {
+    if (role === "ai" && settings.typewriter && opts.animate && !opts.wikiSource) {
       return appendWithTypewriter(msg, idx);
     }
 
-    chatMessages.appendChild(createMessageEl(msg, idx).el);
-    scrollToBottom();
+    upsertMessageEl(msg, idx, { urgent: true });
+    ensureChatDomSynced();
     return Promise.resolve();
   }
 
   function appendWithTypewriter(msg, idx) {
     var plain = msg.text;
-    var result = createMessageEl(msg, idx, "");
-    var bubble = result.bubble;
+    var mounted = upsertMessageEl(msg, idx);
+    if (!mounted) return Promise.resolve();
+    var bubble = mounted.bubble;
+    var msgEl = mounted.el;
     bubble.classList.add("message-writing");
-    chatMessages.appendChild(result.el);
     scrollToBottom(true);
 
     return new Promise(function (resolve) {
       var tokens = plain.match(/\S+|\s+/g) || [plain];
       var ti = 0;
       var built = "";
-      var baseSpeed = settings.speed === "fast" ? 22 : settings.speed === "slow" ? 52 : 34;
+      var baseSpeed = getTypewriterSpeed();
       function tick() {
         if (ti < tokens.length) {
           built += tokens[ti++];
           bubble.innerHTML = escapeHtml(built).replace(/\n/g, "<br>") + '<span class="write-caret" aria-hidden="true"></span>';
-          scrollToBottom(true);
+          if (ti % 3 === 0) scrollToBottom(false);
           var delay = /^\s+$/.test(tokens[ti - 1]) ? baseSpeed * 0.35 : baseSpeed;
           setTimeout(tick, delay);
         } else {
           bubble.classList.remove("message-writing");
           bubble.innerHTML = renderAiHtml(plain);
-          if (msg.topic) {
-            var prismBadge = document.createElement("span");
-            prismBadge.className = "message-prism-badge";
-            prismBadge.textContent = msg.topic;
-            bubble.insertBefore(prismBadge, bubble.firstChild);
-          }
+      if (msg.agentRun) {
+        var agentBadge = document.createElement("span");
+        agentBadge.className = "agent-badge";
+        agentBadge.textContent = "NOCO Agent";
+        bubble.insertBefore(agentBadge, bubble.firstChild);
+      }
+      if (msg.insightRun) {
+        var insightBadge = document.createElement("span");
+        insightBadge.className = "insight-badge";
+        insightBadge.textContent = "🔬 NOCO Inside";
+        bubble.insertBefore(insightBadge, bubble.firstChild);
+      }
+      if (msg.topic) {
+        var prismBadge = document.createElement("span");
+        prismBadge.className = "message-prism-badge";
+        prismBadge.textContent = msg.topic;
+        bubble.insertBefore(prismBadge, bubble.firstChild);
+      }
           if (msg.brief) {
             bubble.classList.add("message-bubble-brief");
             var briefBtn = document.createElement("button");
@@ -2324,8 +4822,8 @@
           time.className = "message-time";
           time.innerHTML = formatTime(new Date(msg.time));
           bubble.appendChild(time);
-          if (msg.related && msg.related.length && isLatestAiMessage(idx)) {
-            var body = result.el.querySelector(".message-body");
+          if (msg.related && msg.related.length && isLatestAiMessage(idx) && isSuggestionsOn("messages")) {
+            var body = msgEl.querySelector(".message-body");
             body.querySelectorAll(".related-chips").forEach(function (r) { r.remove(); });
             var rel = document.createElement("div");
             rel.className = "related-chips";
@@ -2339,7 +4837,13 @@
             });
             body.appendChild(rel);
           }
+          if (msg.chatActions && msg.chatActions.length) {
+            var twBody = msgEl.querySelector(".message-body");
+            bubble.classList.add("message-bubble-has-actions");
+            attachChatActionsToBody(twBody, msg);
+          }
           scrollToBottom(true);
+          ensureChatDomSynced();
           resolve();
         }
       }
@@ -2351,52 +4855,176 @@
     if (!chatMessages) return;
     function doScroll() {
       chatMessages.scrollTop = chatMessages.scrollHeight;
+      if (!isTyping) updateChatScrollRoll();
     }
-    requestAnimationFrame(function () {
+    if (urgent) {
       doScroll();
       requestAnimationFrame(doScroll);
-    });
-    if (urgent) {
-      setTimeout(doScroll, 60);
-      setTimeout(doScroll, 180);
-      setTimeout(doScroll, 420);
+      return;
     }
+    if (scrollBottomPending) return;
+    scrollBottomPending = true;
+    requestAnimationFrame(function () {
+      scrollBottomPending = false;
+      doScroll();
+    });
+  }
+
+  function updateChatScrollRoll() {
+    if (!chatMessages || isTyping) return;
+    var st = chatMessages.scrollTop;
+    var max = chatMessages.scrollHeight - chatMessages.clientHeight;
+    chatMessages.classList.toggle("is-scrolled", st > 10);
+    chatMessages.classList.toggle("is-at-bottom", st >= max - 20);
+    var fadeH = 80;
+    var containerRect = chatMessages.getBoundingClientRect();
+    var msgs = chatMessages.querySelectorAll(".message");
+    var i, el, rect, dist, t, roll, op, scale;
+    for (i = 0; i < msgs.length; i++) {
+      el = msgs[i];
+      rect = el.getBoundingClientRect();
+      dist = rect.top - containerRect.top;
+      if (dist < fadeH && dist > -rect.height * 0.4) {
+        t = Math.max(0, Math.min(1, dist / fadeH));
+        roll = (1 - t) * 14;
+        op = 0.2 + t * 0.8;
+        scale = 0.92 + t * 0.08;
+        el.style.setProperty("--msg-roll", roll + "deg");
+        el.style.setProperty("--msg-op", String(op));
+        el.style.setProperty("--msg-scale", String(scale));
+        el.classList.add("msg-scroll-fade");
+      } else {
+        el.classList.remove("msg-scroll-fade");
+        el.style.removeProperty("--msg-roll");
+        el.style.removeProperty("--msg-op");
+        el.style.removeProperty("--msg-scale");
+      }
+    }
+  }
+
+  function initChatScrollRoll() {
+    if (!chatMessages) return;
+    var raf = 0;
+    chatMessages.addEventListener("scroll", function () {
+      if (!raf) {
+        raf = requestAnimationFrame(function () {
+          raf = 0;
+          updateChatScrollRoll();
+        });
+      }
+    }, { passive: true });
+    updateChatScrollRoll();
   }
 
   function scrollImageRenderIntoView(wrap) {
     if (!wrap || !chatMessages) return;
+    wrap.classList.add("is-render-anchor");
     requestAnimationFrame(function () {
-      var wrapRect = wrap.getBoundingClientRect();
       var chatRect = chatMessages.getBoundingClientRect();
-      var viewH = chatMessages.clientHeight;
+      var wrapRect = wrap.getBoundingClientRect();
       var relativeTop = wrapRect.top - chatRect.top + chatMessages.scrollTop;
-      var ideal = relativeTop - Math.max(48, (viewH - wrapRect.height) * 0.42);
-      chatMessages.scrollTop = Math.max(0, ideal);
+      var anchorTop = 72;
+      chatMessages.scrollTop = Math.max(0, relativeTop - anchorTop);
     });
   }
 
   /* ── Send / Regenerate ── */
 
-  function setTyping(on) {
+  var WIKI_PHASES = [
+    { p: 0, text: "Nexus-Auto routet…" },
+    { p: 0.18, text: "Wiki-API · Suchbegriff wird formuliert…" },
+    { p: 0.38, text: "Wikipedia wird durchsucht…" },
+    { p: 0.58, text: "Treffer werden bewertet…" },
+    { p: 0.78, text: "Abstract wird geladen…" },
+    { p: 0.9, text: "Antwort wird zusammengestellt…" }
+  ];
+
+  var wikiHudTimer = null;
+
+  function setWikiHudMode(on, label) {
+    document.body.classList.toggle("is-wiki-fetch", !!on);
+    document.body.classList.toggle("is-wiki-fetch-lite", !!on);
+    if (typingIndicator) typingIndicator.classList.toggle("is-wiki-mode", !!on);
+    if (on) pauseLiquidCanvasForBusy();
+    var bar = document.getElementById("typingWikiBar");
+    var fill = document.getElementById("typingWikiFill");
+    if (bar) bar.hidden = !on;
+    if (!on) {
+      if (fill) fill.style.width = "0%";
+      if (wikiHudTimer) { clearInterval(wikiHudTimer); wikiHudTimer = null; }
+      document.body.classList.remove("is-wiki-fetch-lite");
+      resumeLiquidCanvasIfNeeded();
+      return;
+    }
+    if (wikiHudTimer) clearInterval(wikiHudTimer);
+    var start = performance.now();
+    var duration = isExclusiveActive() || isProSelected() ? 520 : 720;
+    var tick = 40;
+    wikiHudTimer = setInterval(function () {
+      if (!isTyping) return;
+      var elapsed = performance.now() - start;
+      var p = Math.min(0.95, elapsed / duration);
+      var phaseText = WIKI_PHASES[0].text;
+      var i;
+      for (i = WIKI_PHASES.length - 1; i >= 0; i--) {
+        if (p >= WIKI_PHASES[i].p) { phaseText = WIKI_PHASES[i].text; break; }
+      }
+      if (typingLabel && (label || phaseText)) {
+        typingLabel.textContent = label || phaseText;
+        typingLabel.classList.add("is-priority");
+      }
+      if (fill) fill.style.width = Math.round(p * 100) + "%";
+    }, tick);
+  }
+
+  function pauseLiquidCanvasForBusy() {
+    liquidPausedForBusy = true;
+  }
+
+  function resumeLiquidCanvasIfNeeded() {
+    liquidPausedForBusy = false;
+  }
+
+  function setTyping(on, customLabel) {
     isTyping = on;
     typingIndicator.hidden = !on;
     sendBtn.disabled = on || !chatInput.value.trim();
+    document.body.classList.toggle("is-chat-busy", on);
+    document.body.classList.toggle("is-nexus-busy", on && getKnowledgeSource() === "auto");
+    if (on) pauseLiquidCanvasForBusy();
+    else {
+      resumeLiquidCanvasIfNeeded();
+      scheduleChatListRefresh(true);
+    }
+    if (!on) setWikiHudMode(false);
     if (typingLabel) {
-      if (on && isExclusiveActive()) {
+      if (on && customLabel) {
+        typingLabel.textContent = customLabel;
+        typingLabel.classList.add("is-priority");
+        typingLabel.classList.remove("is-pro");
+      } else if (on && isProSelected()) {
+        typingLabel.textContent = "NOCO AI Pro 1.0…";
+        typingLabel.classList.add("is-priority", "is-pro");
+      } else if (on && isExclusiveActive()) {
         typingLabel.textContent = "NOCO AI denkt… (Rush " + EXCLUSIVE_SPEED_MS + " ms)";
         typingLabel.classList.add("is-priority");
+        typingLabel.classList.remove("is-pro");
       } else if (on) {
         typingLabel.textContent = "NOCO AI denkt…";
-        typingLabel.classList.remove("is-priority");
+        typingLabel.classList.remove("is-priority", "is-pro");
       } else {
         typingLabel.textContent = "NOCO AI denkt…";
-        typingLabel.classList.remove("is-priority");
+        typingLabel.classList.remove("is-priority", "is-pro");
       }
     }
     if (on) scrollToBottom();
   }
 
   function getDelay() {
+    if (isProSelected()) {
+      var pmap = proSpeedMap;
+      return pmap[settings.speed] || pmap.normal;
+    }
     var ex = isExclusiveActive();
     var map = ex ? exclusiveSpeedMap : speedMap;
     var base = map[settings.speed] || map.normal;
@@ -2405,7 +5033,15 @@
   }
 
   function getDelayJitter() {
+    if (isProSelected()) return Math.random() * 12;
     return isExclusiveActive() ? Math.random() * 50 : Math.random() * 200;
+  }
+
+  function getTypewriterSpeed() {
+    if (isProSelected()) return 8;
+    if (settings.speed === "fast") return 22;
+    if (settings.speed === "slow") return 52;
+    return isExclusiveActive() ? 28 : 34;
   }
 
   function findUserPromptBefore(aiIndex) {
@@ -2841,13 +5477,15 @@
       setChatRenderLock(true);
       var result = opts.result;
       if (!result) {
-        var resolved = NocoPixel.resolveMotif ? NocoPixel.resolveMotif(promptText) : null;
-        if (resolved && !resolved.supported) {
+        var smart = NocoPixel.resolveMotifSmart
+          ? NocoPixel.resolveMotifSmart(promptText, { uniqueId: Date.now() })
+          : null;
+        if (!smart || !smart.supported) {
           isRenderingChatImage = false;
           setChatRenderLock(false);
-          appendMessage("ai", resolved.message || (NocoPixel.buildUnsupportedMessage
-            ? NocoPixel.buildUnsupportedMessage(resolved.subject)
-            : "Dieses Motiv kenne ich noch nicht — probier ein einfaches Wort wie Katze oder Haus."));
+          appendMessage("ai", (smart && smart.message) || (NocoPixel.buildUnsupportedMessage
+            ? NocoPixel.buildUnsupportedMessage(NocoPixel.extractSubject ? NocoPixel.extractSubject(promptText) : promptText)
+            : "Motiv konnte nicht erstellt werden."));
           resolve();
           return;
         }
@@ -2856,21 +5494,22 @@
           size: getPixelSize(),
           style: style,
           random: !!opts.random,
-          allowFallback: false,
-          motifIndex: null,
+          motifIndex: smart.motif.index,
+          allowFallback: true,
           uniqueId: Date.now()
         });
         if (!result) {
           isRenderingChatImage = false;
           setChatRenderLock(false);
-          var subj = resolved && resolved.subject
-            ? resolved.subject
-            : (NocoPixel.extractSubject ? NocoPixel.extractSubject(promptText) : promptText);
           appendMessage("ai", NocoPixel.buildUnsupportedMessage
-            ? NocoPixel.buildUnsupportedMessage(subj)
+            ? NocoPixel.buildUnsupportedMessage(smart.userAsked || promptText)
             : "Dieses Motiv kann NOCO Render gerade nicht erstellen.");
           resolve();
           return;
+        }
+        if (smart.mappingNote) {
+          result._mappingNote = smart.mappingNote;
+          result._userAsked = smart.userAsked;
         }
       }
 
@@ -2883,6 +5522,11 @@
         prompt: result.prompt,
         motifIndex: result.motifIndex,
         motifLabel: result.motifLabel
+      };
+      var resolveInfo = {
+        motifLabel: result.motifLabel,
+        mappingNote: result._mappingNote || "",
+        userAsked: result._userAsked || ""
       };
 
       var msg = {
@@ -2898,8 +5542,13 @@
       saveChats();
 
       var idx = chat.messages.length - 1;
-      var built = createMessageEl(msg, idx, "", true);
-      chatMessages.appendChild(built.el);
+      var built = upsertMessageEl(msg, idx, { renderPending: true, urgent: true });
+      if (!built) {
+        isRenderingChatImage = false;
+        setChatRenderLock(false);
+        resolve();
+        return;
+      }
       setTyping(false);
       var renderWrapEarly = built.el.querySelector(".chat-image-wrap");
       scrollImageRenderIntoView(renderWrapEarly);
@@ -2907,6 +5556,17 @@
 
       var canvas = built.el.querySelector(".chat-image-canvas");
       var scale = getChatImageScale(result.size);
+      var usedProImg = !!opts.usedPro;
+      if (canvas && usedProImg && typeof NocoPixel !== "undefined") {
+        NocoPixel.drawToCanvas(result, canvas, scale);
+        finalizeChatImageDisplay(canvas, result, scale, built.el.querySelector(".chat-image-frame"), built.el.querySelector(".chat-image-progress"));
+        isRenderingChatImage = false;
+        setChatRenderLock(false);
+        if (!opts.skipQuota) incrementImageQuota();
+        ensureChatDomSynced();
+        resolve(resolveInfo);
+        return;
+      }
       if (canvas && !opts.skipAnimate) {
         if (activeChatImageAnimCancel) activeChatImageAnimCancel();
         var ctx = canvas.getContext("2d");
@@ -2936,7 +5596,7 @@
             }
           }
         }
-        var revealMs = getPixelDuration();
+        var revealMs = usedProImg ? 900 : getPixelDuration();
         var renderDone = false;
         function finishChatImageRender() {
           if (renderDone) return;
@@ -2947,7 +5607,8 @@
           isRenderingChatImage = false;
           setChatRenderLock(false);
           if (!opts.skipQuota) incrementImageQuota();
-          resolve();
+          ensureChatDomSynced();
+          resolve(resolveInfo);
         }
         var failsafe = setTimeout(finishChatImageRender, revealMs + 3200);
         try {
@@ -2963,43 +5624,90 @@
         isRenderingChatImage = false;
         setChatRenderLock(false);
         if (!opts.skipQuota) incrementImageQuota();
-        resolve();
+        ensureChatDomSynced();
+        resolve(resolveInfo);
       }
     });
   }
 
   function handleImageChatRequest(text, opts) {
     opts = opts || {};
-    if (!canSendMessage()) {
-      showToast("Tageslimit erreicht — Exclusive oder morgen 0:00");
-      openExclusiveDialog();
-      return;
-    }
-    if (!canGenerateImage()) {
-      showToast("NOCO Render nur mit NOCO Exclusive / Flux.");
-      openExclusiveDialog();
+    switchView("chat");
+    if (typeof NocoPixel === "undefined") {
+      showToast("NOCO Render nicht geladen");
       return;
     }
     if (isChatImageRendering()) {
       showToast("Bild wird noch gerendert — gleich wieder moeglich.");
       return;
     }
+    if (!canSendMessage()) {
+      showToast("Tageslimit erreicht — schreib **exclusive** im Chat");
+      return;
+    }
+    if (!canGenerateImage()) {
+      showToast("Render-Limit heute — Exclusive fuer unbegrenzt.");
+      openExclusiveDialog();
+      return;
+    }
+
+    var smart = NocoPixel.resolveMotifSmart
+      ? NocoPixel.resolveMotifSmart(text, { uniqueId: Date.now() })
+      : null;
+    if (!smart || !smart.supported) {
+      chatFlow = { kind: "image-retry" };
+      askInChat(
+        (smart && smart.message) || "**Welches Motiv soll das Bild zeigen?**\n\nEinfach unten eingeben.",
+        [{ id: "mode-create", label: "Bild-Modus", primary: true }],
+        { topic: "Create" }
+      );
+      setImageMode(true);
+      return;
+    }
+
+    if (!opts.skipClarify && !opts.confirmed && imageNeedsClarify(smart)) {
+      chatFlow = {
+        kind: "image-confirm",
+        text: text,
+        displayText: opts.displayText,
+        resolved: smart,
+        opts: { usedPro: opts.usedPro }
+      };
+      if (!opts.skipUserAppend) appendMessage("user", opts.displayText || text);
+      askInChat(
+        buildMotifConfirmText(smart, "bild"),
+        buildMotifConfirmActions(smart, "bild"),
+        { topic: "Create" }
+      );
+      return;
+    }
+
+    runImageChatGeneration(text, opts);
+  }
+
+  function runImageChatGeneration(text, opts) {
+    opts = opts || {};
+    var usedPro = opts.usedPro !== undefined ? opts.usedPro : consumeProForSend();
     switchView("chat");
     if (!opts.skipUserAppend) appendMessage("user", opts.displayText || text);
     chatInput.value = "";
     chatInput.style.height = "auto";
     sendBtn.disabled = true;
     setTyping(true);
-    if (typingLabel) typingLabel.textContent = isExclusiveActive() ? "NOCO Render zeichnet…" : "NOCO Render startet…";
-    appendImageMessage(text, { skipUserAppend: true }).then(function () {
+    if (typingLabel) typingLabel.textContent = usedPro ? "NOCO Pro Render…" : (isExclusiveActive() ? "NOCO Render zeichnet…" : "NOCO Render startet…");
+    appendImageMessage(text, { skipUserAppend: true, usedPro: usedPro }).then(function (info) {
+      setTyping(false);
       if (typingLabel) typingLabel.textContent = "NOCO AI denkt…";
       incrementQuota();
       updateModelUI();
       if (latencyVal) latencyVal.textContent = getPixelDuration() + " ms";
       var subjLabel = NocoPixel.extractSubject ? NocoPixel.extractSubject(text) : text;
+      var mapHint = info && info.mappingNote
+        ? " · " + escapeHtml(info.userAsked || subjLabel) + " → " + escapeHtml(info.motifLabel || "")
+        : "";
       showToast(
-        "<strong>Bild fertig</strong> — " + escapeHtml(subjLabel || "Motiv") + " · <em>3600 Motive</em>",
-        { rainbow: true, duration: 3200 }
+        "<strong>Bild fertig</strong> — " + escapeHtml((info && info.motifLabel) || subjLabel || "Motiv") + mapHint + " · <em>3600 Motive</em>",
+        { rainbow: true, duration: 3400 }
       );
     });
   }
@@ -3159,6 +5867,265 @@
     updatePixelMeta();
   }
 
+  function isVaultEnabled() {
+    return settings.vaultEnabled !== false;
+  }
+
+  function toggleVaultEnabled(forceOn) {
+    var next = typeof forceOn === "boolean" ? forceOn : !isVaultEnabled();
+    settings.vaultEnabled = next;
+    saveSettings();
+    applySettings();
+    if (!next && getKnowledgeSource() === "noco") {
+      showToast("Vault aus — wähle Wiki oder Nexus-Auto.", { duration: 3200 });
+    } else {
+      showToast(next ? "NOCO Vault aktiv." : "NOCO Vault deaktiviert.", { duration: 2400 });
+    }
+  }
+
+  function updateVaultPowerUI() {
+    var on = isVaultEnabled();
+    var btns = [vaultPowerBtn, vaultPowerBtnMobile];
+    var i;
+    for (i = 0; i < btns.length; i++) {
+      if (!btns[i]) continue;
+      btns[i].classList.toggle("is-on", on);
+      btns[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+    if (knowledgeSourceSwitch) knowledgeSourceSwitch.classList.toggle("vault-off", !on);
+    if (knowledgeSourceMobile) knowledgeSourceMobile.classList.toggle("vault-off", !on);
+  }
+
+  function resolveWikiQueryStrict(text) {
+    var wq = "";
+    if (NocoBrain.extractNexusWikiQuery) wq = NocoBrain.extractNexusWikiQuery(text);
+    if (!wq && NocoBrain.extractWikiQuery) wq = NocoBrain.extractWikiQuery(text);
+    if (wq) return wq;
+    if (NocoBrain.cleanWikiTopic && NocoBrain.prepareUserMessage) {
+      wq = NocoBrain.cleanWikiTopic(NocoBrain.prepareUserMessage(text));
+      if (wq && NocoBrain.isValidWikiQuery && NocoBrain.isValidWikiQuery(wq)) return wq;
+    }
+    wq = String(text || "").trim().replace(/[?!.…]+$/g, "").trim();
+    if (wq.length > 80) wq = wq.slice(0, 80);
+    return wq;
+  }
+
+  function finishKnowledgeError(message, opts, start, topic) {
+    setTyping(false);
+    setWikiHudMode(false);
+    incrementQuota();
+    clearPreviousRelated();
+    appendMessage("ai", message, {
+      animate: true,
+      topic: topic || "System",
+      related: []
+    }).then(function () {
+      if (latencyVal && start) latencyVal.textContent = Math.round(performance.now() - start) + " ms";
+      incrementMsgStats();
+      requestAnimationFrame(function () { updateModelUI(); });
+    });
+  }
+
+  function getKnowledgeSource() {
+    var ks = settings.knowledgeSource;
+    if (ks === "wiki" || ks === "auto") return ks;
+    return "noco";
+  }
+
+  function needsExclusiveKnowledgeSource(src) {
+    return src === "auto";
+  }
+
+  function loadWikiLegalAccepted() {
+    try { return !!localStorage.getItem(WIKI_LEGAL_KEY); } catch (e) { return false; }
+  }
+
+  function saveWikiLegalAccepted() {
+    try { localStorage.setItem(WIKI_LEGAL_KEY, String(Date.now())); } catch (e) { /* */ }
+  }
+
+  function openWikiLegalDialog(onAccept) {
+    wikiLegalPending = onAccept || null;
+    if (!wikiLegalDialog) {
+      if (wikiLegalPending) wikiLegalPending();
+      wikiLegalPending = null;
+      return;
+    }
+    if (typeof wikiLegalDialog.showModal === "function") wikiLegalDialog.showModal();
+    else wikiLegalDialog.setAttribute("open", "");
+  }
+
+  function closeWikiLegalDialog() {
+    wikiLegalPending = null;
+    if (!wikiLegalDialog) return;
+    if (typeof wikiLegalDialog.close === "function") wikiLegalDialog.close();
+    else wikiLegalDialog.removeAttribute("open");
+  }
+
+  function acceptWikiLegalDialog() {
+    saveWikiLegalAccepted();
+    var cb = wikiLegalPending;
+    wikiLegalPending = null;
+    closeWikiLegalDialog();
+    if (cb) cb();
+  }
+
+  function requestWikiMode(onAccept, src) {
+    src = src || "wiki";
+    if (src === "auto" && !canUseAutomation()) {
+      if (!isExclusiveActive()) {
+        showToast("Nexus-Auto Limit heute (" + PLAN_LIMITS.free.nexus + "/Tag) — Nutzung pruefen oder Exclusive", { duration: 3800 });
+      } else {
+        openExclusiveCheckout("trial", { reason: "fusion" });
+      }
+      return;
+    }
+    if (!canUseWikiApi() || !NocoWiki.isOnline()) {
+      showToast("Wiki-API braucht Internet.", { duration: 3200 });
+      return;
+    }
+    if (!isExclusiveActive() && !canUseWikiToday()) {
+      showToast("Wiki-Limit heute erreicht (" + WIKI_FREE_DAILY + "/" + WIKI_FREE_DAILY + ") — NOCO-Wissen oder Exclusive.", { duration: 3600 });
+      return;
+    }
+    if (loadWikiLegalAccepted()) {
+      if (onAccept) onAccept();
+      return;
+    }
+    openWikiLegalDialog(onAccept);
+  }
+
+  function applyKnowledgeSource(src) {
+    settings.knowledgeSource = src === "wiki" ? "wiki" : (src === "auto" ? "auto" : "noco");
+    saveSettings();
+    updateKnowledgeSourceUI();
+    updateInputModeHint();
+    document.body.classList.toggle("wiki-source-active", settings.knowledgeSource === "wiki");
+    document.body.classList.toggle("fusion-source-active", settings.knowledgeSource === "auto");
+  }
+
+  function setKnowledgeSource(src, opts) {
+    opts = opts || {};
+    if (src === "wiki" || src === "auto") {
+      requestWikiMode(function () {
+        applyKnowledgeSource(src);
+        if (src === "auto") {
+          showToast("Nexus-Auto aktiv — " + (isExclusiveActive() ? "unbegrenzt" : "1×/Tag Free"), { duration: 3400 });
+        } else if (isExclusiveActive()) {
+          showToast("Wiki-Modus — nur Wikipedia (kein Vault)", { duration: 3000 });
+        } else {
+          showToast("Wiki-Modus — nur Wikipedia · " + WIKI_FREE_DAILY + "/Tag", { duration: 3400 });
+        }
+      }, src);
+      return;
+    }
+    applyKnowledgeSource("noco");
+    showToast("Offline-Wissen — nur Vault", { duration: 2800 });
+  }
+
+  function updateKnowledgeSourceUI() {
+    var ks = getKnowledgeSource();
+    var groups = [knowledgeSourceSwitch, knowledgeSourceMobile];
+    var g, pills, i, pillKs, on, locked;
+    for (g = 0; g < groups.length; g++) {
+      if (!groups[g]) continue;
+      pills = groups[g].querySelectorAll(".ks-pill");
+      for (i = 0; i < pills.length; i++) {
+        pillKs = pills[i].getAttribute("data-ks");
+        on = pillKs === ks;
+        locked = pillKs === "auto" && !canUseAutomation();
+        pills[i].classList.toggle("is-active", on);
+        pills[i].classList.toggle("is-locked", locked);
+        pills[i].setAttribute("aria-pressed", on ? "true" : "false");
+      }
+    }
+    if (knowledgeSourceSwitch) knowledgeSourceSwitch.classList.toggle("is-fusion-routing", ks === "auto");
+    if (knowledgeSourceMobile) knowledgeSourceMobile.classList.toggle("is-fusion-routing", ks === "auto");
+    if (!canUseAutomation() && ks === "auto") applyKnowledgeSource("noco");
+  }
+
+  function bindKnowledgeSourceSwitch(el) {
+    if (!el) return;
+    el.addEventListener("click", function (e) {
+      var pill = e.target.closest(".ks-pill");
+      if (!pill) return;
+      var ks = pill.getAttribute("data-ks");
+      if (!ks || ks === getKnowledgeSource()) return;
+      if (ks === "auto" && !canUseAutomation()) {
+        if (!isExclusiveActive()) {
+          showToast("Nexus-Auto Limit heute — 1×/Tag", { duration: 3400 });
+          openUsageDialog();
+        } else {
+          openExclusiveCheckout("trial", { reason: "fusion" });
+        }
+        return;
+      }
+      setKnowledgeSource(ks === "noco" ? "noco" : ks);
+    });
+  }
+
+  function shouldSkipWikiForQuery(text, routeInfo) {
+    if (!text || typeof NocoBrain === "undefined") return true;
+    if (isCreativeOrToolPayload(text)) return true;
+    if (NocoBrain.isSmalltalkFast && NocoBrain.isSmalltalkFast(text)) return true;
+    if (!NocoBrain.isSmalltalkFast && NocoBrain.isSmalltalkQuery && NocoBrain.isSmalltalkQuery(text)) return true;
+    if (NocoBrain.isNocoBrandedQuery && NocoBrain.isNocoBrandedQuery(text)) return true;
+    if (NocoBrain.isCapabilitiesQuery && NocoBrain.isCapabilitiesQuery(text)) return true;
+    if (NocoBrain.isBriefQuery && NocoBrain.isBriefQuery(text)) return true;
+    if (NocoBrain.isChatRecallQuery && NocoBrain.isChatRecallQuery(text)) return true;
+    if (routeInfo && routeInfo.route === "wiki" && routeInfo.wikiQuery) return false;
+    if (NocoBrain.extractWikiQuery) {
+      var wq = NocoBrain.extractWikiQuery(text);
+      if (!wq) return true;
+    }
+    return false;
+  }
+
+  function thinkVault(text, brainOpts) {
+    return NocoBrain.think(text, brainOpts);
+  }
+
+  function fetchWikiResult(wikiQuery, originalText, routeInfo) {
+    var q = String(wikiQuery || originalText || "").trim();
+    if (!q) return Promise.reject(new Error("empty"));
+    return NocoWiki.fetchAbstract(q).then(function (data) {
+      var block = NocoWiki.formatAnswer(data, {
+        query: q,
+        route: routeInfo && routeInfo.reason ? routeInfo.reason : "wiki"
+      });
+      return {
+        text: NocoWiki.formatAnswerText ? NocoWiki.formatAnswerText(block) : block.main,
+        wikiSource: block,
+        confidence: 88,
+        topic: "Wikipedia · " + data.title,
+        variants: 1,
+        wikiQuery: q
+      };
+    });
+  }
+
+  function finishAiResponse(text, result, opts, start) {
+    opts = opts || {};
+    setTyping(false);
+    incrementQuota();
+    clearPreviousRelated();
+    var related = (isSuggestionsOn("messages") && NocoBrain.getRelatedQuestions)
+      ? NocoBrain.getRelatedQuestions(text, result.topic) : [];
+    appendMessage("ai", result.text, {
+      animate: true,
+      variant: opts.variant || 0,
+      topic: result.topic,
+      related: related.slice(0, 2),
+      brief: result.brief || null,
+      wikiSource: result.wikiSource || null
+    }).then(function () {
+      if (result.brief) openBriefDialog(result.brief);
+      if (latencyVal) latencyVal.textContent = Math.round(performance.now() - start) + " ms";
+      incrementMsgStats();
+      requestAnimationFrame(function () { updateModelUI(); });
+    });
+  }
+
   function getPreviousAnswers(userIndex, beforeIndex) {
     var messages = getMessages();
     var prev = [];
@@ -3170,34 +6137,208 @@
 
   function respondTo(text, opts) {
     opts = opts || {};
+    var usedPro = consumeProForSend();
     setTyping(true);
     var start = performance.now();
-    var tier = getModelTier();
-    setTimeout(function () {
-      var result = NocoBrain.think(text, {
-        variant: opts.variant || 0,
-        regenerate: !!opts.regenerate,
-        previousAnswers: opts.previousAnswers || [],
-        modelTier: tier.id,
-        chatHistory: getChatHistoryForBrain()
+    var tier = getEffectiveModelTier();
+    if (usedPro) tier = getBrand().models.pro
+      ? { id: "pro", name: getBrand().models.pro.name, tagline: getBrand().models.pro.tagline }
+      : tier;
+
+    var brainOpts = {
+      variant: opts.variant || 0,
+      regenerate: !!opts.regenerate,
+      previousAnswers: opts.previousAnswers || [],
+      modelTier: tier.id,
+      proMode: usedPro,
+      chatHistory: getChatHistoryForBrain()
+    };
+
+    var ks = getKnowledgeSource();
+    var hasWiki = typeof NocoWiki !== "undefined" && NocoWiki.fetchAbstract;
+    var routeInfo = null;
+    var nexusMode = ks === "auto";
+    var vaultDelay = nexusMode ? getNexusVaultDelay() : (getDelay() + getDelayJitter());
+    if (nexusMode && isExclusiveActive()) vaultDelay = Math.min(vaultDelay, isProSelected() ? 30 : 52);
+    var wikiQuery = resolveWikiQueryStrict(text);
+    var wikiLabel = "Wiki-API 1.1 · Wikipedia wird abgerufen…";
+    var routeOpts = { chatHistory: brainOpts.chatHistory, vaultDisabled: !isVaultEnabled() };
+
+    function finishVault() {
+      if (!isVaultEnabled()) {
+        finishKnowledgeError(
+          "**NOCO Vault ist deaktiviert.** Aktiviere Vault (▣) oder wähle **Wiki** / **Nexus-Auto**.",
+          opts, start, "NOCO-Wissen"
+        );
+        return;
+      }
+      setWikiHudMode(false);
+      setTimeout(function () {
+        finishAiResponse(text, thinkVault(text, brainOpts), opts, start);
+      }, vaultDelay);
+    }
+
+    function tryWikiStrict(label, strictMode, presetQuery, altIdx) {
+      if (presetQuery && String(presetQuery).trim()) {
+        wikiQuery = String(presetQuery).trim();
+      } else {
+        wikiQuery = resolveWikiQueryStrict(text);
+      }
+      if (!wikiQuery || !String(wikiQuery).trim()) {
+        if (strictMode) {
+          finishKnowledgeError(
+            "**Wiki-Modus:** Kein Suchbegriff erkannt. Formuliere z. B. *Was ist Einstein?* oder *Berlin*.",
+            opts, start, "Wiki-API 1.1"
+          );
+        } else if (nexusMode && routeInfo && NocoBrain.isNexusVaultRoute && NocoBrain.isNexusVaultRoute(routeInfo)) {
+          finishVault();
+        } else if (nexusMode) {
+          finishKnowledgeError(
+            "**Nexus-Auto:** Kein Wikipedia-Suchbegriff erkannt. Formuliere z. B. *Was ist Einstein?*",
+            opts, start, "Nexus-Auto"
+          );
+        } else {
+          finishVault();
+        }
+        return;
+      }
+      if (!hasWiki || !NocoWiki.isOnline()) {
+        if (strictMode) {
+          finishKnowledgeError(
+            "**Wiki-Modus:** Keine Verbindung zu Wikipedia. Internet prüfen — es wird **nicht** auf NOCO Vault zurückgegriffen.",
+            opts, start, "Wiki-API 1.1"
+          );
+        } else if (nexusMode && routeInfo && routeInfo.route === "wiki") {
+          finishKnowledgeError(
+            "**Nexus-Auto:** Wikipedia offline — **kein** Vault-Fallback bei Wiki-Route.",
+            opts, start, "Nexus-Auto"
+          );
+        } else {
+          showToast("Wiki offline — NOCO-Wissen wird genutzt.", { duration: 2800 });
+          finishVault();
+        }
+        return;
+      }
+      if (!canUseWikiToday()) {
+        if (strictMode) {
+          finishKnowledgeError(
+            "**Wiki-Limit heute erreicht** (" + getPlanLimits().wiki + "/" + getPlanLimits().wiki + "). Morgen 0:00 oder **Exclusive** — **kein** Vault-Fallback im Wiki-Modus.",
+            opts, start, "Wiki-API 1.1"
+          );
+        } else if (nexusMode && routeInfo && routeInfo.route === "wiki") {
+          finishKnowledgeError(
+            "**Nexus-Auto:** Wiki-Limit heute erreicht — Vault-Fallback nur bei Vault-Route.",
+            opts, start, "Nexus-Auto"
+          );
+        } else {
+          showToast("Wiki-Limit heute — NOCO-Wissen antwortet.", { duration: 3200 });
+          finishVault();
+        }
+        return;
+      }
+      var wikiCached = NocoWiki.peekCache && NocoWiki.peekCache(wikiQuery);
+      var wikiDelay = getNexusWikiFetchDelay(wikiCached);
+      setTyping(true, label || wikiLabel);
+      setWikiHudMode(true, label || wikiLabel);
+      fetchWikiResult(wikiQuery, text, routeInfo).then(function (wikiResult) {
+        setWikiHudMode(false);
+        incrementWikiQuota();
+        setTimeout(function () {
+          finishAiResponse(text, wikiResult, opts, start);
+        }, wikiDelay);
+      }).catch(function () {
+        setWikiHudMode(false);
+        if (!strictMode && nexusMode) {
+          var alts = getNexusWikiAltQueries(wikiQuery, text);
+          var nextIdx = altIdx || 0;
+          if (nextIdx < alts.length) {
+            tryWikiStrict(label, false, alts[nextIdx], nextIdx + 1);
+            return;
+          }
+          if (routeInfo && routeInfo.route === "wiki") {
+            finishKnowledgeError(
+              "**Nexus-Auto:** Kein Wikipedia-Treffer für „" + wikiQuery + "“. Kürzeren Begriff versuchen — **ohne** schwachen Vault-Fallback.",
+              opts, start, "Nexus-Auto"
+            );
+            return;
+          }
+        }
+        if (strictMode) {
+          finishKnowledgeError(
+            "**Wiki-Modus:** Kein Wikipedia-Treffer für „" + wikiQuery + "“. Versuche einen kürzeren Begriff — **ohne** Vault-Fallback.",
+            opts, start, "Wiki-API 1.1"
+          );
+        } else if (nexusMode && routeInfo && NocoBrain.isNexusVaultRoute && NocoBrain.isNexusVaultRoute(routeInfo)) {
+          finishVault();
+        } else if (nexusMode) {
+          finishKnowledgeError(
+            "**Nexus-Auto:** Wikipedia ohne Treffer für „" + wikiQuery + "“.",
+            opts, start, "Nexus-Auto"
+          );
+        } else {
+          showToast("Wikipedia ohne Treffer — NOCO Vault antwortet.", { duration: 2800 });
+          finishVault();
+        }
       });
-      setTyping(false);
-      incrementQuota();
-      clearPreviousRelated();
-      var related = NocoBrain.getRelatedQuestions ? NocoBrain.getRelatedQuestions(text, result.topic) : [];
-      appendMessage("ai", result.text, {
-        animate: true,
-        variant: opts.variant || 0,
-        topic: result.topic,
-        related: related.slice(0, 2),
-        brief: result.brief || null
-      }).then(function () {
-        if (result.brief) openBriefDialog(result.brief);
-        if (latencyVal) latencyVal.textContent = Math.round(performance.now() - start) + " ms";
-        incrementMsgStats();
-        updateModelUI();
-      });
-    }, getDelay() + getDelayJitter());
+    }
+
+    if (ks === "noco") {
+      finishVault();
+      return;
+    }
+
+    if (ks === "wiki") {
+      wikiLabel = "Wiki-API 1.1 · „" + wikiQuery + "“…";
+      tryWikiStrict(wikiLabel, true);
+      return;
+    }
+
+    if (ks === "auto" && NocoBrain.resolveKnowledgeRoute) {
+      if (!isExclusiveActive()) {
+        if (loadNexusQuota().used >= PLAN_LIMITS.free.nexus) {
+          finishKnowledgeError(
+            "**Nexus-Auto Limit heute erreicht** (" + PLAN_LIMITS.free.nexus + "/" + PLAN_LIMITS.free.nexus + "). Morgen 0:00 oder **NOCO Exclusive**.",
+            opts, start, "Nexus-Auto"
+          );
+          return;
+        }
+        incrementNexusQuota();
+      }
+      routeInfo = NocoBrain.resolveKnowledgeRoute(text, routeOpts);
+      if (isCreativeOrToolPayload(text)) {
+        finishVault();
+        return;
+      }
+      if (routeInfo.route === "wiki") {
+        wikiQuery = routeInfo.wikiQuery || resolveWikiQueryStrict(text);
+        if (wikiQuery) {
+          wikiLabel = getNexusWikiLabel(routeInfo, wikiQuery);
+          tryWikiStrict(wikiLabel, false, wikiQuery);
+          return;
+        }
+      }
+      if (NocoBrain.isNexusVaultRoute && NocoBrain.isNexusVaultRoute(routeInfo)) {
+        finishVault();
+        return;
+      }
+      wikiQuery = resolveWikiQueryStrict(text);
+      if (wikiQuery) {
+        wikiLabel = getNexusWikiLabel(routeInfo, wikiQuery);
+        tryWikiStrict(wikiLabel, false, wikiQuery);
+        return;
+      }
+      if (routeInfo.confidence >= 70 && routeInfo.route === "vault") {
+        finishVault();
+        return;
+      }
+      finishKnowledgeError(
+        "**Nexus-Auto:** Konnte die Frage nicht sicher zuordnen. Formuliere z. B. *Was ist Photosynthese?* oder frage nach **NOCO**.",
+        opts, start, "Nexus-Auto"
+      );
+      return;
+    }
+
+    finishVault();
   }
 
   function handleSlashCommand(text) {
@@ -3212,17 +6353,19 @@
     if (cmd === "/new") { createChat(true); return true; }
     if (cmd === "/clear") { clearCurrentChat(); return true; }
     if (cmd === "/model") {
-      var tier = getModelTier();
+      var tier = getEffectiveModelTier();
       var q = loadQuota();
       var left = Math.max(0, 20 - q.used);
       if (isExclusiveActive()) {
         appendSystemMessage(
-          "**Plan:** NOCO Exclusive\n**Modell:** " + tier.name + "\n**Rush:** ~90 ms · **Nachrichten:** Unbegrenzt"
+          "**Plan:** NOCO Exclusive\n**Modell:** " + tier.name +
+          (isProSelected() ? "\n**Pro 1.0:** Ultra Rush " + PRO_SPEED_MS + " ms" : "\n**Rush:** ~90 ms") +
+          "\n**Nachrichten:** Unbegrenzt\n\n*Pro 1.0: unten rechts vor jeder Eingabe aktivieren*"
         );
       } else {
         appendSystemMessage(
           "**Plan:** NOCO Access Free\n**Modell:** " + tier.name +
-          "\n**Heute:** " + left + "/20 · Prism bis Msg 10, dann Spark\n**Exclusive:** Flux + Rush + Lens + Render"
+          "\n**Heute:** " + left + "/" + FREE_MSG_DAILY + " · Prism bis Msg " + Math.ceil(FREE_MSG_DAILY / 2) + ", dann Spark\n**Exclusive:** Flux + Rush + Lens + Render"
         );
       }
       return true;
@@ -3247,6 +6390,55 @@
       return true;
     }
     if (cmd === "/topics") { switchView("system"); renderSystemPanel(); return true; }
+    if (cmd === "/agent") {
+      setImageMode(false);
+      setSummaryMode(false);
+      setInsightMode(false);
+      setAgentMode(true);
+      if (arg) {
+        runAgentJob(arg);
+      } else if (chatInput) {
+        chatInput.focus();
+        showToast("Agent aktiv — beschreibe deinen Auftrag unten");
+      }
+      return true;
+    }
+    if (cmd === "/inside" || cmd === "/insight") {
+      setImageMode(false);
+      setSummaryMode(false);
+      setAgentMode(false);
+      setMotionMode(false);
+      setInsightMode(true);
+      if (chatInput) {
+        chatInput.focus();
+        showToast("NOCO Inside — Datei links oder Text einfügen");
+      }
+      return true;
+    }
+    if (cmd === "/motion") {
+      setImageMode(false);
+      setSummaryMode(false);
+      setAgentMode(false);
+      setInsightMode(false);
+      setMotionMode(true);
+      if (arg) {
+        handleMotionRequest(arg);
+      } else if (chatInput) {
+        chatInput.focus();
+        showToast("NOCO Motion — Motiv-Begriff eingeben");
+      }
+      return true;
+    }
+    if (cmd === "/summary") {
+      setAgentMode(false);
+      setImageMode(false);
+      setSummaryMode(true);
+      if (chatInput) {
+        chatInput.focus();
+        showToast("Summary Mode — langen Text einfuegen");
+      }
+      return true;
+    }
     if (cmd === "/pixel" || cmd === "/bild") {
       focusChatImagePrompt();
       return true;
@@ -3268,6 +6460,24 @@
     }
     if (cmd === "/random") {
       fireRandomSpark();
+      return true;
+    }
+    if (cmd === "/wiki") {
+      if (!canUseWikiApi()) {
+        openExclusiveCheckout("trial", { reason: "wiki" });
+        return true;
+      }
+      setKnowledgeSource("wiki");
+      return true;
+    }
+    if (cmd === "/vault") {
+      setKnowledgeSource("noco");
+      appendSystemMessage(
+        "**Wissensquelle:** **NOCO-Wissen** (Standard)\n\n" +
+        "Lokale **NOCO Vault** — fuer NOCO OS, Alltag, Schule & Features.\n" +
+        "Empfohlen & offline verfuegbar.\n\n" +
+        "*Wiki-API 1.0 nur bei Bedarf oben umschalten (Internet + Wikipedia-Lizenz).*"
+      );
       return true;
     }
     if (cmd === "/hub") {
@@ -3351,7 +6561,7 @@
         });
         html += "</ul></section>";
       }
-      if (brief.related && brief.related.length) {
+      if (brief.related && brief.related.length && isSuggestionsOn("messages")) {
         html += '<section class="brief-section"><h3>Verwandte Bereiche</h3><div class="brief-related-row">';
         brief.related.forEach(function (r) {
           html += '<button type="button" class="brief-related-chip" data-prompt="' + escapeHtml(r.query) + '">' + escapeHtml(r.label) + "</button>";
@@ -3460,6 +6670,453 @@
     renderAllMessages();
   }
 
+  function getLastAiMessageIndex() {
+    var messages = getMessages();
+    var i;
+    for (i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "ai" && messages[i].type !== "image") return i;
+    }
+    return -1;
+  }
+
+  function handleAnswerAdjust(mode, sourceIndex) {
+    if (isTyping || agentRunning || !mode) return;
+    if (!canSendMessage()) {
+      showToast("Tageslimit erreicht");
+      openExclusiveDialog();
+      return;
+    }
+    var messages = getMessages();
+    var idx = sourceIndex >= 0 ? sourceIndex : getLastAiMessageIndex();
+    var aiMsg = messages[idx];
+    if (!aiMsg || aiMsg.role !== "ai" || aiMsg.type === "image") {
+      showToast("Keine Antwort zum Anpassen");
+      return;
+    }
+    if (!NocoBrain.adjustAnswerText) {
+      showToast("Anpassen nicht verfuegbar");
+      return;
+    }
+    var labels = { longer: "Bitte laenger", shorter: "Bitte kuerzer", ontopic: "Mehr zum Thema" };
+    var topics = { longer: "Ausfuehrlich", shorter: "Kurz", ontopic: "Fokus" };
+    appendMessage("user", labels[mode] || "Anpassen");
+    setTyping(true);
+    setTimeout(function () {
+      var adjusted = NocoBrain.adjustAnswerText(aiMsg.text, mode);
+      setTyping(false);
+      incrementQuota();
+      appendMessage("ai", adjusted, { animate: true, topic: topics[mode] || "Angepasst", related: [] });
+      var toasts = { longer: "Ausfuehrlichere Version", shorter: "3 Kernpunkte", ontopic: "Fokus aufs Thema" };
+      showToast(toasts[mode] || "Angepasst");
+    }, getDelay() * 0.45);
+  }
+
+  function resetAgentConsole() {
+    if (agentSteps) agentSteps.innerHTML = "";
+    if (agentInterim) agentInterim.innerHTML = "";
+    if (agentProgressFill) agentProgressFill.style.width = "0%";
+    if (agentConsole) agentConsole.hidden = true;
+    if (agentConsoleTitle) agentConsoleTitle.textContent = "Agent arbeitet…";
+  }
+
+  function renderAgentSteps(blocks) {
+    if (!agentSteps) return;
+    agentSteps.innerHTML = "";
+    (blocks || []).forEach(function (block, i) {
+      var li = document.createElement("li");
+      li.className = "agent-step";
+      li.setAttribute("data-step", i);
+      li.innerHTML = '<span class="agent-step-dot"></span><span>' + escapeHtml(block.title || block.id) + "</span>";
+      agentSteps.appendChild(li);
+    });
+  }
+
+  function setAgentStepActive(index) {
+    if (!agentSteps) return;
+    agentSteps.querySelectorAll(".agent-step").forEach(function (el, i) {
+      el.classList.toggle("is-active", i === index);
+      el.classList.toggle("is-done", i < index);
+    });
+  }
+
+  function showAgentWorkStrip(phase) {
+    if (!agentWorkStrip) return;
+    agentWorkStrip.hidden = false;
+    var order = { analyze: 0, create: 1, optimize: 2, finalize: 3 };
+    var phaseOrder = order[phase] != null ? order[phase] : -1;
+    agentWorkStrip.querySelectorAll(".aws-phase").forEach(function (el) {
+      var p = el.getAttribute("data-aws-phase");
+      var po = order[p] != null ? order[p] : 99;
+      el.classList.toggle("is-active", p === phase);
+      el.classList.toggle("is-done", po < phaseOrder);
+    });
+  }
+
+  function hideAgentWorkStrip() {
+    if (agentWorkStrip) agentWorkStrip.hidden = true;
+  }
+
+  function removeAgentLivePanel() {
+    if (agentLiveRoot && agentLiveRoot.parentNode) agentLiveRoot.parentNode.removeChild(agentLiveRoot);
+    agentLiveRoot = null;
+    document.body.classList.remove("is-agent-running");
+    hideAgentWorkStrip();
+  }
+
+  function scrollAgentLiveIntoView(el) {
+    if (!el || !chatMessages) return;
+    requestAnimationFrame(function () {
+      var chatRect = chatMessages.getBoundingClientRect();
+      var elRect = el.getBoundingClientRect();
+      var elCenter = elRect.top - chatRect.top + chatMessages.scrollTop + elRect.height * 0.5;
+      chatMessages.scrollTop = Math.max(0, elCenter - chatRect.height * 0.42);
+    });
+  }
+
+  function createAgentLivePanel(task, goal, blocks) {
+    removeAgentLivePanel();
+    hideWelcome();
+    var wrap = document.createElement("div");
+    wrap.className = "message system agent-live-msg";
+    var body = document.createElement("div");
+    body.className = "message-body";
+    var card = document.createElement("div");
+    card.className = "agent-chat-live";
+    card.innerHTML =
+      '<div class="agent-chat-live-glow" aria-hidden="true"></div>' +
+      '<div class="agent-scan-line" aria-hidden="true"></div>' +
+      '<header class="agent-chat-live-head">' +
+        '<span class="agent-chat-live-icon">' + (task.icon || "⚡") + "</span>" +
+        "<div><strong class=\"agent-chat-live-title\">NOCO Agent</strong>" +
+        '<span class="agent-chat-live-sub">' + escapeHtml(task.title) + "</span></div>" +
+        '<span class="agent-chat-live-pct" data-agent-pct>0%</span>' +
+      "</header>" +
+      '<div class="agent-live-controls">' +
+        '<button type="button" class="agent-ctrl-btn agent-ctrl-stop" data-agent-stop title="Agent stoppen">⛔ Stop</button>' +
+        '<button type="button" class="agent-ctrl-btn" data-agent-skip title="Zu Ergebnis springen">⚡ Skip</button>' +
+        '<button type="button" class="agent-ctrl-btn" data-agent-plan title="Vollen Plan zeigen">🧠 Plan</button>' +
+        '<button type="button" class="agent-ctrl-btn" data-agent-simplify hidden title="Ergebnis vereinfachen">📉 Simplify</button>' +
+      "</div>" +
+      '<p class="agent-live-status is-pulse" data-agent-status>🧠 Agent gestartet…</p>' +
+      '<div class="agent-block-feed" data-agent-feed></div>' +
+      '<div class="agent-tool-feed" data-agent-tools></div>' +
+      '<div class="agent-chat-live-bar"><span data-agent-bar></span></div>' +
+      '<p class="agent-chat-live-footer" data-agent-footer hidden>Nexus-Auto-Routing abgeschlossen</p>';
+    body.appendChild(card);
+    wrap.appendChild(body);
+    chatMessages.appendChild(wrap);
+    agentLiveRoot = wrap;
+
+    card.querySelector("[data-agent-stop]").addEventListener("click", stopAgentJob);
+    card.querySelector("[data-agent-skip]").addEventListener("click", skipAgentJob);
+    card.querySelector("[data-agent-plan]").addEventListener("click", showAgentFullPlan);
+    card.querySelector("[data-agent-simplify]").addEventListener("click", simplifyAgentResult);
+
+    document.body.classList.add("is-agent-running");
+    showAgentWorkStrip("analyze");
+    scrollAgentLiveIntoView(wrap);
+    return card;
+  }
+
+  function getAgentLiveCard() {
+    return agentLiveRoot ? agentLiveRoot.querySelector(".agent-chat-live") : null;
+  }
+
+  function ensureAgentBlockEl(card, block) {
+    var feed = card.querySelector("[data-agent-feed]");
+    var id = "block-" + block.id;
+    var existing = feed.querySelector('[data-block-id="' + block.id + '"]');
+    if (existing) return existing;
+    var el = document.createElement("div");
+    el.className = "agent-action-block is-entering";
+    el.setAttribute("data-block-id", block.id);
+    el.innerHTML =
+      '<header class="aab-head">' +
+        '<span class="aab-icon">' + block.icon + "</span>" +
+        '<span class="aab-title">' + escapeHtml(block.title) + "</span>" +
+        '<span class="aab-step" data-aab-step></span>' +
+      "</header>" +
+      '<ul class="aab-ticks"></ul>';
+    feed.appendChild(el);
+    requestAnimationFrame(function () { el.classList.remove("is-entering"); });
+    scrollAgentLiveIntoView(agentLiveRoot);
+    return el;
+  }
+
+  function appendAgentTool(card, tool) {
+    var feed = card.querySelector("[data-agent-tools]");
+    if (!feed) return;
+    var pill = document.createElement("div");
+    pill.className = "agent-tool-pill is-entering";
+    pill.innerHTML = '<span class="atp-icon">🧰</span><span class="atp-name">Tool: ' + escapeHtml(tool.name) + "</span>" +
+      '<span class="atp-action">' + escapeHtml(tool.action) + "</span>";
+    feed.appendChild(pill);
+    requestAnimationFrame(function () { pill.classList.remove("is-entering"); });
+    if (feed.children.length > 4) feed.removeChild(feed.firstChild);
+  }
+
+  function handleAgentEvent(info) {
+    var card = getAgentLiveCard();
+    if (!card) return;
+    var ev = info.event;
+    var block = ev.block;
+    var progress = Math.round((info.progress || 0) * 100);
+    var pct = card.querySelector("[data-agent-pct]");
+    var bar = card.querySelector("[data-agent-bar]");
+    var status = card.querySelector("[data-agent-status]");
+
+    if (pct) pct.textContent = progress + "%";
+    if (bar) bar.style.width = progress + "%";
+    if (agentProgressFill) agentProgressFill.style.width = progress + "%";
+
+    if (ev.type === "block_start" && block) {
+      showAgentWorkStrip(block.workPhase || "analyze");
+      setAgentStepActive(ev.blockIndex);
+      var blockEl = ensureAgentBlockEl(card, block);
+      var stepLbl = blockEl.querySelector("[data-aab-step]");
+      if (stepLbl) stepLbl.textContent = "Schritt " + (ev.blockIndex + 1) + "/" + ev.blockTotal;
+      if (status) status.textContent = block.icon + " " + block.title + "…";
+      if (typingLabel) typingLabel.textContent = block.title + "…";
+    }
+
+    if (ev.type === "tool" && ev.tool) {
+      appendAgentTool(card, ev.tool);
+      if (status) status.textContent = "🧰 Tool: " + ev.tool.name + " — " + ev.tool.action;
+      if (typingLabel) typingLabel.textContent = "Tool: " + ev.tool.name;
+    }
+
+    if (ev.type === "tick" && block) {
+      var blockEl = ensureAgentBlockEl(card, block);
+      var ul = blockEl.querySelector(".aab-ticks");
+      var li = document.createElement("li");
+      li.className = "aab-tick is-entering";
+      li.textContent = "→ " + ev.text;
+      ul.appendChild(li);
+      requestAnimationFrame(function () { li.classList.remove("is-entering"); });
+      if (status) status.textContent = "→ " + ev.text;
+      if (typingLabel) typingLabel.textContent = ev.text;
+      scrollAgentLiveIntoView(agentLiveRoot);
+    }
+
+    if (ev.type === "block_done" && block) {
+      var doneEl = card.querySelector('[data-block-id="' + block.id + '"]');
+      if (doneEl) doneEl.classList.add("is-done");
+    }
+  }
+
+  function finishAgentLivePanel() {
+    var card = getAgentLiveCard();
+    if (!card) return;
+    card.classList.add("is-done");
+    var pct = card.querySelector("[data-agent-pct]");
+    var bar = card.querySelector("[data-agent-bar]");
+    var footer = card.querySelector("[data-agent-footer]");
+    var status = card.querySelector("[data-agent-status]");
+    var simplifyBtn = card.querySelector("[data-agent-simplify]");
+    if (pct) pct.textContent = "100%";
+    if (bar) bar.style.width = "100%";
+    if (status) {
+      status.textContent = "🏁 Finales Ergebnis wird gestreamt…";
+      status.classList.remove("is-pulse");
+    }
+    if (footer) footer.hidden = false;
+    if (simplifyBtn) simplifyBtn.hidden = false;
+    showAgentWorkStrip("finalize");
+    card.querySelectorAll(".agent-action-block").forEach(function (el) { el.classList.add("is-done"); });
+  }
+
+  function stopAgentJob() {
+    if (!agentRunning) return;
+    if (agentSession && !agentSession.cancelled) {
+      agentSession.stop();
+      return;
+    }
+  }
+
+  function finalizeAgentCancel() {
+    agentRunning = false;
+    agentSession = null;
+    setTyping(false);
+    if (agentRunBtn) agentRunBtn.disabled = false;
+    var card = getAgentLiveCard();
+    if (card) {
+      card.classList.add("is-stopped");
+      var status = card.querySelector("[data-agent-status]");
+      if (status) status.textContent = "⛔ Agent gestoppt";
+    }
+    hideAgentWorkStrip();
+    document.body.classList.remove("is-agent-running");
+    showToast("Agent gestoppt");
+  }
+
+  function skipAgentJob() {
+    if (!agentRunning || !agentSession) return;
+    agentSession.skip();
+    showToast("Springe zum Ergebnis…");
+  }
+
+  function showAgentFullPlan() {
+    var plan = (agentSession && agentSession.fullPlan) || agentLastFullPlan;
+    if (!plan) {
+      showToast("Kein Plan verfuegbar");
+      return;
+    }
+    appendSystemMessage(plan);
+    scrollToBottom(true);
+  }
+
+  function simplifyAgentResult() {
+    if (!agentLastResult || !NocoBrain.adjustAnswerText) return;
+    var shortText = NocoBrain.adjustAnswerText(agentLastResult, "shorter");
+    appendMessage("ai", shortText, { animate: true, topic: "Kurz", related: [], agentRun: true });
+    showToast("Vereinfachte Version");
+  }
+
+  function streamAgentFinalText(text, opts) {
+    opts = opts || {};
+    var streamDelay = opts.pro ? 110 : 480;
+    return new Promise(function (resolve) {
+      hideWelcome();
+      var chat = getActiveChat();
+      if (!chat) { resolve(); return; }
+
+      var msg = {
+        id: uid(),
+        role: "ai",
+        text: "",
+        time: Date.now(),
+        feedback: null,
+        agentRun: true
+      };
+      chat.messages.push(msg);
+      chat.updated = Date.now();
+      saveChats();
+      var idx = chat.messages.length - 1;
+      var built = upsertMessageEl(msg, idx);
+      if (!built) { resolve(); return; }
+      var bubble = built.el.querySelector(".message-bubble");
+      setTyping(true);
+      if (typingLabel) typingLabel.textContent = "Ergebnis wird gestreamt…";
+
+      var parts = String(text || "").split(/\n\n+/).filter(function (p) { return p.trim(); });
+      var pi = 0;
+      var builtText = "";
+
+      function pushPart() {
+        if (pi >= parts.length) {
+          msg.text = text;
+          saveChats();
+          bubble.classList.remove("message-writing");
+          bubble.innerHTML = renderAiHtml(text);
+          var badge = document.createElement("span");
+          badge.className = "agent-badge";
+          badge.textContent = "NOCO Agent";
+          bubble.insertBefore(badge, bubble.firstChild);
+          setTyping(false);
+          if (typingLabel) typingLabel.textContent = "NOCO AI denkt…";
+          scrollToBottom(true);
+          ensureChatDomSynced();
+          resolve();
+          return;
+        }
+        builtText += (pi > 0 ? "\n\n" : "") + parts[pi];
+        bubble.classList.add("message-writing");
+        bubble.innerHTML = renderAiHtml(builtText) + '<span class="write-caret" aria-hidden="true"></span>';
+        pi++;
+        scrollToBottom(true);
+        setTimeout(pushPart, streamDelay);
+      }
+      setTimeout(pushPart, opts.pro ? 80 : 320);
+    });
+  }
+
+  function runAgentJob(promptText, opts) {
+    opts = opts || {};
+    if (typeof NocoAgent === "undefined" || agentRunning) return;
+    promptText = (promptText || "").trim();
+    if (!promptText) {
+      showToast("Beschreibe deinen Agent-Auftrag");
+      return;
+    }
+    if (!canSendMessage()) {
+      showToast("Tageslimit erreicht");
+      openExclusiveDialog();
+      return;
+    }
+    if (isChatImageRendering()) {
+      showToast("NOCO Render laeuft — bitte warten");
+      return;
+    }
+
+    var usedPro = consumeProForSend();
+    agentRunning = true;
+    agentLastResult = "";
+    var liveCard = null;
+    switchView("chat");
+    if (!opts.skipUserAppend) appendMessage("user", "Agent: " + promptText);
+
+    agentSession = NocoAgent.runTask(promptText, {
+      totalMs: usedPro ? 10000 : (NocoAgent.TOTAL_MS || 60000),
+      onStart: function (task, goal, blocks, fullPlan) {
+        agentLastFullPlan = fullPlan || "";
+        if (agentSession) agentSession.fullPlan = fullPlan;
+        renderAgentSteps(blocks);
+        setTyping(true);
+        if (typingLabel) typingLabel.textContent = usedPro ? "NOCO Agent Pro…" : "NOCO Agent gestartet…";
+        showToast(usedPro ? "Agent Pro — Ultra Rush" : "Agent arbeitet — Live Execution", { duration: 2800 });
+        liveCard = createAgentLivePanel(task, goal, blocks);
+      },
+      onEvent: function (info) {
+        handleAgentEvent(info);
+      },
+      onCancel: function () {
+        finalizeAgentCancel();
+      },
+      onDone: function (result) {
+        var finalText = result.text;
+        if (result.useBrain && typeof NocoBrain !== "undefined") {
+          var brainFn = NocoBrain.composeAgentDeliverable || NocoBrain.think;
+          var brain = brainFn(promptText, {
+            modelTier: usedPro ? "pro" : "flux",
+            agentMode: true,
+            proMode: usedPro,
+            chatHistory: getChatHistoryForBrain(),
+            goal: result.goal,
+            agentTaskType: result.task.id
+          });
+          finalText = brain.text;
+        }
+        agentLastResult = finalText;
+        agentLastFullPlan = result.fullPlan || agentLastFullPlan;
+        setAgentStepActive((result.blocks || []).length);
+        finishAgentLivePanel();
+        incrementQuota();
+        streamAgentFinalText(finalText, { topic: "NOCO Agent", pro: usedPro }).then(function () {
+          agentRunning = false;
+          agentSession = null;
+          showToast("Agent fertig — " + result.task.title, { rainbow: true, duration: 3200 });
+
+          if (result.imagePrompt && canGenerateImage()) {
+            setTimeout(function () {
+              var card = getAgentLiveCard();
+              var status = card && card.querySelector("[data-agent-status]");
+              if (status) status.textContent = "🎨 Tool: Bildgenerator — Logo wird gerendert…";
+              appendAgentTool(card, { name: "Bildgenerator", action: "Logo-Render gestartet" });
+              handleImageChatRequest(result.imagePrompt, {
+                skipUserAppend: true,
+                displayText: "Agent-Bild: " + (result.goal || "Motiv"),
+                usedPro: false
+              });
+            }, usedPro ? 300 : 900);
+          } else if (result.imagePrompt && !canGenerateImage()) {
+            appendSystemMessage("*Tipp:* Fuer Logo/Bild-Render brauchst du **NOCO Exclusive**.");
+          }
+          setTimeout(hideAgentWorkStrip, 2400);
+        });
+      }
+    });
+  }
+
   function simplifyMessage(aiIndex) {
     if (isTyping) return;
     if (!canSendMessage()) {
@@ -3513,6 +7170,10 @@
   }
 
   function renderGlowPrism() {
+    if (!isFeatureEnabled("glow") || !isSuggestionsOn("input")) {
+      hideGlowPrism();
+      return;
+    }
     if (!nocoGlowPrism || !chatInput || typeof NocoBrain === "undefined" || !NocoBrain.getGlowPrism) return;
     var val = chatInput.value;
     if (val.charAt(0) === "/" || !val.trim() || val.trim().length < 2) {
@@ -3534,21 +7195,7 @@
       if (glowPrismMeter) {
         glowPrismMeter.style.setProperty("--glow-fill", Math.min(100, data.confidence) + "%");
       }
-      if (glowPrismChips) {
-        glowPrismChips.innerHTML = "";
-        (data.related || []).slice(0, 2).forEach(function (q) {
-          var chip = document.createElement("button");
-          chip.type = "button";
-          chip.className = "glow-prism-chip";
-          chip.setAttribute("data-prompt", q);
-          chip.textContent = q.length > 42 ? q.slice(0, 40) + "…" : q;
-          chip.addEventListener("mousedown", function (e) {
-            e.preventDefault();
-            sendMessage(q);
-          });
-          glowPrismChips.appendChild(chip);
-        });
-      }
+      if (glowPrismChips) glowPrismChips.innerHTML = "";
       nocoGlowPrism.hidden = false;
     }, 110);
   }
@@ -3562,6 +7209,10 @@
   }
 
   function renderWriteAssist() {
+    if (!isSuggestionsOn("input")) {
+      hideWriteAssist();
+      return;
+    }
     if (!writeAssist || !writeAssistList || !chatInput || typeof NocoBrain === "undefined") return;
     var val = chatInput.value;
     if (val.charAt(0) === "/" || !val.trim() || val.trim().length < 2) {
@@ -3636,22 +7287,140 @@
       }
     }
 
+    if (NocoBrain.detectAnswerAdjust && !agentModeActive && text.charAt(0) !== "/") {
+      var adjustMode = NocoBrain.detectAnswerAdjust(text);
+      if (adjustMode && getLastAiMessageIndex() >= 0) {
+        chatInput.value = "";
+        autoResizeInput();
+        handleAnswerAdjust(adjustMode);
+        return;
+      }
+    }
+
     if (imageModeActive && text.charAt(0) !== "/") {
       if (!canSendMessage()) {
-        showToast("Tageslimit 20/20 — Exclusive fuer unbegrenzt oder ab 0:00 neu.");
+        showToast("Tageslimit " + FREE_MSG_DAILY + "/" + FREE_MSG_DAILY + " — Exclusive oder Reset 0:00.");
         openExclusiveDialog();
         return;
       }
       if (!canGenerateImage()) {
-        showToast("NOCO Render nur mit NOCO Exclusive / Flux.");
+        showToast("Render-Limit heute — Exclusive fuer unbegrenzt.");
         openExclusiveDialog();
         return;
       }
-      var imgQuery = typeof NocoPixel !== "undefined" && NocoPixel.formatImagePrompt
+      var imgQueryEarly = typeof NocoPixel !== "undefined" && NocoPixel.formatImagePrompt
         ? NocoPixel.formatImagePrompt(text)
         : ("Mach ein Bild von " + text);
-      handleImageChatRequest(imgQuery, Object.assign({}, opts, { displayText: text }));
-      setImageMode(false);
+      handleImageChatRequest(imgQueryEarly, Object.assign({}, opts, { displayText: text }));
+      return;
+    }
+
+    if (motionModeActive && text.charAt(0) !== "/") {
+      handleMotionRequest(text, { displayText: text });
+      return;
+    }
+
+    if (text.charAt(0) !== "/" && typeof NocoPixel !== "undefined") {
+      if (NocoPixel.isMotionRequest && NocoPixel.isMotionRequest(text)) {
+        handleMotionRequest(text, { displayText: text });
+        return;
+      }
+      if (NocoPixel.isImageRequest && NocoPixel.isImageRequest(text)) {
+        handleImageChatRequest(text, Object.assign({}, opts, { displayText: text }));
+        return;
+      }
+    }
+
+    if (agentModeActive && text.charAt(0) !== "/") {
+      if (!canSendMessage()) {
+        showToast("Tageslimit erreicht");
+        openExclusiveDialog();
+        return;
+      }
+      runAgentJob(text, { skipUserAppend: false });
+      chatInput.value = "";
+      chatInput.style.height = "auto";
+      sendBtn.disabled = true;
+      return;
+    }
+
+    if (summaryModeActive && text.charAt(0) !== "/") {
+      if (!canSendMessage()) {
+        showToast("Tageslimit erreicht");
+        openExclusiveDialog();
+        return;
+      }
+      var usedProSum = consumeProForSend();
+      switchView("chat");
+      appendMessage("user", "Summary: " + (text.length > 80 ? text.slice(0, 80) + "…" : text));
+      chatInput.value = "";
+      chatInput.style.height = "auto";
+      sendBtn.disabled = true;
+      setTyping(true);
+      setTimeout(function () {
+        var sumResult = NocoBrain.summarizeText
+          ? NocoBrain.summarizeText(text, { modelTier: usedProSum ? "pro" : getModelTier().id, proMode: usedProSum })
+          : { text: text.slice(0, 200), topic: "Summary" };
+        setTyping(false);
+        incrementQuota();
+        appendMessage("ai", sumResult.text, { animate: true, topic: "Summary", related: [] });
+        showToast("Summary fertig — 5 Stichpunkte");
+        setSummaryMode(false);
+      }, (usedProSum ? 40 : getDelay()) + getDelayJitter());
+      return;
+    }
+
+    if (insightModeActive && text.charAt(0) !== "/") {
+      if (typeof NocoInsight === "undefined") {
+        showToast("NOCO Insight nicht geladen");
+        return;
+      }
+      if (!canSendMessage()) {
+        showToast("Tageslimit erreicht");
+        openExclusiveDialog();
+        return;
+      }
+      switchView("chat");
+      chatInput.value = "";
+      chatInput.style.height = "auto";
+      sendBtn.disabled = true;
+
+      if (insightCategory === "ask") {
+        if (insightPayload) {
+          runInsightAnalysis(insightPayload, "ask", text);
+        } else {
+          var askKind = NocoInsight.guessFileKind("eingabe.txt", "", text);
+          insightPayload = { kind: askKind, name: "Eingabe", text: text };
+          updateInsightFileBadge("Eingabe");
+          runInsightAnalysis(insightPayload, askKind === "code" ? "code" : "document");
+        }
+        return;
+      }
+
+      if (insightCategory === "image" && !insightPayload) {
+        sendBtn.disabled = false;
+        chatFlow = { kind: "inside-needs-file" };
+        askInChat(
+          "**Bildanalyse braucht eine Datei.**\n\nLade ein Bild hoch oder analysiere Text stattdessen:",
+          [
+            { id: "inside-file-hint", label: "Bild waehlen", primary: true },
+            { id: "inside-paste", label: "Text einfuegen" }
+          ],
+          { topic: "Inside" }
+        );
+        return;
+      }
+
+      var pasteKind = NocoInsight.guessFileKind("eingabe.txt", "", text);
+      var pastePayload = { kind: pasteKind, name: "Eingabe", text: text };
+      insightPayload = pastePayload;
+      updateInsightFileBadge("Eingabe");
+      runInsightAnalysis(pastePayload, insightCategory);
+      return;
+    }
+
+    if (typeof NocoPixel !== "undefined" && NocoPixel.isMotionRequest && NocoPixel.isMotionRequest(text)) {
+      handleMotionRequest(text, { displayText: text });
       return;
     }
 
@@ -3662,8 +7431,14 @@
 
     var queryText = resolveQueryText(text);
     if (queryText !== text && text.split(/\s+/).filter(Boolean).length <= 4 &&
-        !(typeof NocoPixel !== "undefined" && NocoPixel.isImageRequest(queryText))) {
+        !(typeof NocoPixel !== "undefined" && NocoPixel.isImageRequest && NocoPixel.isImageRequest(queryText)) &&
+        !(typeof NocoPixel !== "undefined" && NocoPixel.isMotionRequest && NocoPixel.isMotionRequest(queryText))) {
       showToast("Verstanden: " + (queryText.length > 48 ? queryText.slice(0, 48) + "…" : queryText));
+    }
+
+    if (typeof NocoPixel !== "undefined" && NocoPixel.isMotionRequest && NocoPixel.isMotionRequest(queryText)) {
+      handleMotionRequest(queryText, { displayText: text });
+      return;
     }
 
     if (typeof NocoPixel !== "undefined" && NocoPixel.isImageRequest(queryText)) {
@@ -3672,7 +7447,7 @@
     }
 
     if (!canSendMessage()) {
-      showToast("Tageslimit 20/20 — Exclusive fuer unbegrenzt oder ab 0:00 neu.");
+      showToast("Tageslimit " + FREE_MSG_DAILY + "/" + FREE_MSG_DAILY + " — Nutzung pruefen oder Exclusive.");
       openExclusiveDialog();
       return;
     }
@@ -3800,38 +7575,12 @@
   }
 
   function activateExclusivePlan(planType) {
-    var ex = { active: true, plan: planType, since: Date.now() };
-    if (planType === "trial") {
-      ex.until = Date.now() + 86400000;
-      ex.label = "Testphase 1 Tag";
-    } else {
-      var months = parseInt(planType, 10) || 1;
-      ex.until = Date.now() + months * 30 * 86400000;
-      ex.label = months + " Monat(e)";
-    }
-    saveExclusive(ex);
-    if (exclusiveDialog && exclusiveDialog.open) {
-      exclusiveDialog.classList.add("is-purchasing");
-      exclusiveDialog.classList.remove("is-closing");
-      window.setTimeout(function () {
-        exclusiveDialog.classList.remove("is-purchasing", "is-closing");
-        exclusiveDialog.close();
-      }, 420);
-    }
-    playRainbowBurst(exclusiveTopBtn || exclusiveCard, { count: 56, duration: 2800 });
-    document.body.classList.add("exclusive-activated");
-    setTimeout(function () { document.body.classList.remove("exclusive-activated"); }, 1400);
-    showToast(
-      "<strong>NOCO Exclusive aktiv</strong> — Flux + Rush ~90 ms · " + escapeHtml(ex.label),
-      { rainbow: true, duration: 3400 }
-    );
-    updateModelUI();
-    updateExclusiveStats();
+    openExclusiveCheckout(planType);
   }
 
   /* ── Message Actions Delegation ── */
 
-  chatMessages.addEventListener("click", function (e) {
+  if (chatMessages) chatMessages.addEventListener("click", function (e) {
     var termBtn = e.target.closest(".term-link");
     if (termBtn) {
       e.preventDefault();
@@ -3850,17 +7599,41 @@
       saveChatImage(imgSave.getAttribute("data-msg-id") || imgSave.getAttribute("data-msg-index"));
       return;
     }
+    var motionCopy = e.target.closest(".chat-motion-copy");
+    if (motionCopy) {
+      copyChatMotion(motionCopy.getAttribute("data-msg-id"));
+      return;
+    }
+    var motionSave = e.target.closest(".chat-motion-save");
+    if (motionSave) {
+      saveChatMotion(motionSave.getAttribute("data-msg-id"));
+      return;
+    }
+    var chatActionBtn = e.target.closest("[data-chat-action]");
+    if (chatActionBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleChatAction(
+        chatActionBtn.getAttribute("data-chat-action"),
+        chatActionBtn.getAttribute("data-chat-payload")
+      );
+      return;
+    }
+
     var imgStudio = e.target.closest(".chat-img-studio");
     if (imgStudio) {
       var studioMsg = getMessageById(imgStudio.getAttribute("data-msg-id"));
       if (studioMsg && studioMsg.image) {
         var studioResult = resolveChatImage(studioMsg);
-        if (studioResult) {
-          lastPixelResult = studioResult;
-          if (pixelPrompt && studioResult.prompt) pixelPrompt.value = studioResult.prompt;
+        if (studioResult && studioResult.prompt) {
+          setImageMode(true);
+          chatInput.value = studioResult.prompt;
+          autoResizeInput();
+          sendBtn.disabled = !chatInput.value.trim();
+          chatInput.focus();
+          showToast("Prompt im Chat — Enter zum Neuzeichnen");
         }
       }
-      openPixelStudio(studioResult && studioResult.prompt ? studioResult.prompt : "");
       return;
     }
 
@@ -3928,19 +7701,19 @@
   function closeExclusiveDialog(opts) {
     opts = opts || {};
     if (!exclusiveDialog || !exclusiveDialog.open) return;
-    if (!opts.skipBurst) {
-      var burstAnchor = closeExclusive || exclusiveTopBtn;
-      playRainbowBurst(burstAnchor, { count: 40, duration: 2400 });
+    if (opts.instant) {
+      exclusiveDialog.classList.remove("is-closing", "is-purchasing");
+      exclusiveDialog.close();
+      return;
     }
     exclusiveDialog.classList.add("is-closing");
     exclusiveDialog.classList.remove("is-purchasing");
     window.setTimeout(function () {
       exclusiveDialog.classList.remove("is-closing");
       exclusiveDialog.close();
-    }, 380);
+    }, 320);
   }
 
-  if (exclusiveCard) exclusiveCard.addEventListener("click", openExclusiveDialog);
   if (exclusiveTopBtn) exclusiveTopBtn.addEventListener("click", openExclusiveDialog);
   var navImageBtn = document.getElementById("navImageBtn");
   var navDetectBtn = document.getElementById("navDetectBtn");
@@ -3956,14 +7729,150 @@
     closeOverlayMenus();
     triggerImageDetectPicker();
   });
-  if (chatImageBtn) {
-    chatImageBtn.addEventListener("click", function () {
-      if (imageModeActive) {
-        setImageMode(false);
-        chatInput.focus();
+  if (chatAgentBtn) {
+    chatAgentBtn.addEventListener("click", function () {
+      if (isChatImageRendering()) {
+        showToast("NOCO Render laeuft — bitte warten");
         return;
       }
-      focusChatImagePrompt();
+      setImageMode(false);
+      setSummaryMode(false);
+      setInsightMode(false);
+      setMotionMode(false);
+      setAgentMode(!agentModeActive);
+      if (agentModeActive) {
+        showToast("Agent aktiv — frag alles im Eingabefeld");
+        if (chatInput) chatInput.focus();
+      }
+    });
+  }
+
+  if (chatInsightBtn) {
+    chatInsightBtn.addEventListener("click", function () {
+      if (isChatImageRendering()) {
+        showToast("NOCO Render laeuft — bitte warten");
+        return;
+      }
+      setMotionMode(false);
+      if (insightModeActive) {
+        setInsightMode(false);
+        if (chatInput) chatInput.focus();
+      } else {
+        activateInsideModeInChat();
+      }
+    });
+  }
+
+  if (nocoMotionBtn) {
+    nocoMotionBtn.addEventListener("click", function () {
+      if (isChatImageRendering()) {
+        showToast("Render laeuft — bitte warten");
+        return;
+      }
+      if (motionModeActive) {
+        setMotionMode(false);
+        if (chatInput) chatInput.focus();
+      } else {
+        activateMotionModeInChat();
+      }
+    });
+  }
+
+  if (motionChips) {
+    motionChips.addEventListener("click", function (e) {
+      var chip = e.target.closest("[data-motion-fill]");
+      if (!chip) return;
+      if (!motionModeActive) setMotionMode(true);
+      var fill = chip.getAttribute("data-motion-fill");
+      var prompt = "Erstelle ein Video von " + fill;
+      handleMotionRequest(prompt, { displayText: prompt, skipClarify: true, confirmed: true });
+    });
+  }
+
+  if (motionTheatreCopy) {
+    motionTheatreCopy.addEventListener("click", function () {
+      if (lastMotionExportMeta) copyMotionMeta(lastMotionExportMeta);
+      else showToast("Noch kein Motion-Render");
+    });
+  }
+  if (motionTheatreSave) {
+    motionTheatreSave.addEventListener("click", function () {
+      if (lastMotionExportMeta) saveMotionMeta(lastMotionExportMeta);
+      else showToast("Noch kein Motion-Render");
+    });
+  }
+
+  if (insightFileBtn) {
+    insightFileBtn.addEventListener("click", function () {
+      if (!insightModeActive) setInsightMode(true);
+      triggerInsightFilePicker();
+    });
+  }
+
+  if (insightFileInput) {
+    insightFileInput.addEventListener("change", function () {
+      var file = insightFileInput.files && insightFileInput.files[0];
+      insightFileInput.value = "";
+      if (file) handleInsightFile(file);
+    });
+  }
+
+  if (insightCategories) {
+    insightCategories.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-insight-cat]");
+      if (!btn) return;
+      var cat = btn.getAttribute("data-insight-cat");
+      setInsightCategory(cat);
+      if (!insightPayload) return;
+      if (cat === "ask") {
+        if (chatInput) {
+          chatInput.focus();
+          showToast("Stelle eine Frage zum geladenen Inhalt");
+        }
+        return;
+      }
+      if (!canSendMessage()) {
+        showToast("Tageslimit erreicht");
+        return;
+      }
+      runInsightAnalysis(insightPayload, cat);
+    });
+  }
+
+  if (insightVoiceBtn) {
+    insightVoiceBtn.addEventListener("click", toggleInsightVoice);
+  }
+
+  if (proModeBtn) {
+    proModeBtn.addEventListener("click", function () {
+      toggleProMode();
+    });
+  }
+
+  if (knowledgeSourceSwitch) bindKnowledgeSourceSwitch(knowledgeSourceSwitch);
+  if (knowledgeSourceMobile) bindKnowledgeSourceSwitch(knowledgeSourceMobile);
+
+  if (wikiLegalAcceptBtn) wikiLegalAcceptBtn.addEventListener("click", acceptWikiLegalDialog);
+  if (wikiLegalCancelBtn) {
+    wikiLegalCancelBtn.addEventListener("click", function () {
+      applyKnowledgeSource("noco");
+      closeWikiLegalDialog();
+    });
+  }
+  if (closeWikiLegal) closeWikiLegal.addEventListener("click", closeWikiLegalDialog);
+
+  if (chatImageBtn) {
+    chatImageBtn.addEventListener("click", function () {
+      setAgentMode(false);
+      setSummaryMode(false);
+      setInsightMode(false);
+      setMotionMode(false);
+      if (imageModeActive) {
+        setImageMode(false);
+        if (chatInput) chatInput.focus();
+        return;
+      }
+      activateImageModeInChat();
     });
   }
   if (inputSuggestionsRefresh) {
@@ -4115,13 +8024,63 @@
   document.querySelectorAll(".exclusive-plan").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var plan = btn.getAttribute("data-plan");
-      var label = btn.querySelector(".plan-name");
-      var name = label ? label.textContent : plan;
-      if (confirm("NOCO Exclusive starten: " + name + "?\n\nAlles simuliert — kein echtes Geld.")) {
-        activateExclusivePlan(plan);
-      }
+      activateExclusivePlan(plan);
     });
   });
+
+  var closeExclusiveCheckout = document.getElementById("closeExclusiveCheckout");
+  if (closeExclusiveCheckout) closeExclusiveCheckout.addEventListener("click", closeExclusiveCheckoutDialog);
+  if (exclusiveCheckoutDialog) {
+    exclusiveCheckoutDialog.addEventListener("click", function (e) {
+      if (e.target === exclusiveCheckoutDialog) closeExclusiveCheckoutDialog();
+    });
+  }
+  var exCheckoutToPayment = document.getElementById("exCheckoutToPayment");
+  if (exCheckoutToPayment) exCheckoutToPayment.addEventListener("click", function () { setCheckoutPanel("payment"); });
+  var exCheckoutBackPayment = document.getElementById("exCheckoutBackPayment");
+  if (exCheckoutBackPayment) exCheckoutBackPayment.addEventListener("click", function () { setCheckoutPanel("plan"); });
+  var exCheckoutToConfirm = document.getElementById("exCheckoutToConfirm");
+  if (exCheckoutToConfirm) exCheckoutToConfirm.addEventListener("click", function () {
+    updateCheckoutSummaryPay();
+    setCheckoutPanel("confirm");
+  });
+  var exCheckoutBackConfirm = document.getElementById("exCheckoutBackConfirm");
+  if (exCheckoutBackConfirm) exCheckoutBackConfirm.addEventListener("click", function () { setCheckoutPanel("payment"); });
+  if (exCheckoutAgree) {
+    exCheckoutAgree.addEventListener("change", function () {
+      if (exCheckoutPayBtn) exCheckoutPayBtn.disabled = !exCheckoutAgree.checked;
+    });
+  }
+  if (exCheckoutPayBtn) exCheckoutPayBtn.addEventListener("click", completeExclusiveCheckout);
+  var exCheckoutDoneBtn = document.getElementById("exCheckoutDoneBtn");
+  if (exCheckoutDoneBtn) {
+    exCheckoutDoneBtn.addEventListener("click", function () {
+      closeExclusiveCheckoutDialog();
+      if (checkoutState.reason === "wiki" && canUseWikiApi()) {
+        setKnowledgeSource("wiki");
+      }
+      showToast("<strong>Willkommen bei NOCO Exclusive</strong>", { rainbow: true, duration: 3000 });
+    });
+  }
+  document.querySelectorAll(".ex-pay-method").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var method = btn.getAttribute("data-pay-method");
+      checkoutState.payMethod = method;
+      document.querySelectorAll(".ex-pay-method").forEach(function (m) {
+        m.classList.toggle("is-active", m.getAttribute("data-pay-method") === method);
+      });
+      var cardForm = document.getElementById("exPayCardForm");
+      if (cardForm) cardForm.hidden = method !== "card";
+      updateCheckoutSummaryPay();
+    });
+  });
+  if (exclusiveManageChangeBtn) {
+    exclusiveManageChangeBtn.addEventListener("click", function () {
+      if (exclusiveSubscribeBlock) exclusiveSubscribeBlock.hidden = false;
+      if (exclusiveManagePanel) exclusiveManagePanel.hidden = true;
+    });
+  }
+  if (exclusiveManageCancelBtn) exclusiveManageCancelBtn.addEventListener("click", cancelExclusiveSubscription);
 
   if (closeBrief && briefDialog) {
     closeBrief.addEventListener("click", function () { briefDialog.close(); });
@@ -4159,49 +8118,46 @@
   /* ── Input ── */
 
   function autoResizeInput() {
+    if (!chatInput) return;
     chatInput.style.height = "auto";
     chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
-    sendBtn.disabled = !canSendMessage() || isTyping || !chatInput.value.trim();
+    if (sendBtn) sendBtn.disabled = !canSendMessage() || isTyping || !chatInput.value.trim();
     if (commandPalette) {
       commandPalette.hidden = chatInput.value.trim().charAt(0) !== "/";
     }
-    if (!chatInput.value.trim()) {
-      renderInputSuggestions();
-    } else {
-      hideInputSuggestions();
-    }
-    renderWriteAssist();
+    hideInputSuggestions();
     renderGlowPrism();
   }
 
-  chatInput.addEventListener("input", autoResizeInput);
+  if (chatInput) {
+    chatInput.addEventListener("input", autoResizeInput);
+    chatInput.addEventListener("focus", function () {
+      setInputFocusState(true);
+      hideInputSuggestions();
+    });
+    chatInput.addEventListener("blur", function () {
+      setInputFocusState(false);
+      setTimeout(function () {
+        hideWriteAssist();
+        hideGlowPrism();
+      }, 180);
+    });
+    chatInput.addEventListener("keydown", function (e) {
+      if (writeAssist && !writeAssist.hidden && writeAssistItems.length) {
+        if (e.key === "ArrowDown") { e.preventDefault(); highlightWriteAssist(1); return; }
+        if (e.key === "ArrowUp") { e.preventDefault(); highlightWriteAssist(-1); return; }
+        if (e.key === "Tab" && !e.shiftKey) {
+          if (acceptWriteAssistSelection()) { e.preventDefault(); return; }
+        }
+        if (e.key === "Escape") { hideWriteAssist(); return; }
+      }
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(chatInput.value); }
+    });
+  }
   function setInputFocusState(on) {
     document.body.classList.toggle("input-focused", on);
     if (inputGlass) inputGlass.classList.toggle("is-focused", on);
   }
-
-  chatInput.addEventListener("focus", function () {
-    setInputFocusState(true);
-    if (!chatInput.value.trim()) renderInputSuggestions();
-  });
-  chatInput.addEventListener("blur", function () {
-    setInputFocusState(false);
-    setTimeout(function () {
-      hideWriteAssist();
-      hideGlowPrism();
-    }, 180);
-  });
-  chatInput.addEventListener("keydown", function (e) {
-    if (writeAssist && !writeAssist.hidden && writeAssistItems.length) {
-      if (e.key === "ArrowDown") { e.preventDefault(); highlightWriteAssist(1); return; }
-      if (e.key === "ArrowUp") { e.preventDefault(); highlightWriteAssist(-1); return; }
-      if (e.key === "Tab" && !e.shiftKey) {
-        if (acceptWriteAssistSelection()) { e.preventDefault(); return; }
-      }
-      if (e.key === "Escape") { hideWriteAssist(); return; }
-    }
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(chatInput.value); }
-  });
 
   if (quickWrite) {
     quickWrite.addEventListener("click", function (e) {
@@ -4222,10 +8178,12 @@
       }
     });
   }
-  chatForm.addEventListener("submit", function (e) { e.preventDefault(); sendMessage(chatInput.value); });
+  if (chatForm && chatInput) {
+    chatForm.addEventListener("submit", function (e) { e.preventDefault(); sendMessage(chatInput.value); });
+  }
 
   if (promptChips) promptChips.addEventListener("click", function (e) {
-    var chip = e.target.closest(".chip");
+    var chip = e.target.closest(".spark-list-item, .chip");
     if (!chip) return;
     if (!canSendMessage()) {
       showToast("Tageslimit erreicht — Exclusive oder morgen 0:00");
@@ -4292,7 +8250,7 @@
   if (planDiscoverBtn) planDiscoverBtn.addEventListener("click", function (e) {
     e.stopPropagation();
     closeOverlayMenus();
-    openDiscoverDialog();
+    openHubInChat();
   });
   var chatToolsImageBtn = document.getElementById("chatToolsImageBtn");
   if (chatToolsImageBtn) {
@@ -4307,7 +8265,7 @@
     openPixelStudioBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       closeOverlayMenus();
-      openPixelStudio();
+      activateImageModeInChat();
     });
   }
   var pixelGoChatBtn = document.getElementById("pixelGoChatBtn");
@@ -4317,9 +8275,19 @@
       focusChatImagePrompt();
     });
   }
-  if (discoverHintBtn) discoverHintBtn.addEventListener("click", openDiscoverDialog);
+  if (discoverHintBtn) discoverHintBtn.addEventListener("click", openHubInChat);
   if (discoverHintClose) discoverHintClose.addEventListener("click", markGuideSeen);
   if (nfbClose) nfbClose.addEventListener("click", dismissFeatureBanner);
+  var nfdClose = document.getElementById("nfdClose");
+  if (nfdClose) nfdClose.addEventListener("click", dismissFeatureBanner);
+  var nfdCtaBtn = document.getElementById("nfdCtaBtn");
+  if (nfdCtaBtn) nfdCtaBtn.addEventListener("click", dismissFeatureBanner);
+  if (nocoFeatureDialog) {
+    nocoFeatureDialog.addEventListener("cancel", function (e) { e.preventDefault(); });
+    nocoFeatureDialog.addEventListener("click", function (e) {
+      if (e.target === nocoFeatureDialog) e.preventDefault();
+    });
+  }
   if (closeDiscover && discoverDialog) {
     closeDiscover.addEventListener("click", function () {
       markGuideSeen();
@@ -4415,46 +8383,13 @@
     if (e.key === "Escape") closeOverlayMenus();
   });
 
-  var shortcutsBar = document.querySelector(".input-shortcuts-clean");
-  if (shortcutsBar) {
-    shortcutsBar.addEventListener("click", function (e) {
-      var btn = e.target.closest("[data-shortcut]");
-      if (!btn || !shortcutsBar.contains(btn)) return;
-      if (isChatImageRendering()) {
-        showToast("NOCO Render laeuft — bitte warten…");
-        return;
-      }
-      var sc = btn.getAttribute("data-shortcut");
-      if (sc === "hub") openDiscoverDialog("overview");
-      else if (sc === "brief") handleQuickAction("brief");
-      else if (sc === "glow") handleQuickAction("glow");
-      else if (sc === "echo") handleQuickAction("echo");
-      else if (sc === "image") focusChatImagePrompt();
-      else if (sc === "detect") triggerImageDetectPicker();
-      else if (sc === "new" && newChatBtn) newChatBtn.click();
-      else if (sc === "help") {
-        if (chatInput) {
-          chatInput.value = "/help";
-          chatInput.focus();
-          autoResizeInput();
-        }
-      }
-    });
-  }
-
-  if (sidebarHubBtn) {
-    sidebarHubBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      openDiscoverDialog("overview");
-    });
-  }
   var sparksMoreBtn = document.getElementById("sparksMoreBtn");
   if (sparksMoreBtn) {
     sparksMoreBtn.addEventListener("click", function () {
       openDiscoverDialog("sparks");
     });
   }
-  if (hubOpenDialogBtn) hubOpenDialogBtn.addEventListener("click", function () { openDiscoverDialog("overview"); });
+  if (hubOpenDialogBtn) hubOpenDialogBtn.addEventListener("click", openHubInChat);
 
   if (featureTipAction) {
     featureTipAction.addEventListener("click", function () {
@@ -4478,6 +8413,14 @@
     sparkSearch.addEventListener("input", function () {
       sparkSearchQuery = sparkSearch.value;
       renderPromptChips();
+    });
+  }
+  var sparksRefreshBtn = document.getElementById("sparksRefreshBtn");
+  if (sparksRefreshBtn) {
+    sparksRefreshBtn.addEventListener("click", function () {
+      sparksShuffleSeed += 1;
+      renderPromptChips();
+      showToast("Neue Sparks-Auswahl", { duration: 1800 });
     });
   }
 
@@ -4561,9 +8504,11 @@
 
   /* ── Settings ── */
 
-  settingsBtn.addEventListener("click", handleSettingsClick);
-  closeSettings.addEventListener("click", function () { settingsDialog.close(); });
-  settingsDialog.addEventListener("click", function (e) { if (e.target === settingsDialog) settingsDialog.close(); });
+  if (settingsBtn) settingsBtn.addEventListener("click", handleSettingsClick);
+  if (closeSettings && settingsDialog) {
+    closeSettings.addEventListener("click", function () { settingsDialog.close(); });
+    settingsDialog.addEventListener("click", function (e) { if (e.target === settingsDialog) settingsDialog.close(); });
+  }
 
   fillTosText(tosFullText);
   fillTosText(settingsTosText);
@@ -4600,6 +8545,88 @@
   if (glassSelect) glassSelect.addEventListener("change", function () { settings.glass = glassSelect.value; saveSettings(); applySettings(); });
   if (compactToggle) compactToggle.addEventListener("change", function () { settings.compact = compactToggle.checked; saveSettings(); applySettings(); });
   if (soundToggle) soundToggle.addEventListener("change", function () { settings.sound = soundToggle.checked; saveSettings(); });
+  if (vaultEnabledToggle) vaultEnabledToggle.addEventListener("change", function () {
+    settings.vaultEnabled = vaultEnabledToggle.checked;
+    saveSettings();
+    applySettings();
+  });
+  if (suggestionsMessagesToggle) suggestionsMessagesToggle.addEventListener("change", function () {
+    settings.suggestionsMessages = suggestionsMessagesToggle.checked;
+    saveSettings();
+    applySettings();
+    if (!isSuggestionsOn("messages")) clearPreviousRelated();
+    renderWelcomeChips();
+    renderInputSuggestions();
+  });
+  if (suggestionsInputToggle) suggestionsInputToggle.addEventListener("change", function () {
+    settings.suggestionsInput = suggestionsInputToggle.checked;
+    saveSettings();
+    applySettings();
+    if (!isSuggestionsOn("input")) { hideWriteAssist(); hideGlowPrism(); hideInputSuggestions(); }
+    else { renderInputSuggestions(); }
+  });
+  if (suggestionsWelcomeToggle) suggestionsWelcomeToggle.addEventListener("change", function () {
+    settings.suggestionsWelcome = suggestionsWelcomeToggle.checked;
+    saveSettings();
+    applySettings();
+    renderWelcomeChips();
+  });
+  if (suggestionsSparksToggle) suggestionsSparksToggle.addEventListener("change", function () {
+    settings.suggestionsSparks = suggestionsSparksToggle.checked;
+    saveSettings();
+    applySettings();
+    renderPromptChips();
+  });
+  if (suggestionsAllToggle) suggestionsAllToggle.addEventListener("change", function () {
+    settings.suggestionsAll = suggestionsAllToggle.checked;
+    saveSettings();
+    applySettings();
+    if (!isSuggestionsOn("messages")) clearPreviousRelated();
+    if (!isSuggestionsOn("input")) { hideWriteAssist(); hideGlowPrism(); hideInputSuggestions(); }
+    renderWelcomeChips();
+    renderInputSuggestions();
+    renderPromptChips();
+  });
+  function bindFeatureToggle(el, key) {
+    if (!el) return;
+    el.addEventListener("change", function () {
+      settings[key] = el.checked;
+      saveSettings();
+      applySettings();
+    });
+  }
+  bindFeatureToggle(cleanModeToggle, "cleanMode");
+  bindFeatureToggle(featureGlowToggle, "featureGlow");
+  bindFeatureToggle(featureEchoToggle, "featureEcho");
+  bindFeatureToggle(featureMotionToggle, "featureMotion");
+  bindFeatureToggle(featureAgentToggle, "featureAgent");
+  bindFeatureToggle(featureInsideToggle, "featureInside");
+  bindFeatureToggle(featureBriefToggle, "featureBrief");
+  bindFeatureToggle(featureSummaryToggle, "featureSummary");
+  bindFeatureToggle(featureLensToggle, "featureLens");
+  if (settingsQuotaResetBtn) settingsQuotaResetBtn.addEventListener("click", resetAllDailyQuotas);
+  var settingsOpenUsageBtn = document.getElementById("settingsOpenUsageBtn");
+  if (settingsOpenUsageBtn) settingsOpenUsageBtn.addEventListener("click", function () {
+    if (settingsDialog) settingsDialog.close();
+    openUsageDialog();
+  });
+  if (usageBtn) usageBtn.addEventListener("click", openUsageDialog);
+  if (closeUsage && usageDialog) closeUsage.addEventListener("click", function () { usageDialog.close(); });
+  if (usageResetBtn) usageResetBtn.addEventListener("click", resetAllDailyQuotas);
+  var usageUpgradeBtn = document.getElementById("usageUpgradeBtn");
+  if (usageUpgradeBtn) usageUpgradeBtn.addEventListener("click", function () {
+    if (usageDialog) usageDialog.close();
+    openExclusiveDialog();
+  });
+  function bindVaultPowerBtn(btn) {
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      toggleVaultEnabled();
+    });
+  }
+  bindVaultPowerBtn(vaultPowerBtn);
+  bindVaultPowerBtn(vaultPowerBtnMobile);
 
   if (chatSearch) {
     chatSearch.addEventListener("input", function () {
@@ -4719,7 +8746,8 @@
     }
 
     resize();
-    for (var i = 0; i < 7; i++) blobs.push(createBlob(i));
+    var blobCount = isExclusiveActive() ? 6 : 4;
+    for (var i = 0; i < blobCount; i++) blobs.push(createBlob(i));
 
     var resizeTimer;
     window.addEventListener("resize", function () {
@@ -4728,7 +8756,10 @@
     });
 
     function draw(time) {
-      if (!settings.animations) return;
+      if (!settings.animations || isTyping || liquidPausedForBusy) {
+        animFrameId = requestAnimationFrame(draw);
+        return;
+      }
       var w = window.innerWidth;
       var h = window.innerHeight;
       ctx.clearRect(0, 0, w, h);
@@ -4773,8 +8804,10 @@
       btn.textContent = label;
       sparkFilterTabs.appendChild(btn);
     }
-    addTab("recommended", "Empfohlen");
-    groups.forEach(function (g) { addTab(g.title, g.title); });
+    addTab("recommended", "Empfohlen · " + RECOMMENDED_SPARKS.length);
+    groups.forEach(function (g) {
+      addTab(g.title, g.title + " · " + g.items.length);
+    });
   }
 
   function renderHubSparkTabs() {
@@ -4831,7 +8864,7 @@
     }
   }
 
-  var SPARKS_SIDEBAR_LIMIT = 8;
+  var SPARKS_SIDEBAR_LIMIT = 12;
 
   function collectSparkPool() {
     var pool = [];
@@ -4861,39 +8894,77 @@
     return shuffled.slice(0, limit);
   }
 
+  function getRecommendedSidebarSparks() {
+    if (!sparksShuffleSeed) {
+      return RECOMMENDED_SPARKS.map(function (item) {
+        return { item: item, icon: "✦" };
+      });
+    }
+    return pickRandomSparks(SPARKS_SIDEBAR_LIMIT);
+  }
+
+  function updateSparksMeta(count, filterLabel) {
+    if (sparksCountLabel) {
+      sparksCountLabel.textContent = count + " Spark" + (count === 1 ? "" : "s") + " · " + filterLabel;
+    }
+  }
+
   function renderPromptChips() {
     if (!promptChips || typeof NocoBrain === "undefined" || !NocoBrain.getPromptGroups) return;
+    if (!isSuggestionsOn("sparks")) {
+      promptChips.innerHTML = "";
+      if (sparksCountLabel) sparksCountLabel.textContent = "Sparks deaktiviert — Einstellungen";
+      return;
+    }
     var groups = NocoBrain.getPromptGroups();
     var query = (sparkSearchQuery || "").toLowerCase().trim();
     promptChips.innerHTML = "";
     var count = 0;
-    var useRandom = !query && sparkFilterId === "recommended";
+    var filterLabel = "Empfohlen";
+    var activeGroup = null;
 
-    function addChip(item, icon) {
+    if (sparkCategoryHead) {
+      sparkCategoryHead.hidden = true;
+      sparkCategoryHead.textContent = "";
+    }
+
+    function addListItem(item, icon, category) {
       if (query && item.toLowerCase().indexOf(query) === -1) return;
       var btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "chip";
+      btn.className = "spark-list-item";
       btn.setAttribute("data-prompt", item);
-      var label = item.length > 42 ? item.slice(0, 40) + "…" : item;
-      btn.innerHTML = '<span class="chip-icon">' + icon + "</span>" + escapeHtml(label);
       btn.title = item;
+      btn.innerHTML =
+        '<span class="spark-list-icon" aria-hidden="true">' + icon + "</span>" +
+        '<span class="spark-list-text">' + escapeHtml(item) + "</span>" +
+        (category ? '<span class="spark-list-cat">' + escapeHtml(category) + "</span>" : "");
       promptChips.appendChild(btn);
       count++;
     }
 
-    if (useRandom) {
-      pickRandomSparks(SPARKS_SIDEBAR_LIMIT).forEach(function (s) {
-        addChip(s.item, s.icon);
-      });
-    } else if (sparkFilterId === "recommended") {
-      RECOMMENDED_SPARKS.forEach(function (item) { addChip(item, "✦"); });
+    if (sparkFilterId === "recommended") {
+      if (!query) {
+        getRecommendedSidebarSparks().forEach(function (s) {
+          addListItem(s.item, s.icon, "");
+        });
+      } else {
+        collectSparkPool().forEach(function (s) {
+          if (count >= 24) return;
+          addListItem(s.item, s.icon, "");
+        });
+      }
     } else {
       groups.forEach(function (group) {
         if (sparkFilterId !== group.title) return;
+        activeGroup = group;
+        filterLabel = group.title;
+        if (sparkCategoryHead) {
+          sparkCategoryHead.hidden = false;
+          sparkCategoryHead.innerHTML = '<span class="spark-cat-icon">' + group.icon + "</span> " + escapeHtml(group.title);
+        }
         group.items.forEach(function (item) {
-          if (count >= SPARKS_SIDEBAR_LIMIT && !query) return;
-          addChip(item, group.icon);
+          addListItem(item, group.icon, "");
         });
       });
     }
@@ -4901,52 +8972,172 @@
     if (!count) {
       var empty = document.createElement("p");
       empty.className = "spark-empty";
-      empty.textContent = query ? "Keine Treffer — Suche anpassen" : "Keine Sparks";
+      empty.textContent = query ? "Keine Treffer — Suche anpassen" : "Keine Sparks in dieser Kategorie";
       promptChips.appendChild(empty);
     }
+
+    updateSparksMeta(count, filterLabel);
+  }
+
+  /* ── Feature Hover Tips ── */
+
+  function initFeatureTooltips() {
+    var hints = typeof NocoBrain !== "undefined" && NocoBrain.getFeatureHints
+      ? NocoBrain.getFeatureHints()
+      : {};
+    var map = [
+      { sel: "#nocoAgentBtn", key: "agent" },
+      { sel: "#nocoCreateBtn", key: "create" },
+      { sel: "#nocoInsideBtn", key: "inside" },
+      { sel: "#nocoMotionBtn", key: "motion" },
+      { sel: "#insightFileBtn", key: "file" },
+      { sel: "[data-shortcut='hub']", key: "hub" },
+      { sel: "[data-shortcut='image']", key: "image" },
+      { sel: "[data-shortcut='summary']", key: "summary" },
+      { sel: "[data-shortcut='brief']", key: "brief" },
+      { sel: "[data-shortcut='glow']", key: "glow" },
+      { sel: "[data-shortcut='echo']", key: "echo" },
+      { sel: "[data-shortcut='detect']", key: "lens" },
+      { sel: "[data-shortcut='motion']", key: "motion" },
+      { sel: "[data-shortcut='inside']", key: "inside" },
+      { sel: "[data-shortcut='insight']", key: "inside" },
+      { sel: "[data-shortcut='agent']", key: "agent" },
+      { sel: "[data-shortcut='help']", key: "help" },
+      { sel: "[data-shortcut='new']", key: "new" }
+    ];
+    map.forEach(function (entry) {
+      var tip = hints[entry.key] || (hints.brand && hints.brand[entry.key]) || "";
+      if (!tip) return;
+      document.querySelectorAll(entry.sel).forEach(function (el) {
+        el.setAttribute("data-feature-tip", tip);
+        el.setAttribute("title", tip);
+        el.setAttribute("aria-description", tip);
+      });
+    });
   }
 
   /* ── Init ── */
 
-  var NOCO_BUILD = "4.1.2";
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = src;
+      s.charset = "UTF-8";
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error("load failed: " + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function loadBrainModule() {
+    if (typeof NocoBrain !== "undefined") return Promise.resolve();
+    return loadScript("js/brain.js?v=" + NOCO_BUILD);
+  }
+
+  var NOCO_BUILD = "5.2.44";
+
+  function initAppCore() {
+    if (!settings.knowledgeSource) settings.knowledgeSource = "noco";
+    if (settings.vaultEnabled === undefined) settings.vaultEnabled = true;
+    if (settings.suggestionsAll === undefined) settings.suggestionsAll = true;
+    if (settings.suggestionsMessages === undefined) settings.suggestionsMessages = true;
+    if (settings.suggestionsInput === undefined) settings.suggestionsInput = true;
+    if (settings.suggestionsWelcome === undefined) settings.suggestionsWelcome = true;
+    if (settings.suggestionsSparks === undefined) settings.suggestionsSparks = true;
+    if (settings.cleanMode === undefined) settings.cleanMode = false;
+    if (settings.featureGlow === undefined) settings.featureGlow = true;
+    if (settings.featureEcho === undefined) settings.featureEcho = true;
+    if (settings.featureMotion === undefined) settings.featureMotion = true;
+    if (settings.featureAgent === undefined) settings.featureAgent = true;
+    if (settings.featureInside === undefined) settings.featureInside = true;
+    if (settings.featureBrief === undefined) settings.featureBrief = true;
+    if (settings.featureSummary === undefined) settings.featureSummary = true;
+    if (settings.featureLens === undefined) settings.featureLens = true;
+    if (!canUseAutomation() && settings.knowledgeSource === "auto") {
+      settings.knowledgeSource = "noco";
+      saveSettings();
+    }
+    document.body.classList.toggle("wiki-source-active", settings.knowledgeSource === "wiki");
+    document.body.classList.toggle("fusion-source-active", settings.knowledgeSource === "auto");
+    updateKnowledgeSourceUI();
+    updatePayWalletUI();
+    try {
+      renderSparkFilterTabs();
+      renderPromptChips();
+      renderAgentPresets();
+      initChatScrollRoll();
+      initSidebarCollapsible();
+      initComposeToolbar();
+      if (discoverHint) discoverHint.hidden = true;
+      initPixelStudio();
+      renderPixelGallery();
+      applySettings();
+      loadChats();
+      updateModelUI();
+      updateExclusiveStats();
+      updateTopicCount();
+      updateTosUI();
+      renderSavedList();
+      renderSystemPanel();
+      setupDialogDismiss();
+      if (welcomeBlock) welcomeBlock.innerHTML = getWelcomeHtml();
+      renderWelcomeChips();
+      renderInputSuggestions();
+      initFeatureTooltips();
+      if (inputSuggestionsTimer) clearInterval(inputSuggestionsTimer);
+      inputSuggestionsTimer = setInterval(function () {
+        if (!chatInput || chatInput.value.trim() || document.hidden) return;
+        var panel = document.getElementById("chatPanel");
+        if (panel && panel.hidden) return;
+        renderInputSuggestions();
+        if (welcomeBlock && welcomeBlock.parentNode) renderWelcomeChips();
+      }, 14000);
+    } catch (err) {
+      console.error("NOCO initAppCore:", err);
+      if (bootStatus && !bootFinished) bootStatus.textContent = "Start wird abgeschlossen…";
+      forceBootComplete(bootScreen && bootScreen.querySelector(".boot-logo"));
+      showToast("Init-Fehler — App laeuft eingeschraenkt");
+    }
+  }
 
   function initApp() {
     document.documentElement.setAttribute("data-noco-build", NOCO_BUILD);
+    ensureAppVisible();
+    if (typeof window.__nocoUnlockApp === "function") {
+      window.addEventListener("load", function () {
+        ensureAppVisible();
+      });
+    }
     if (typeof NocoBootFX === "undefined") {
-      console.warn("NOCO: boot-fx.js fehlt — Boot-Shard-Animation deaktiviert. Datei mit hochladen.");
+      console.warn("NOCO: boot-fx.js fehlt — Boot-Shard-Animation deaktiviert.");
     }
-    if (typeof NocoBrain === "undefined") {
-      if (bootStatus) bootStatus.textContent = "Fehler: brain.js konnte nicht geladen werden.";
-      showToast("brain.js Fehler — bitte Seite neu laden");
-      return;
+    if (window.__nocoBootDone) {
+      ensureAppVisible();
+    } else if (typeof window.__nocoForceBoot === "function") {
+      window.setTimeout(ensureAppVisible, 1200);
+    } else {
+      boot();
     }
-    renderSparkFilterTabs();
-    renderPromptChips();
-    initSidebarCollapsible();
-    if (discoverHint) discoverHint.hidden = true;
-    initPixelStudio();
-    renderPixelGallery();
-    applySettings();
-    loadChats();
-    updateModelUI();
-    updateExclusiveStats();
-    updateTopicCount();
-    updateTosUI();
-    renderSavedList();
-    renderSystemPanel();
-    setupDialogDismiss();
-    if (welcomeBlock) welcomeBlock.innerHTML = getWelcomeHtml();
-    renderWelcomeChips();
-    renderInputSuggestions();
-    if (inputSuggestionsTimer) clearInterval(inputSuggestionsTimer);
-    inputSuggestionsTimer = setInterval(function () {
-      if (!chatInput || chatInput.value.trim() || document.hidden) return;
-      var panel = document.getElementById("chatPanel");
-      if (panel && panel.hidden) return;
-      renderInputSuggestions();
-      if (welcomeBlock && welcomeBlock.parentNode) renderWelcomeChips();
-    }, 14000);
-    boot();
+    setTimeout(ensureAppVisible, 2500);
+    setTimeout(ensureAppVisible, 5000);
+
+    loadBrainModule().then(function () {
+      if (typeof NocoBrain === "undefined") {
+        if (bootStatus) bootStatus.textContent = "Eingeschraenkter Modus — Start in Kuerze…";
+        if (bootScreen) bootScreen.classList.add("is-boot-error");
+        settings.animations = false;
+        ensureAppVisible();
+        showToast("brain.js fehlt — bitte Hard-Reload (?v=" + NOCO_BUILD + ")");
+        return;
+      }
+      setTimeout(initAppCore, 0);
+    }).catch(function (err) {
+      console.error("NOCO brain load:", err);
+      ensureAppVisible();
+      showToast("brain.js konnte nicht geladen werden");
+    }).then(function () {
+      ensureAppVisible();
+    });
   }
 
   if (document.readyState === "loading") {

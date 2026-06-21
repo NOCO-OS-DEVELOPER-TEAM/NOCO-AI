@@ -1,0 +1,60 @@
+/* v5.1 — Feature Hover Tips */
+
+[data-feature-tip] {
+  position: relative;
+}
+
+[data-feature-tip]:hover::after,
+[data-feature-tip]:focus-visible::after {
+  content: attr(data-feature-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.45rem);
+  transform: translateX(-50%);
+  z-index: 120;
+  min-width: 10rem;
+  max-width: 16rem;
+  padding: 0.38rem 0.55rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  background: rgba(8, 12, 24, 0.94);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.58rem;
+  line-height: 1.35;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  text-align: center;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  white-space: normal;
+}
+
+[data-feature-tip]:hover::before,
+[data-feature-tip]:focus-visible::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.12rem);
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(129, 140, 248, 0.45);
+  z-index: 121;
+  pointer-events: none;
+}
+
+.noco-build-pill[data-feature-tip]:hover::after,
+.input-shortcut[data-feature-tip]:hover::after {
+  bottom: calc(100% + 0.55rem);
+}
+
+.chat-tool-pill[data-feature-tip]:hover::after {
+  bottom: auto;
+  top: calc(100% + 0.45rem);
+}
+
+.chat-tool-pill[data-feature-tip]:hover::before {
+  bottom: auto;
+  top: calc(100% + 0.1rem);
+  border-top-color: transparent;
+  border-bottom-color: rgba(129, 140, 248, 0.45);
+}

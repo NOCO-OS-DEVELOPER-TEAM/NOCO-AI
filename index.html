@@ -14,9 +14,34 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <!-- Build: v4.1.2 — bump ?v= when deploying to GitHub -->
-  <link rel="stylesheet" href="css/main.css?v=4.1.2">
-  <link rel="stylesheet" href="css/noco-theme.css?v=4.1.2">
+  <!-- Build: v5.2.44 — bump ?v= when deploying to GitHub -->
+  <link rel="stylesheet" href="css/main.css?v=5.2.44">
+  <link rel="stylesheet" href="css/noco-theme.css?v=5.2.44">
+  <style id="nocoBootFailsafe">
+    body.noco-ui-ready .boot-screen,
+    body.noco-ui-ready #bootScreen {
+      display: none !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+    body.noco-ui-ready .app-shell,
+    .app-shell.ready {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      filter: none !important;
+      pointer-events: auto !important;
+    }
+    .boot-screen:not(.is-booting),
+    .boot-screen.is-handoff,
+    .boot-screen.is-exiting,
+    .boot-screen.hidden {
+      pointer-events: none !important;
+    }
+    .boot-screen.is-booting:not(.hidden):not(.is-handoff):not(.is-exiting) {
+      pointer-events: auto;
+    }
+  </style>
 </head>
 <body>
   <div class="boot-screen" id="bootScreen" aria-hidden="true">
@@ -44,8 +69,39 @@
       </div>
       <div class="boot-progress"><span class="boot-progress-bar"></span></div>
       <p class="boot-status" id="bootStatus">NOCO AI wird gestartet…</p>
+      <p class="boot-skip-hint" id="bootSkipHint">Klicken zum Überspringen</p>
     </div>
   </div>
+
+  <script src="js/noco-boot.js?v=5.2.44" charset="UTF-8"></script>
+  <script>
+    (function () {
+      function unlock() {
+        var b = document.getElementById("bootScreen");
+        var s = document.getElementById("appShell");
+        if (b) {
+          b.classList.add("hidden", "is-handoff");
+          b.classList.remove("is-booting", "is-exiting");
+          b.setAttribute("aria-hidden", "true");
+        }
+        if (s) {
+          s.classList.add("ready");
+          s.classList.remove("is-boot-handoff");
+        }
+        document.body.classList.add("noco-ui-ready");
+        document.body.classList.remove("noco-booting", "boot-handoff-active");
+        window.__nocoBootDone = true;
+        if (typeof window.__nocoUnlockApp === "function") window.__nocoUnlockApp();
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(unlock, 6000);
+      });
+      window.addEventListener("load", function () {
+        setTimeout(unlock, 400);
+      });
+      window.__nocoFailsafeUnlock = unlock;
+    })();
+  </script>
 
   <div class="ambient" aria-hidden="true">
     <canvas id="liquidCanvas"></canvas>
@@ -99,6 +155,21 @@
         <button type="button" class="icon-btn top-bar-more-mobile" id="navMoreBtnMobile" title="Mehr" aria-label="Mehr" aria-expanded="false" aria-haspopup="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
         </button>
+        <div class="knowledge-source-cluster liquid-glass" id="knowledgeSourceCluster">
+          <div class="knowledge-source-switch" id="knowledgeSourceSwitch" role="group" aria-label="Wissensquelle">
+            <button type="button" class="ks-pill is-active" data-ks="noco" title="Nur Offline-Wissen (NOCO Vault)">Offline</button>
+            <button type="button" class="ks-pill ks-pill-wiki" data-ks="wiki" title="Nur Wikipedia (Wiki-API 1.1)">Wiki</button>
+            <button type="button" class="ks-pill ks-pill-auto" data-ks="auto" title="Nexus-Auto — intelligent Vault + Wiki">Nexus-Auto</button>
+          </div>
+          <button type="button" class="vault-power-btn is-on" id="vaultPowerBtn" title="NOCO Vault ein/aus" aria-pressed="true" aria-label="NOCO Vault">
+            <span class="vault-power-icon" aria-hidden="true">▣</span>
+            <span class="vault-power-label">Vault</span>
+          </button>
+        </div>
+        <button type="button" class="usage-top-btn liquid-glass" id="usageBtn" title="Nutzung &amp; Limits">
+          <span class="usage-top-icon" aria-hidden="true">◎</span>
+          <span class="usage-top-label">Nutzung</span>
+        </button>
         <button type="button" class="exclusive-top-btn" id="exclusiveTopBtn" title="NOCO Exclusive" aria-label="NOCO Exclusive">
           <span class="exclusive-icon-wrap" aria-hidden="true">
             <span class="exclusive-icon-ring"></span>
@@ -109,7 +180,7 @@
           <span class="exclusive-top-label">Exclusive</span>
         </button>
         <span class="meta-pill meta-motifs" title="NOCO Render Motiv-Bibliothek">3600 Motive</span>
-        <span class="meta-pill version" id="buildVersion" title="Build-Version">v4.1.2</span>
+        <span class="meta-pill version" id="buildVersion" title="Build-Version">v5.1</span>
         <div class="top-sys-cluster">
         <button class="icon-btn" id="newChatBtn" type="button" title="Neuer Chat" aria-label="Neuer Chat">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
@@ -131,7 +202,7 @@
           </div>
         </section>
 
-        <section class="sidebar-section">
+        <section class="sidebar-section sidebar-chats-priority">
           <div class="sidebar-heading-row">
             <h3 class="sidebar-heading">Chats</h3>
             <button type="button" class="sidebar-mini-btn" id="sidebarNewChat" title="Neuer Chat">+</button>
@@ -139,28 +210,42 @@
           <ul class="chat-list" id="chatList"></ul>
         </section>
 
-        <section class="sidebar-section exclusive-section">
-          <button type="button" class="exclusive-card liquid-glass" id="exclusiveCard" aria-label="NOCO Exclusive">
-            <span class="exclusive-card-leading" aria-hidden="true">
-              <span class="exclusive-card-icon">
-                <span class="exclusive-card-ring"></span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 7.5H22l-6 4.5 2.5 7.5L12 17l-6.5 4.5L8 14 2 9.5h7.5z"/></svg>
-              </span>
-              <span class="exclusive-badge" id="exclusiveBadge">FREE</span>
+        <section class="sidebar-section sidebar-collapsible is-collapsed sidebar-prompts" data-collapse="sparks">
+          <button type="button" class="sidebar-collapse-head" aria-expanded="false">
+            <span>NOCO Sparks</span>
+            <span class="sidebar-collapse-actions">
+              <button type="button" class="sidebar-mini-btn sidebar-mini-btn-inline" id="sidebarHubBtn" title="NOCO Hub">◎</button>
+              <span class="collapse-chevron">›</span>
             </span>
-            <div class="exclusive-card-body">
-              <span class="exclusive-card-title">NOCO Exclusive</span>
-              <span class="exclusive-card-model" id="modelLabel">NOCO Prism</span>
-              <span class="exclusive-card-quota" id="quotaLabel">20/20 heute · Reset 0:00</span>
-              <div class="exclusive-perk-pills" id="exclusivePerkPills" hidden>
-                <span class="ex-perk">Rush</span>
-                <span class="ex-perk">Pixel</span>
-                <span class="ex-perk">Keywords</span>
-              </div>
-            </div>
-            <span class="exclusive-card-arrow">›</span>
           </button>
+          <div class="sidebar-collapse-body sparks-panel-body">
+            <div class="sparks-toolbar">
+              <input type="search" class="spark-search" id="sparkSearch" placeholder="Frage suchen…" aria-label="Sparks durchsuchen">
+              <button type="button" class="sparks-refresh-btn" id="sparksRefreshBtn" title="Neue Auswahl" aria-label="Sparks neu mischen">↻</button>
+            </div>
+            <details class="sparks-cat-fold">
+              <summary class="sparks-cat-fold-label">Kategorien</summary>
+              <div class="spark-filter-tabs" id="sparkFilterTabs" role="tablist" aria-label="Spark-Kategorien"></div>
+            </details>
+            <div class="sparks-meta-row">
+              <span class="sparks-count-label" id="sparksCountLabel"></span>
+            </div>
+            <div class="spark-category-head" id="sparkCategoryHead" hidden></div>
+            <div class="sparks-list" id="promptChips"></div>
+            <button type="button" class="sparks-more-btn" id="sparksMoreBtn">Alle Sparks im Hub</button>
+          </div>
         </section>
+
+        <div id="exclusiveSidebarMeta" hidden aria-hidden="true">
+          <span class="exclusive-badge" id="exclusiveBadge">FREE</span>
+          <span id="modelLabel">NOCO Prism</span>
+          <span id="quotaLabel">20/20 heute · Reset 0:00</span>
+          <div class="exclusive-perk-pills" id="exclusivePerkPills" hidden>
+            <span class="ex-perk">Rush</span>
+            <span class="ex-perk">Pixel</span>
+            <span class="ex-perk">Keywords</span>
+          </div>
+        </div>
 
         <section class="sidebar-section sidebar-collapsible is-collapsed" data-collapse="status">
           <button type="button" class="sidebar-collapse-head" aria-expanded="false">
@@ -187,26 +272,6 @@
           </div>
         </section>
 
-        <section class="sidebar-section sidebar-collapsible sidebar-prompts is-collapsed" data-collapse="sparks">
-          <button type="button" class="sidebar-collapse-head" aria-expanded="false">
-            <span>NOCO Sparks</span>
-            <span class="sidebar-collapse-actions">
-              <button type="button" class="sidebar-mini-btn sidebar-mini-btn-inline" id="sidebarHubBtn" title="NOCO Hub">◎</button>
-              <span class="collapse-chevron">›</span>
-            </span>
-          </button>
-          <div class="sidebar-collapse-body">
-            <p class="sparks-panel-hint">Kurz-Tipps — wechseln zufaellig. Mehr im Hub.</p>
-            <div class="spark-filter-tabs" id="sparkFilterTabs" role="tablist" aria-label="Spark-Kategorien"></div>
-            <input type="search" class="spark-search" id="sparkSearch" placeholder="Sparks suchen…" aria-label="Sparks durchsuchen">
-            <div class="prompt-chips is-compact" id="promptChips"></div>
-            <button type="button" class="sparks-more-btn" id="sparksMoreBtn">Alle Sparks im Hub</button>
-          </div>
-        </section>
-
-        <section class="sidebar-section sidebar-footer">
-          <p class="sidebar-note">Simulierte KI · Kein echtes LLM</p>
-        </section>
       </aside>
 
       <div class="content-area" id="contentArea">
@@ -233,10 +298,7 @@
 
           <div class="chat-status-strip liquid-glass" id="planStatusBar" aria-live="polite">
             <span class="chat-status-dot" aria-hidden="true"></span>
-            <span class="plan-status-line" id="planStatusLine"><strong>Prism</strong> · 20/20</span>
-            <span class="plan-badge" id="planBadge" hidden>Access Free</span>
-            <span class="plan-model" id="planModelText" hidden>NOCO Prism</span>
-            <span class="plan-quota" id="planQuotaText" hidden>20/20</span>
+            <span class="plan-status-line" id="planStatusLine"><strong>NOCO Free</strong> · 20/20</span>
             <span class="plan-speed-badge" id="planSpeedBadge" hidden>Rush</span>
           </div>
 
@@ -245,10 +307,21 @@
             <span class="render-lock-text">NOCO Render laeuft — bitte warten…</span>
           </div>
 
+          <div class="agent-work-strip" id="agentWorkStrip" hidden role="status" aria-live="polite">
+            <span class="aws-pulse" aria-hidden="true"></span>
+            <span class="aws-label">NOCO arbeitet…</span>
+            <span class="aws-phases">
+              <span class="aws-phase" data-aws-phase="analyze">🟡 Analysiert</span>
+              <span class="aws-phase" data-aws-phase="create">🟠 Erstellt</span>
+              <span class="aws-phase" data-aws-phase="optimize">🔵 Optimiert</span>
+              <span class="aws-phase" data-aws-phase="finalize">🟢 Finalisiert</span>
+            </span>
+          </div>
+
           <div class="noco-feature-banner" id="nocoFeatureBanner" hidden role="status">
             <span class="nfb-glow" aria-hidden="true"></span>
             <div class="nfb-content" id="nfbContent">
-              <strong>Neu in NOCO v4.0:</strong> <em>3600 Render-Motive</em>, Rainbow-Shard-Animation, NOCO Glow, Brief &amp; Echo — tippe <strong>◎ Hub</strong> oder nutze die Shortcuts unten.
+              <strong>Neu — Nexus-Auto:</strong> Intelligent zwischen <strong>Offline-Wissen</strong> + <strong>Wiki-API 1.1</strong>. Fakten → Wikipedia. NOCO → Vault. Oben: <strong>Offline · Wiki · Nexus-Auto</strong>.
             </div>
             <button type="button" class="nfb-close" id="nfbClose" aria-label="Hinweis schliessen">×</button>
           </div>
@@ -271,36 +344,37 @@
                 <span class="typing-lens-glow" aria-hidden="true"></span>
                 <span class="typing-lens-fill" id="typingLensFill"></span>
               </div>
+              <div class="typing-wiki-scan" id="typingWikiBar" hidden aria-hidden="true">
+                <span class="typing-wiki-orbit" aria-hidden="true"></span>
+                <span class="typing-wiki-fill" id="typingWikiFill"></span>
+              </div>
             </div>
           </div>
 
           <form class="input-bar" id="chatForm" autocomplete="off">
-            <div class="input-bar-stack">
-            <div class="input-shortcuts liquid-glass liquid-glass-prism input-shortcuts-rainbow input-shortcuts-clean" role="toolbar" aria-label="Schnellzugriff">
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="hub" title="NOCO Hub">
-                <span class="isc-hub-logo" aria-hidden="true"><span class="noco-hub-logo-plate"><span class="noco-hub-logo-sq"></span></span></span>
-                <span class="isc-label">Hub</span>
-              </button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-render" data-shortcut="image" title="Bild im Chat"><span class="isc-label">Bild</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-brief" data-shortcut="brief" title="NOCO Brief"><span class="isc-label">Brief</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-glow" data-shortcut="glow" title="NOCO Glow"><span class="isc-label">Glow</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="echo" title="NOCO Echo"><span class="isc-label">Echo</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip input-shortcut-lens" data-shortcut="detect" title="NOCO Lens"><span class="isc-label">Lens</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="new" title="Neuer Chat"><span class="isc-label">Neu</span></button>
-              <button type="button" class="input-shortcut input-shortcut-chip" data-shortcut="help" title="Hilfe"><span class="isc-label">Help</span></button>
+            <div class="input-bar-stack input-compose-shell liquid-glass liquid-glass-prism">
+            <div class="agent-preset-strip liquid-glass" id="agentPresetStrip" hidden aria-label="Agent-Vorlagen">
+              <div class="agent-preset-scroll" id="agentPresetScroll" role="list"></div>
             </div>
-            <div class="input-row-main">
-            <div class="chat-input-tools">
-              <button type="button" class="chat-tool-pill chat-image-btn chat-tool-glass" id="chatImageBtn" title="Bildmodus" aria-label="Bildmodus" aria-pressed="false">
-                <span class="chat-tool-pill-icon">◇</span>
-                <span class="chat-tool-pill-label">Bild</span>
+            <div class="compose-primary-bar liquid-glass liquid-glass-prism" id="composePrimaryBar" role="toolbar" aria-label="Hauptwerkzeuge">
+              <button type="button" class="compose-primary-chip input-shortcut-render" data-shortcut="image" title="Bild im Chat erstellen">
+                <span class="cpc-icon" aria-hidden="true">▦</span>
+                <span class="cpc-label">Bild erstellen</span>
               </button>
-              <button type="button" class="chat-tool-pill chat-attach-btn chat-tool-glass" id="chatAttachBtn" title="KI-Bild erkennen" aria-label="Bild erkennen">
-                <span class="chat-tool-pill-icon">◌</span>
-                <span class="chat-tool-pill-label">Lens</span>
+              <button type="button" class="compose-primary-chip" data-shortcut="hub" title="NOCO Hub">
+                <span class="cpc-icon cpc-icon-hub" aria-hidden="true"><span class="noco-hub-logo-plate"><span class="noco-hub-logo-sq"></span></span></span>
+                <span class="cpc-label">Hub</span>
               </button>
-              <input type="file" id="imageDetectInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden aria-hidden="true">
+              <button type="button" class="compose-primary-chip input-shortcut-motion" data-shortcut="motion" title="NOCO Motion — Video erstellen">
+                <span class="cpc-icon" aria-hidden="true">▶</span>
+                <span class="cpc-label">Video erstellen</span>
+              </button>
+              <button type="button" class="compose-primary-chip input-shortcut-agent" data-shortcut="agent" title="NOCO Agent">
+                <span class="cpc-icon" aria-hidden="true">◆</span>
+                <span class="cpc-label">Agent</span>
+              </button>
             </div>
+            <div class="input-row-main input-row-compose">
             <div class="input-glass liquid-input input-glass-ai liquid-glass-prism" id="inputGlass">
               <span class="input-ai-spark" aria-hidden="true">✦</span>
               <div class="input-glow" aria-hidden="true"></div>
@@ -312,12 +386,151 @@
                   Exclusive aktivieren
                 </button>
               </div>
-              <textarea id="chatInput" rows="1" placeholder="Nachricht…" aria-label="Nachricht eingeben" maxlength="2000" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="true"></textarea>
+              <textarea id="chatInput" rows="1" placeholder="Frage stellen…" aria-label="Nachricht eingeben" maxlength="2000" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="true"></textarea>
+              <button type="button" class="pro-mode-btn" id="proModeBtn" title="NOCO AI Pro 1.0" aria-pressed="false" aria-label="NOCO AI Pro 1.0">
+                <span class="pro-mode-logo" aria-hidden="true"><span class="pro-mode-sq"></span></span>
+                <span class="pro-mode-label">Pro 1.0</span>
+              </button>
               <button class="send-btn iridescent-btn" type="submit" id="sendBtn" aria-label="Senden" disabled>
                 <span class="btn-shimmer"></span>
                 <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
             </div>
+            </div>
+            <div class="input-footer-row input-footer-clean">
+              <div class="knowledge-source-cluster knowledge-source-mobile liquid-glass" id="knowledgeSourceMobileCluster">
+                <div class="knowledge-source-switch knowledge-source-mobile" id="knowledgeSourceMobile" role="group" aria-label="Wissensquelle mobil">
+                  <button type="button" class="ks-pill is-active" data-ks="noco">Offline</button>
+                  <button type="button" class="ks-pill ks-pill-wiki" data-ks="wiki">Wiki</button>
+                  <button type="button" class="ks-pill ks-pill-auto" data-ks="auto">Auto</button>
+                </div>
+                <button type="button" class="vault-power-btn vault-power-mobile is-on" id="vaultPowerBtnMobile" title="NOCO Vault" aria-pressed="true" aria-label="NOCO Vault">
+                  <span class="vault-power-icon" aria-hidden="true">▣</span>
+                </button>
+              </div>
+              <span class="input-model-hint" id="inputModelHint">NOCO Free · Prism</span>
+            </div>
+            <details class="compose-more-fold liquid-glass liquid-glass-prism" id="composeMoreFold">
+              <summary class="compose-more-summary">
+                <span class="compose-more-title">Weitere Werkzeuge</span>
+                <span class="compose-more-chevron" aria-hidden="true">›</span>
+              </summary>
+              <div class="compose-more-inner" role="toolbar" aria-label="Weitere Werkzeuge">
+                <div class="compose-more-section">
+                  <span class="compose-more-label">Analyse</span>
+                  <div class="compose-more-grid">
+                    <button type="button" class="compose-more-chip input-shortcut-summary" data-shortcut="summary" title="NOCO Summary"><span>Summary</span></button>
+                    <button type="button" class="compose-more-chip input-shortcut-brief" data-shortcut="brief" title="NOCO Brief"><span>Brief</span></button>
+                    <button type="button" class="compose-more-chip input-shortcut-insight" data-shortcut="inside" title="NOCO Inside"><span>Inside</span></button>
+                  </div>
+                </div>
+                <div class="compose-more-section">
+                  <span class="compose-more-label">Tools</span>
+                  <div class="compose-more-grid">
+                    <button type="button" class="compose-more-chip input-shortcut-glow" data-shortcut="glow" title="NOCO Glow"><span>Glow</span></button>
+                    <button type="button" class="compose-more-chip" data-shortcut="echo" title="NOCO Echo"><span>Echo</span></button>
+                    <button type="button" class="compose-more-chip input-shortcut-lens" data-shortcut="detect" title="NOCO Lens"><span>Lens</span></button>
+                  </div>
+                </div>
+                <div class="compose-more-section">
+                  <span class="compose-more-label">Chat</span>
+                  <div class="compose-more-grid">
+                    <button type="button" class="compose-more-chip" data-shortcut="new" title="Neuer Chat"><span>Neu</span></button>
+                    <button type="button" class="compose-more-chip" data-shortcut="help" title="Hilfe"><span>Help</span></button>
+                  </div>
+                </div>
+                <details class="compose-files-fold">
+                  <summary class="compose-files-summary">Erstellen &amp; Dateien</summary>
+                  <div class="chat-input-tools chat-tools-rail">
+                    <button type="button" class="chat-tool-pill chat-insight-file-btn chat-tool-glass" id="insightFileBtn" title="Datei fuer NOCO Inside" aria-label="Inside Datei">
+                      <span class="chat-tool-pill-icon">📂</span>
+                      <span class="chat-tool-pill-label">Datei</span>
+                    </button>
+                    <div class="noco-build-suite" role="toolbar" aria-label="NOCO Build Suite">
+                      <button type="button" class="noco-build-pill" id="nocoAgentBtn" data-noco-build="agent" title="NOCO Agent" aria-pressed="false">
+                        <span class="nbp-icon nbp-icon-agent" aria-hidden="true"></span>
+                        <span class="nbp-label">Agent</span>
+                      </button>
+                      <button type="button" class="noco-build-pill" id="nocoCreateBtn" data-noco-build="create" title="NOCO Create" aria-pressed="false">
+                        <span class="nbp-icon nbp-icon-create" aria-hidden="true"></span>
+                        <span class="nbp-label">Create</span>
+                      </button>
+                      <button type="button" class="noco-build-pill" id="nocoInsideBtn" data-noco-build="inside" title="NOCO Inside" aria-pressed="false">
+                        <span class="nbp-icon nbp-icon-inside" aria-hidden="true"></span>
+                        <span class="nbp-label">Inside</span>
+                      </button>
+                      <button type="button" class="noco-build-pill" id="nocoMotionBtn" data-noco-build="motion" title="NOCO Motion" aria-pressed="false">
+                        <span class="nbp-icon nbp-icon-motion" aria-hidden="true"></span>
+                        <span class="nbp-label">Video</span>
+                      </button>
+                    </div>
+                    <button type="button" class="chat-tool-pill chat-attach-btn chat-tool-glass" id="chatAttachBtn" title="NOCO Lens" aria-label="Bild erkennen">
+                      <span class="chat-tool-pill-icon">◌</span>
+                      <span class="chat-tool-pill-label">Lens</span>
+                    </button>
+                  </div>
+                </details>
+                <input type="file" id="imageDetectInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden aria-hidden="true">
+                <input type="file" id="insightFileInput" accept=".txt,.md,.pdf,.doc,.docx,.js,.ts,.jsx,.tsx,.py,.html,.css,.json,.xml,.csv,.log,.png,.jpg,.jpeg,.webp,.gif" hidden aria-hidden="true">
+              </div>
+            </details>
+            <div class="motion-panel motion-theme-bar liquid-glass liquid-glass-prism" id="motionPanel" aria-label="NOCO Motion">
+              <div class="motion-theme-head">
+                <span class="motion-panel-title">🎬 NOCO Motion</span>
+                <span class="motion-theme-badge motion-theme-badge-epic" id="motionThemeBadge">EPIC VIDEO</span>
+              </div>
+              <p class="motion-hint" id="motionHint"><strong>Epic Video:</strong> Motiv nennen → <em>4s Loop</em> · 8 Keyframes · Pixel-Morph</p>
+              <div class="motion-theatre" id="motionTheatre" hidden>
+                <div class="motion-theatre-body">
+                  <div class="motion-film-strip" id="motionFilmStrip" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="motion-preview-wrap">
+                    <div class="motion-preview-glow" aria-hidden="true"></div>
+                    <canvas class="motion-preview-canvas" id="motionPreviewCanvas" width="144" height="144" aria-hidden="true"></canvas>
+                    <div class="motion-preview-scan" id="motionPreviewScan" aria-hidden="true"></div>
+                  </div>
+                  <div class="motion-pipeline" id="motionPipeline" role="list"></div>
+                </div>
+                <div class="motion-timeline-block" id="motionTimelineBlock" hidden>
+                  <div class="motion-timeline-head">
+                    <span class="motion-timeline-title">Timeline</span>
+                    <span class="motion-timeline-sub" id="motionTimelineSub">8 Keyframes</span>
+                  </div>
+                  <div class="motion-keyframe-row" id="motionKeyframeRow" role="list" aria-label="Keyframe-Vorschau"></div>
+                  <div class="motion-export-actions" id="motionExportActions" hidden>
+                    <button type="button" class="motion-export-btn motion-export-copy" id="motionTheatreCopy" title="Sprite-Sheet kopieren">
+                      <span class="motion-export-icon">⧉</span><span>Kopieren</span>
+                    </button>
+                    <button type="button" class="motion-export-btn motion-export-save" id="motionTheatreSave" title="Video als WebM speichern">
+                      <span class="motion-export-icon">↓</span><span>Speichern</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="motion-chips motion-chips-hint" id="motionChips">
+                <span class="motion-chips-label">Beispiele — frei tippen geht auch:</span>
+                <button type="button" class="motion-chip" data-motion-fill="Apfel">Apfel</button>
+                <button type="button" class="motion-chip" data-motion-fill="Katze">Katze</button>
+                <button type="button" class="motion-chip" data-motion-fill="Auto fährt">Auto</button>
+                <button type="button" class="motion-chip" data-motion-fill="Haus">Haus</button>
+              </div>
+              <div class="motion-progress" id="motionProgressWrap" hidden>
+                <span class="motion-progress-fill" id="motionProgressFill"></span>
+              </div>
+              <span class="motion-progress-label" id="motionProgressLabel" hidden></span>
+            </div>
+            <div class="insight-panel inside-theme-bar liquid-glass liquid-glass-prism" id="insightPanel" aria-label="NOCO Inside Kategorien">
+              <div class="insight-panel-head">
+                <span class="insight-panel-title">🔬 NOCO Inside</span>
+                <span class="inside-pipeline-badge" id="insidePipelineBadge">SCAN→REPORT</span>
+                <span class="insight-file-badge" id="insightFileBadge" hidden></span>
+              </div>
+              <div class="insight-categories" id="insightCategories" role="toolbar"></div>
+              <div class="insight-actions">
+                <button type="button" class="insight-voice-btn" id="insightVoiceBtn" title="Sprache zu Text">🎙️ Sprache</button>
+                <p class="insight-hint" id="insightHint">Datei links oder Text einfügen · Pro 1.0 für Rush</p>
+              </div>
             </div>
             <div class="input-suggestions" id="inputSuggestions" hidden>
               <div class="input-suggestions-row" id="inputSuggestionsRow" role="list" aria-label="Zufallsvorschlaege"></div>
@@ -344,7 +557,7 @@
               <button type="button" class="command-chip" data-cmd="/hub">/hub</button>
               <span class="command-palette-more">mehr in /help</span>
             </div>
-            <p class="input-hint" id="inputHint"><span class="hint-blue">/</span> Befehle · <span class="hint-glow">◇ 3600 Motive</span> · <span class="hint-glow">✦ Glow</span> live · Enter senden</p>
+            <p class="input-hint input-hint-compact" id="inputHint"><span class="hint-glow">✦ Glow</span> beim Tippen · Enter senden</p>
             </div>
           </form>
         </section>
@@ -467,7 +680,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </header>
-    <div class="st3-scroll settings-dialog-body">
+    <div class="st3-scroll settings-dialog-body settings-v2-body">
       <div class="settings-plan-card st3-plan liquid-glass-prism" id="settingsPlanCard">
         <div class="settings-plan-top">
           <span class="settings-plan-label">Plan</span>
@@ -477,70 +690,149 @@
         <p class="settings-plan-detail" id="settingsPlanDetail">20 Nachrichten/Tag · Reset um 0:00 Uhr</p>
         <button type="button" class="settings-plan-upgrade" id="settingsPlanUpgrade">NOCO Exclusive</button>
       </div>
-      <section class="st3-section liquid-glass-prism">
-        <h3 class="st3-section-title">Darstellung</h3>
-        <label class="setting-row st3-row">
-          <span class="setting-label">Animationen<small>Orbs &amp; Blobs</small></span>
-          <input type="checkbox" id="animToggle" checked>
-        </label>
-        <label class="setting-row st3-row">
-          <span class="setting-label">Glass<small>Blur-Staerke</small></span>
-          <select id="glassSelect">
-            <option value="normal" selected>Normal</option>
-            <option value="high">Hoch</option>
-            <option value="low">Niedrig</option>
-          </select>
-        </label>
-        <label class="setting-row st3-row">
-          <span class="setting-label">Kompakt<small>Weniger Abstand</small></span>
-          <input type="checkbox" id="compactToggle">
-        </label>
-      </section>
-      <section class="st3-section liquid-glass-prism">
-        <h3 class="st3-section-title">Chat</h3>
-        <label class="setting-row st3-row">
-          <span class="setting-label">Schreib-Effekt<small>Typewriter</small></span>
-          <input type="checkbox" id="typewriterToggle" checked>
-        </label>
-        <label class="setting-row st3-row">
-          <span class="setting-label">Geschwindigkeit<small>Antwort-Tempo</small></span>
-          <select id="speedSelect">
-            <option value="fast">Schnell</option>
-            <option value="normal" selected>Normal</option>
-          </select>
-        </label>
-        <p class="settings-exclusive-hint" id="settingsExclusiveHint">Exclusive: Rush, Render 35s, 52×52</p>
-        <label class="setting-row st3-row">
-          <span class="setting-label">Kopier-Toast<small>Nach Kopieren</small></span>
-          <input type="checkbox" id="soundToggle" checked>
-        </label>
-      </section>
-      <section class="st3-section liquid-glass-prism settings-tos-group">
-        <h3 class="st3-section-title">Nutzung</h3>
-        <p class="tos-summary">Simulierte Chat-Webseite — Daten bleiben lokal.</p>
-        <button type="button" class="tos-more-btn" id="settingsTosMore" aria-expanded="false">
-          <span>Mehr anzeigen</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="tos-full" id="settingsTosFull" hidden>
-          <div class="tos-full-inner" id="settingsTosText"></div>
+
+      <details class="settings-group" open>
+        <summary class="settings-group-head"><span>Darstellung</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body">
+          <label class="setting-toggle-row">
+            <span class="setting-label">Animationen<small>Orbs &amp; Blobs im Hintergrund</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="animToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
+          <label class="setting-toggle-row setting-row-select">
+            <span class="setting-label">Glass<small>Blur-Staerke</small></span>
+            <select id="glassSelect">
+              <option value="normal" selected>Normal</option>
+              <option value="high">Hoch</option>
+              <option value="low">Niedrig</option>
+            </select>
+          </label>
+          <label class="setting-toggle-row">
+            <span class="setting-label">Kompakt<small>Weniger Abstand in Nachrichten</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="compactToggle"><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
         </div>
-        <p class="tos-accepted-note" id="tosAcceptedNote" hidden>Akzeptiert</p>
-      </section>
-      <section class="st3-section liquid-glass-prism settings-privacy-group">
-        <h3 class="st3-section-title">Daten</h3>
-        <p class="settings-privacy-note">Kein Server · Kein Tracking</p>
-        <button type="button" class="setting-btn st3-btn" id="exportChatsBtn">Export (.json)</button>
-        <button type="button" class="setting-btn st3-btn" id="importChatsBtn">Import (.json)</button>
-        <input type="file" id="importChatsFile" accept=".json,application/json" hidden>
-        <button type="button" class="setting-btn st3-btn danger" id="clearAllChatsBtn">Chats loeschen</button>
-      </section>
-      <section class="st3-section liquid-glass-prism settings-danger-group">
-        <h3 class="st3-section-title">Reset</h3>
-        <p class="settings-reset-note">Alles wie neu: Chats, Limits, Exclusive, Galerie.</p>
-        <button type="button" class="setting-btn st3-btn danger setting-btn-reset" id="resetAppBtn">Alles zuruecksetzen</button>
-      </section>
-      <p class="setting-note st3-foot">NOCO AI — simulierte Wissens-KI, offline-faehig.</p>
+      </details>
+
+      <details class="settings-group" open>
+        <summary class="settings-group-head"><span>Chat</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body">
+          <label class="setting-toggle-row">
+            <span class="setting-label">Schreib-Effekt<small>Typewriter bei Antworten</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="typewriterToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
+          <label class="setting-toggle-row setting-row-select">
+            <span class="setting-label">Geschwindigkeit<small>Antwort-Tempo</small></span>
+            <select id="speedSelect">
+              <option value="fast">Schnell</option>
+              <option value="normal" selected>Normal</option>
+            </select>
+          </label>
+          <label class="setting-toggle-row">
+            <span class="setting-label">Kopier-Toast<small>Hinweis nach Kopieren</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="soundToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
+        </div>
+      </details>
+
+      <details class="settings-group" open>
+        <summary class="settings-group-head"><span>Wissen</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body">
+          <label class="setting-toggle-row">
+            <span class="setting-label">NOCO Vault<small>Offline-Wissensbasis</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="vaultEnabledToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
+          <p class="settings-inline-hint">Modus oben: <strong>Offline</strong> = Vault · <strong>Wiki</strong> = Wikipedia · <strong>Nexus-Auto</strong> = intelligent kombiniert.</p>
+          <p class="settings-inline-hint" id="settingsExclusiveHint">NOCO Free: Vault offline · Wiki 5/Tag. Exclusive: Nexus-Auto, Rush, Render.</p>
+          <p class="settings-inline-hint settings-data-note">Deine Chats liegen nur lokal im Browser — kein Server-Upload.</p>
+        </div>
+      </details>
+
+      <details class="settings-group">
+        <summary class="settings-group-head"><span>Funktionen</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body">
+          <label class="setting-toggle-row setting-toggle-master">
+            <span class="setting-label">Clean Mode<small>Nur Essentials — aufgeraeumte Oberflaeche</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="cleanModeToggle"><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
+          <div class="settings-sub-toggles" id="settingsFeatureSubs">
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Glow<small>Live-Intent beim Tippen</small></span><span class="noco-toggle"><input type="checkbox" id="featureGlowToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Echo<small>Chat zusammenfassen</small></span><span class="noco-toggle"><input type="checkbox" id="featureEchoToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Motion<small>Video erstellen</small></span><span class="noco-toggle"><input type="checkbox" id="featureMotionToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Agent<small>Auftraege &amp; Vorlagen</small></span><span class="noco-toggle"><input type="checkbox" id="featureAgentToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Inside<small>Datei-Analyse</small></span><span class="noco-toggle"><input type="checkbox" id="featureInsideToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Brief<small>Recherche-Briefings</small></span><span class="noco-toggle"><input type="checkbox" id="featureBriefToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Summary<small>Text zusammenfassen</small></span><span class="noco-toggle"><input type="checkbox" id="featureSummaryToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+            <label class="setting-toggle-row"><span class="setting-label">NOCO Lens<small>Bild-Erkennung</small></span><span class="noco-toggle"><input type="checkbox" id="featureLensToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span></label>
+          </div>
+        </div>
+      </details>
+
+      <details class="settings-group" open>
+        <summary class="settings-group-head"><span>Nutzung &amp; Limits</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body settings-actions-body">
+          <p class="settings-inline-hint">Alle Tageslimits resetten um <strong>0:00 Uhr</strong> — oder manuell zuruecksetzen.</p>
+          <button type="button" class="setting-btn st3-btn" id="settingsOpenUsageBtn">Nutzung im Detail anzeigen</button>
+          <button type="button" class="setting-btn st3-btn" id="settingsQuotaResetBtn">Tageslimits jetzt zuruecksetzen</button>
+        </div>
+      </details>
+
+      <details class="settings-group" open>
+        <summary class="settings-group-head"><span>Vorschläge</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body" id="settingsSuggestionsGroup">
+          <label class="setting-toggle-row setting-toggle-master">
+            <span class="setting-label">Alle Vorschläge<small>Master-Schalter für alle Bereiche</small></span>
+            <span class="noco-toggle"><input type="checkbox" id="suggestionsAllToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+          </label>
+          <div class="settings-sub-toggles" id="settingsSuggestionSubs">
+            <label class="setting-toggle-row">
+              <span class="setting-label">Unter Antworten<small>Weitere Fragen &amp; Chips</small></span>
+              <span class="noco-toggle"><input type="checkbox" id="suggestionsMessagesToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+            </label>
+            <label class="setting-toggle-row">
+              <span class="setting-label">NOCO Glow<small>Intent-Erkennung beim Tippen</small></span>
+              <span class="noco-toggle"><input type="checkbox" id="suggestionsInputToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+            </label>
+            <label class="setting-toggle-row">
+              <span class="setting-label">Start-Chips<small>Willkommens-Vorschläge</small></span>
+              <span class="noco-toggle"><input type="checkbox" id="suggestionsWelcomeToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+            </label>
+            <label class="setting-toggle-row">
+              <span class="setting-label">NOCO Sparks<small>Sidebar &amp; Hub-Sparks</small></span>
+              <span class="noco-toggle"><input type="checkbox" id="suggestionsSparksToggle" checked><span class="noco-toggle-track" aria-hidden="true"><span class="noco-toggle-thumb"></span></span></span>
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <details class="settings-group">
+        <summary class="settings-group-head"><span>Daten &amp; Export</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body settings-actions-body">
+          <p class="settings-inline-hint settings-privacy-note">Kein Server · Kein Tracking · alles lokal</p>
+          <button type="button" class="setting-btn st3-btn" id="exportChatsBtn">Chats exportieren (.json)</button>
+          <button type="button" class="setting-btn st3-btn" id="importChatsBtn">Chats importieren (.json)</button>
+          <input type="file" id="importChatsFile" accept=".json,application/json" hidden>
+          <button type="button" class="setting-btn st3-btn danger" id="clearAllChatsBtn">Alle Chats loeschen</button>
+        </div>
+      </details>
+
+      <details class="settings-group">
+        <summary class="settings-group-head"><span>Nutzung &amp; Reset</span><span class="settings-group-chevron" aria-hidden="true">›</span></summary>
+        <div class="settings-group-body settings-actions-body">
+          <p class="tos-summary">Simulierte Chat-Webseite — Daten bleiben lokal.</p>
+          <button type="button" class="tos-more-btn" id="settingsTosMore" aria-expanded="false">
+            <span>Nutzungsbedingungen anzeigen</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="tos-full" id="settingsTosFull" hidden>
+            <div class="tos-full-inner" id="settingsTosText"></div>
+          </div>
+          <p class="tos-accepted-note" id="tosAcceptedNote" hidden>Akzeptiert</p>
+          <p class="settings-reset-note">Alles wie neu: Chats, Limits, Exclusive, Galerie.</p>
+          <button type="button" class="setting-btn st3-btn danger setting-btn-reset" id="resetAppBtn">App komplett zuruecksetzen</button>
+        </div>
+      </details>
+
+      <p class="setting-note st3-foot">NOCO Free · lokal im Browser · keine Cloud-Chats</p>
     </div>
   </dialog>
 
@@ -724,9 +1016,29 @@
         <div class="ex3-benefit liquid-glass-prism"><span>⚡</span><strong>Rush</strong><em>90 ms</em></div>
         <div class="ex3-benefit liquid-glass-prism"><span>▦</span><strong>Render</strong><em>35 Sek.</em></div>
         <div class="ex3-benefit liquid-glass-prism"><span>◇</span><strong>Lens</strong><em>Terms</em></div>
+        <div class="ex3-benefit liquid-glass-prism ex3-benefit-wiki"><span>🌐</span><strong>Wiki-API</strong><em>Wikipedia</em></div>
         <div class="ex3-benefit liquid-glass-prism"><span>∞</span><strong>Chat</strong><em>Kein Limit</em></div>
+        <div class="ex3-benefit liquid-glass-prism ex3-benefit-pro"><span>◆</span><strong>Pro 1.0</strong><em>Ultra Rush</em></div>
       </div>
-      <p class="ex3-plans-label">Plan waehlen (simuliert)</p>
+      <section class="ex3-manage liquid-glass-prism" id="exclusiveManagePanel" hidden>
+        <div class="ex3-manage-head">
+          <h3 class="ex3-manage-title">Dein NOCO Exclusive Abo</h3>
+          <span class="ex3-manage-badge" id="exclusiveManageBadge">AKTIV</span>
+        </div>
+        <div class="ex3-manage-grid">
+          <div class="ex3-manage-row"><span>Plan</span><strong id="exclusiveManagePlan">—</strong></div>
+          <div class="ex3-manage-row"><span>Gueltig bis</span><strong id="exclusiveManageUntil">—</strong></div>
+          <div class="ex3-manage-row"><span>Zahlung</span><strong id="exclusiveManagePay">NOCO Pay</strong></div>
+          <div class="ex3-manage-row"><span>Transaktion</span><strong id="exclusiveManageTx" class="ex3-manage-mono">—</strong></div>
+        </div>
+        <p class="ex3-manage-hint" id="exclusiveManageHint">Flux · Rush · Render · Motion · Wiki · Nexus-Auto</p>
+        <div class="ex3-manage-actions">
+          <button type="button" class="btn-ghost ex3-manage-btn" id="exclusiveManageChangeBtn">Plan aendern</button>
+          <button type="button" class="btn-ghost ex3-manage-btn ex3-manage-cancel" id="exclusiveManageCancelBtn">Abo beenden</button>
+        </div>
+      </section>
+      <div class="ex3-subscribe-block" id="exclusiveSubscribeBlock">
+      <p class="ex3-plans-label">Plan waehlen — Checkout mit NOCO Pay (simuliert)</p>
       <div class="exclusive-plans ex3-plans">
         <button type="button" class="exclusive-plan ex3-plan liquid-glass-prism is-recommended" data-plan="trial">
           <span class="plan-name">Testphase</span>
@@ -749,8 +1061,103 @@
           <span class="plan-price">599 €</span>
         </button>
       </div>
-      <p class="exclusive-fake-note ex3-note">Alles simuliert — kein echtes Geld.</p>
+      <p class="exclusive-fake-note ex3-note">NOCO Pay · simulierte Zahlung — kein echtes Geld, kein Bankkontakt.</p>
+      </div>
       <ul class="exclusive-features" id="exclusiveFeatures" hidden aria-hidden="true"></ul>
+    </div>
+  </dialog>
+
+  <dialog class="exclusive-checkout-dialog liquid-glass liquid-glass-prism" id="exclusiveCheckoutDialog">
+    <div class="dialog-glow ex-checkout-glow" aria-hidden="true"></div>
+    <header class="ex-checkout-head">
+      <div class="ex-checkout-brand">
+        <span class="ex-checkout-mark" aria-hidden="true">◆</span>
+        <div>
+          <h2 id="exCheckoutTitle">NOCO Pay Checkout</h2>
+          <p class="dialog-sub" id="exCheckoutSub">Exclusive Abonnement</p>
+        </div>
+      </div>
+      <button class="icon-btn dialog-close" type="button" id="closeExclusiveCheckout" aria-label="Schliessen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="ex-checkout-steps" id="exCheckoutSteps" aria-label="Checkout-Schritte">
+      <span class="ex-checkout-step is-active" data-ex-step="plan">① Plan</span>
+      <span class="ex-checkout-step" data-ex-step="payment">② NOCO Pay</span>
+      <span class="ex-checkout-step" data-ex-step="confirm">③ Bestaetigen</span>
+    </div>
+    <div class="ex-checkout-body">
+      <section class="ex-checkout-panel is-active" data-ex-panel="plan" id="exCheckoutPanelPlan">
+        <div class="ex-checkout-plan-card liquid-glass-prism" id="exCheckoutPlanCard">
+          <p class="ex-checkout-plan-name" id="exCheckoutPlanName">—</p>
+          <p class="ex-checkout-plan-detail" id="exCheckoutPlanDetail">—</p>
+          <p class="ex-checkout-plan-price" id="exCheckoutPlanPrice">—</p>
+        </div>
+        <ul class="ex-checkout-includes">
+          <li>NOCO Flux · unbegrenzte Nachrichten</li>
+          <li>NOCO Rush ~90 ms · Render · Motion</li>
+          <li>NOCO Lens · Wiki-API 1.1 · <strong>Nexus-Auto</strong></li>
+          <li>NOCO AI Pro 1.0 · Ultra Rush</li>
+        </ul>
+        <p class="ex-checkout-legal">Simuliertes NOCO-Universum-Abo. Keine echte Abbuchung.</p>
+        <button type="button" class="iridescent-btn ex-checkout-next" id="exCheckoutToPayment">Weiter zur Zahlung</button>
+      </section>
+      <section class="ex-checkout-panel" data-ex-panel="payment" id="exCheckoutPanelPayment" hidden>
+        <div class="ex-pay-wallet liquid-glass-prism">
+          <div class="ex-pay-wallet-head">
+            <span class="ex-pay-logo">NOCO Pay</span>
+            <span class="ex-pay-balance" id="exPayBalance">50,00 €</span>
+          </div>
+          <p class="ex-pay-wallet-sub">Fake-Guthaben im NOCO OS Universum</p>
+        </div>
+        <p class="ex-checkout-label">Zahlungsmethode waehlen</p>
+        <div class="ex-pay-methods" id="exPayMethods">
+          <button type="button" class="ex-pay-method is-active" data-pay-method="wallet">
+            <span class="ex-pay-method-icon">💳</span>
+            <span class="ex-pay-method-text"><strong>NOCO Pay Wallet</strong><em>Guthaben abbuchen</em></span>
+          </button>
+          <button type="button" class="ex-pay-method" data-pay-method="card">
+            <span class="ex-pay-method-icon">◆</span>
+            <span class="ex-pay-method-text"><strong>NOCO Card</strong><em>•••• 4242 · 12/28</em></span>
+          </button>
+        </div>
+        <div class="ex-pay-card-form liquid-glass-prism" id="exPayCardForm" hidden>
+          <label class="ex-pay-field"><span>Kartennummer</span><input type="text" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" id="exPayCardNumber"></label>
+          <div class="ex-pay-field-row">
+            <label class="ex-pay-field"><span>Gueltig</span><input type="text" placeholder="12/28" maxlength="5" id="exPayCardExpiry"></label>
+            <label class="ex-pay-field"><span>CVC</span><input type="text" inputmode="numeric" maxlength="3" placeholder="123" id="exPayCardCvc"></label>
+          </div>
+          <label class="ex-pay-field"><span>Name</span><input type="text" placeholder="NOCO Nutzer" id="exPayCardName"></label>
+        </div>
+        <button type="button" class="iridescent-btn ex-checkout-next" id="exCheckoutToConfirm">Weiter zur Bestaetigung</button>
+        <button type="button" class="btn-ghost ex-checkout-back" id="exCheckoutBackPayment">Zurueck</button>
+      </section>
+      <section class="ex-checkout-panel" data-ex-panel="confirm" id="exCheckoutPanelConfirm" hidden>
+        <div class="ex-checkout-summary liquid-glass-prism">
+          <div class="ex-summary-row"><span>Produkt</span><strong>NOCO Exclusive</strong></div>
+          <div class="ex-summary-row"><span>Plan</span><strong id="exSummaryPlan">—</strong></div>
+          <div class="ex-summary-row"><span>Zahlung</span><strong id="exSummaryPay">—</strong></div>
+          <div class="ex-summary-row ex-summary-total"><span>Gesamt</span><strong id="exSummaryTotal">—</strong></div>
+        </div>
+        <label class="ex-checkout-agree">
+          <input type="checkbox" id="exCheckoutAgree">
+          <span>Ich verstehe: <strong>simulierte Zahlung</strong>, kein echtes Geld, Abo im NOCO-Universum.</span>
+        </label>
+        <button type="button" class="iridescent-btn ex-checkout-pay" id="exCheckoutPayBtn" disabled>Jetzt mit NOCO Pay bezahlen</button>
+        <button type="button" class="btn-ghost ex-checkout-back" id="exCheckoutBackConfirm">Zurueck</button>
+      </section>
+      <section class="ex-checkout-panel ex-checkout-processing" data-ex-panel="processing" id="exCheckoutPanelProcessing" hidden>
+        <div class="ex-checkout-spinner" aria-hidden="true"></div>
+        <p class="ex-checkout-process-label" id="exCheckoutProcessLabel">Verbindung zu NOCO Pay…</p>
+        <div class="ex-checkout-process-bar"><span id="exCheckoutProcessBar"></span></div>
+      </section>
+      <section class="ex-checkout-panel ex-checkout-success" data-ex-panel="success" id="exCheckoutPanelSuccess" hidden>
+        <div class="ex-checkout-success-icon" aria-hidden="true">✓</div>
+        <h3>Exclusive aktiviert!</h3>
+        <p id="exCheckoutSuccessText">NOCO Flux · Rush · Wiki-API freigeschaltet.</p>
+        <p class="ex-checkout-tx" id="exCheckoutSuccessTx"></p>
+        <button type="button" class="iridescent-btn" id="exCheckoutDoneBtn">Fertig — los geht's</button>
+      </section>
     </div>
   </dialog>
 
@@ -879,6 +1286,142 @@
     </div>
   </dialog>
 
+  <dialog class="wiki-legal-dialog liquid-glass liquid-glass-prism" id="wikiLegalDialog">
+    <div class="dialog-glow wiki-legal-glow" aria-hidden="true"></div>
+    <div class="dialog-header">
+      <div>
+        <h2 class="dialog-title">Wiki-API 1.1 — Hinweis</h2>
+        <p class="dialog-sub">Optional · nur online · Wikipedia</p>
+      </div>
+      <button class="icon-btn dialog-close" type="button" id="closeWikiLegal" aria-label="Schliessen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body wiki-legal-body">
+      <p><strong>NOCO-Wissen</strong> (Standard) nutzt die lokale <strong>NOCO Vault</strong> — empfohlen fuer NOCO OS, Features, Alltag &amp; Schule. Funktioniert offline.</p>
+      <p><strong>Wiki-API 1.1</strong> holt Kurztexte <strong>live von de.wikipedia.org</strong>. Quelle wird unten in der Nachricht angezeigt.</p>
+      <ul class="wiki-legal-list">
+        <li>Internetverbindung erforderlich</li>
+        <li>Texte: <strong>CC BY-SA 4.0</strong> — © Wikimedia Foundation &amp; Autor:innen</li>
+        <li>NOCO AI speichert Wikipedia-Texte nicht dauerhaft (nur Session-Cache)</li>
+        <li>Du kannst jederzeit zurueck auf <strong>NOCO-Wissen</strong> wechseln</li>
+      </ul>
+      <p class="wiki-legal-note">Mit „Verstanden &amp; aktivieren“ bestaetigst du, dass Wiki-Antworten externe Wikipedia-Inhalte sind.</p>
+    </div>
+    <div class="wiki-legal-footer">
+      <button type="button" class="btn-ghost" id="wikiLegalCancelBtn">Abbrechen · NOCO-Wissen</button>
+      <button type="button" class="iridescent-btn wiki-legal-accept" id="wikiLegalAcceptBtn">
+        <span class="btn-shimmer"></span>
+        Verstanden &amp; aktivieren
+      </button>
+    </div>
+  </dialog>
+
+  <dialog class="usage-dialog liquid-glass liquid-glass-prism" id="usageDialog">
+    <div class="dialog-glow usage-dialog-glow" aria-hidden="true"></div>
+    <header class="usage-dialog-head">
+      <div>
+        <span class="usage-plan-badge" id="usagePlanBadge">NOCO Free</span>
+        <h2 id="usagePlanTitle">Nutzung &amp; Limits</h2>
+        <p class="usage-plan-sub" id="usagePlanSub">Tageskontingente · Reset 0:00</p>
+      </div>
+      <button type="button" class="icon-btn dialog-close" id="closeUsage" aria-label="Schliessen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="usage-dialog-scroll">
+      <ul class="usage-feature-list" id="usageFeatureList"></ul>
+      <div class="usage-meters">
+        <div class="usage-meter-row" id="usageRowMessages">
+          <div class="usage-meter-top"><strong>Nachrichten</strong><span class="usage-meter-val">0 / 30</span></div>
+          <div class="usage-meter-track"><span class="usage-meter-fill"></span></div>
+          <span class="usage-meter-note">Chat-Antworten</span>
+        </div>
+        <div class="usage-meter-row" id="usageRowPro">
+          <div class="usage-meter-top"><strong>NOCO Pro</strong><span class="usage-meter-val">0 / 1</span></div>
+          <div class="usage-meter-track"><span class="usage-meter-fill"></span></div>
+          <span class="usage-meter-note">Pro Rush-Speed</span>
+        </div>
+        <div class="usage-meter-row" id="usageRowImages">
+          <div class="usage-meter-top"><strong>Bilder</strong><span class="usage-meter-val">0 / 3</span></div>
+          <div class="usage-meter-track"><span class="usage-meter-fill"></span></div>
+          <span class="usage-meter-note">NOCO Render</span>
+        </div>
+        <div class="usage-meter-row" id="usageRowWiki">
+          <div class="usage-meter-top"><strong>Wikipedia</strong><span class="usage-meter-val">0 / 5</span></div>
+          <div class="usage-meter-track"><span class="usage-meter-fill"></span></div>
+          <span class="usage-meter-note">Wiki-API 1.1</span>
+        </div>
+        <div class="usage-meter-row" id="usageRowNexus">
+          <div class="usage-meter-top"><strong>Nexus-Auto</strong><span class="usage-meter-val">0 / 1</span></div>
+          <div class="usage-meter-track"><span class="usage-meter-fill"></span></div>
+          <span class="usage-meter-note">Automation Vault + Wiki</span>
+        </div>
+        <div class="usage-meter-row" id="usageRowVideos">
+          <div class="usage-meter-top"><strong>Videos</strong><span class="usage-meter-val">0 / 1</span></div>
+          <div class="usage-meter-track"><span class="usage-meter-fill"></span></div>
+          <span class="usage-meter-note">NOCO Motion</span>
+        </div>
+      </div>
+      <p class="usage-reset-note" id="usageResetNote">Reset taeglich um Mitternacht</p>
+      <div class="usage-dialog-actions">
+        <button type="button" class="setting-btn st3-btn" id="usageResetBtn">Limits zuruecksetzen</button>
+        <button type="button" class="iridescent-btn usage-upgrade-btn" id="usageUpgradeBtn"><span class="btn-shimmer"></span>Exclusive freischalten</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="noco-feature-dialog liquid-glass liquid-glass-prism" id="nocoFeatureDialog">
+    <div class="dialog-glow nfd-glow" aria-hidden="true"></div>
+    <button type="button" class="nfd-close icon-btn" id="nfdClose" aria-label="Schliessen">×</button>
+    <div class="nfd-body">
+      <p class="nfd-kicker">Neu in NOCO AI</p>
+      <h2 class="nfd-title">Wiki · Nexus-Auto · Automation</h2>
+      <p class="nfd-lead"><strong>NOCO Wiki</strong> nutzt live Wikipedia — wenn du es erlaubst. <strong>Nexus-Auto</strong> wählt intelligent zwischen Offline-Wissen &amp; Wiki.</p>
+      <div class="nfd-grid nfd-grid-wide">
+        <div class="nfd-card nfd-card-featured">
+          <span class="nfd-card-tag auto">◈ NEU</span>
+          <strong>Nexus-Auto</strong>
+          <p>Automation — Fakten → Wikipedia · NOCO/Smalltalk → Offline-Wissen</p>
+        </div>
+        <div class="nfd-card nfd-card-featured">
+          <span class="nfd-card-tag online">◎ NEU</span>
+          <strong>NOCO Wiki</strong>
+          <p>Wiki-API 1.1 · Wikipedia live · Free 5/Tag · mit Rechtshinweis</p>
+        </div>
+        <div class="nfd-card">
+          <span class="nfd-card-tag offline">offline</span>
+          <strong>NOCO-Wissen</strong>
+          <p>520+ Vault-Themen · offline · immer verfuegbar</p>
+        </div>
+        <div class="nfd-card">
+          <span class="nfd-card-tag create">create</span>
+          <strong>Render &amp; Motion</strong>
+          <p>Bilder &amp; Videos im Chat · 3600 Motive</p>
+        </div>
+        <div class="nfd-card">
+          <span class="nfd-card-tag pro">pro</span>
+          <strong>NOCO Pro · Nutzung</strong>
+          <p>Oben <em>Nutzung</em> — alle Limits mit Balken · Reset 0:00</p>
+        </div>
+        <div class="nfd-card">
+          <span class="nfd-card-tag tools">tools</span>
+          <strong>Clean Mode</strong>
+          <p>Einstellungen → aufgeraeumte UI · Glow &amp; Tools einzeln aus</p>
+        </div>
+      </div>
+      <label class="nfd-never-row">
+        <input type="checkbox" id="nfdNeverAgain">
+        <span>Nicht mehr anzeigen</span>
+      </label>
+      <button type="button" class="iridescent-btn nfd-cta" id="nfdCtaBtn">
+        <span class="btn-shimmer"></span>
+        Verstanden — loslegen
+      </button>
+      <p class="nfd-foot">Pop-up erscheint bei jedem Seiten-Reload — ausser „Nicht mehr anzeigen“.</p>
+    </div>
+  </dialog>
+
   <div class="pixel-fullscreen" id="pixelFullscreen" hidden>
     <canvas id="pixelFullscreenCanvas" class="pixel-canvas"></canvas>
     <button type="button" class="pixel-fs-close" id="pixelFullscreenClose" aria-label="Schliessen">×</button>
@@ -888,10 +1431,13 @@
 
   <div class="toast" id="toast" hidden role="status"></div>
 
-  <script src="js/brain.js?v=4.1.2" charset="UTF-8"></script>
-  <script src="js/pixelgen.js?v=4.1.2" charset="UTF-8"></script>
-  <script src="js/imgdetect.js?v=4.1.2" charset="UTF-8"></script>
-  <script src="js/boot-fx.js?v=4.1.2" charset="UTF-8"></script>
-  <script src="js/app.js?v=4.1.2" charset="UTF-8"></script>
+  <script defer src="js/boot-fx.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/agent.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/insight.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/motion.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/pixelgen.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/imgdetect.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/wiki-api.js?v=5.2.44" charset="UTF-8"></script>
+  <script defer src="js/app.js?v=5.2.44" charset="UTF-8"></script>
 </body>
 </html>

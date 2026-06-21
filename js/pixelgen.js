@@ -2592,8 +2592,17 @@
         if (ax > 0.08 && ax < 0.42 && Math.abs(ny) < 0.28 - ax * 0.35) return 0.8;
         return 0;
       case "house":
-        if (ny > 0.05 && inRect(nx, ny, -0.32, 0.32, 0.05, 0.42)) return 0.85;
-        if (ny <= 0.05 && ny > -0.35 && ax < 0.38 - ny * 0.5) return 0.9;
+      case "home":
+      case "cottage":
+      case "gingerhouse":
+        if (ny > 0.42 && ny < 0.48 && ax < 0.42) return 0.55;
+        if (ny > 0.1 && inRect(nx, ny, -0.36, 0.36, 0.1, 0.42)) return 0.88;
+        if (ny <= 0.1 && ny > -0.4 && ax < 0.42 - (ny + 0.4) * 0.32) return 0.92;
+        if (inRect(nx, ny, 0.14, 0.3, -0.36, 0.08)) return 0.9;
+        if (inRect(nx, ny, -0.12, 0.12, 0.2, 0.42)) return 0.72;
+        if (inRect(nx, ny, -0.3, -0.14, 0.14, 0.3)) return 0.68;
+        if (inRect(nx, ny, 0.14, 0.3, 0.14, 0.3)) return 0.68;
+        if (ny > 0.38 && inRect(nx, ny, -0.4, 0.4, 0.38, 0.46)) return 0.82;
         return 0;
       case "car":
         if (inRect(nx, ny, -0.42, 0.42, 0.0, 0.22)) return 0.85;
@@ -3187,6 +3196,10 @@
     if (motif && motif.pattern === "moon") {
       base = lerpColor(palette[9], palette[7], t);
     }
+    if (motif && (motif.pattern === "house" || motif.pattern === "home" || motif.pattern === "cottage")) {
+      if (t > 0.72) base = lerpColor(palette[3], palette[4], (t - 0.72) / 0.28);
+      else if (t < 0.45) base = lerpColor(palette[7], palette[8], t / 0.45);
+    }
     var vig = 1 - Math.pow(dist(x, y, cx, cy) / (size * 0.72), 2) * 0.22;
     if (styleKey === "cosmic" || styleKey === "aurora") {
       base = lerpColor(palette[7], palette[5], t * 0.7 + detHash(x, y, seed, "bg") * 0.04);
@@ -3343,7 +3356,9 @@
   var ALL_MOTIFS = buildMotifList();
 
   var MOTIF_ALIASES = [
-    ["pferdchen", "pferd"], ["hündchen", "hund"], ["hundchen", "hund"], ["welpe", "hund"],
+    ["emoji", "smiley happy gesicht emoji"],
+    ["emojis", "smiley happy gesicht"],
+    ["gesicht", "smiley happy"], ["pferdchen", "pferd"], ["hundchen", "hund"], ["welpe", "hund"],
     ["kätzchen", "katze"], ["katzchen", "katze"], ["kitten", "katze"], ["kitty", "katze"],
     ["vogel", "bird"], ["fischchen", "fisch"], ["auto", "car"], ["wagen", "car"],
     ["flugzeug", "plane"], ["flieger", "plane"], ["zug", "train"], ["bahn", "train"],
@@ -3613,13 +3628,204 @@
 
   function extractSubject(prompt) {
     var n = normalize(prompt);
-    n = n.replace(/^(mach|erstelle|generiere|generier|male|zeichne|render|pixel|zeig|noco render|kannst du|koenntest du|bitte|ich will|ich moechte)( mir)?( bitte)?( ein)?( (pixel)?bild)?( (von|vom|der|die|das|eine|einen|einem))?\s*/g, "");
-    n = n.replace(/^(ein|eine|einen)\s+(bild|pixel|motiv)\s+(von|vom)\s*/g, "");
-    n = n.replace(/^(bild|pixel)\s+(von|vom)\s*/g, "");
+    n = n.replace(/^(mach|erstelle|generiere|generier|male|zeichne|render|pixel|zeig|noco render|kannst du|koenntest du|bitte|ich will|ich moechte|create|make|generate)( mir)?( bitte)?( ein)?( (pixel)?bild)?( (video|film|animation|clip|motion|bewegung))?( (von|vom|der|die|das|eine|einen|einem|of|a|an))?\s*/gi, "");
+    n = n.replace(/^(ein|eine|einen)\s+(bild|pixel|motiv|video|film|animation|clip)\s+(von|vom|of)\s*/gi, "");
+    n = n.replace(/^(bild|pixel|video|film|animation|clip|motion)\s+(von|vom|of)\s*/gi, "");
+    n = n.replace(/\b(video|film|animation|clip|bewegung|motion)\s+(von|vom|of|einer?|einem?)\s+/gi, "");
     n = n.replace(/\s+(im|in|mit|style|stil|modus)\s+.+$/g, "");
     n = n.replace(/\s+bei\s+nacht$/g, " nacht");
     n = n.replace(/\s+als\s+.+$/g, "");
     return n.trim();
+  }
+
+  function levenshtein(a, b) {
+    var i, j, m, n, row, prev, cur;
+    a = String(a || "");
+    b = String(b || "");
+    m = a.length;
+    n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    row = [];
+    for (j = 0; j <= n; j++) row[j] = j;
+    for (i = 1; i <= m; i++) {
+      prev = row[0];
+      row[0] = i;
+      for (j = 1; j <= n; j++) {
+        cur = row[j];
+        row[j] = a.charAt(i - 1) === b.charAt(j - 1)
+          ? prev
+          : Math.min(prev + 1, row[j] + 1, row[j - 1] + 1);
+        prev = cur;
+      }
+    }
+    return row[n];
+  }
+
+  function wordSimilarity(a, b) {
+    a = normalize(a);
+    b = normalize(b);
+    if (!a || !b) return 0;
+    if (a === b) return 1;
+    if (a.length >= 3 && b.length >= 3 && (a.indexOf(b) >= 0 || b.indexOf(a) >= 0)) return 0.82;
+    var maxLen = Math.max(a.length, b.length);
+    return Math.max(0, 1 - levenshtein(a, b) / maxLen);
+  }
+
+  function findFuzzyMotifCandidates(subject, limit) {
+    var word = normalize(subject);
+    limit = limit || 3;
+    if (!word || word.length < 2) return [];
+    var ranked = [];
+    var seen = {};
+    var i, k, key, sim, lbl, entry;
+    for (i = 0; i < ALL_MOTIFS.length; i++) {
+      for (k = 0; k < ALL_MOTIFS[i].keys.length; k++) {
+        key = normalize(ALL_MOTIFS[i].keys[k]);
+        if (isGeneratedMotifKey(key)) continue;
+        sim = wordSimilarity(word, key);
+        if (sim < 0.22) continue;
+        lbl = getMotifLabel(ALL_MOTIFS[i]);
+        if (seen[lbl]) continue;
+        seen[lbl] = true;
+        ranked.push({ sim: sim, motif: ALL_MOTIFS[i], key: key, label: lbl });
+      }
+      if (ALL_MOTIFS[i].label) {
+        sim = wordSimilarity(word, normalize(ALL_MOTIFS[i].label));
+        if (sim >= 0.22) {
+          lbl = getMotifLabel(ALL_MOTIFS[i]);
+          if (!seen[lbl]) {
+            seen[lbl] = true;
+            ranked.push({ sim: sim, motif: ALL_MOTIFS[i], key: ALL_MOTIFS[i].label, label: lbl });
+          }
+        }
+      }
+    }
+    ranked.sort(function (a, b) { return b.sim - a.sim; });
+    return ranked.slice(0, limit);
+  }
+
+  function findFuzzyMotif(subject) {
+    var list = findFuzzyMotifCandidates(subject, 1);
+    if (list.length && list[0].motif) return list[0];
+    return null;
+  }
+
+  function computeNeedsConfirm(matchType, matchPct) {
+    if (matchType === "exact" && (matchPct || 0) >= 95) return false;
+    return true;
+  }
+
+  function buildSuggestPhrase(userAsked, mappedLabel, alternateLabel) {
+    var parts = [];
+    if (alternateLabel && normalize(alternateLabel) !== normalize(mappedLabel)) {
+      parts.push("**Alternativ in der Bank:** *" + alternateLabel + "*");
+    }
+    if (userAsked && mappedLabel && normalize(userAsked) !== normalize(mappedLabel)) {
+      parts.push("*Tipp:* Schreib den Begriff genauer — z.B. *Smiley* statt *Emoji*, *Katze* statt *Kätzchen*.");
+    }
+    return parts.join("\n");
+  }
+
+  function buildMotifClarifyMessage(resolved, mode) {
+    mode = mode || "bild";
+    if (!resolved) return "**Passt das Motiv?**";
+    var asked = resolved.userAsked || "dein Wunsch";
+    var mapped = resolved.mappedLabel || resolved.label || "Motiv";
+    var pct = resolved.matchPct || 0;
+    var verb = mode === "video" ? "animieren" : "zeichnen";
+    var msg = "Du wolltest **" + asked + "** — ich würde **" + mapped + "** " + verb + " (*" + pct + "% Ähnlichkeit*).";
+    if (resolved.suggestPhrase) msg += "\n\n" + resolved.suggestPhrase;
+    if (pct < 50) {
+      msg += "\n\n*Die Zuordnung ist unsicher — nur starten wenn es für dich passt.*";
+    }
+    msg += "\n\n**Passt das?**";
+    return msg;
+  }
+
+  function enrichResolvedMeta(base, userAsked, mappedLabel, matchType, matchPct, extras) {
+    extras = extras || {};
+    var out = {
+      supported: true,
+      motif: base.motif,
+      label: mappedLabel,
+      userAsked: userAsked,
+      mappedLabel: mappedLabel,
+      matchType: matchType,
+      matchScore: extras.matchScore != null ? extras.matchScore : matchPct,
+      matchPct: matchPct,
+      mappingNote: buildMappingNote(userAsked, mappedLabel, matchType, matchPct),
+      subject: extras.subject || userAsked,
+      needsConfirm: computeNeedsConfirm(matchType, matchPct),
+      suggestPhrase: buildSuggestPhrase(userAsked, mappedLabel, extras.alternateLabel),
+      alternateLabel: extras.alternateLabel || "",
+      alternatePct: extras.alternatePct || 0,
+      alternateMotif: extras.alternateMotif || null,
+      fuzzyKey: extras.fuzzyKey || ""
+    };
+    return out;
+  }
+
+  function buildMappingNote(userAsked, mappedLabel, matchType, matchPct) {
+    if (!userAsked || !mappedLabel) return "";
+    var ua = String(userAsked).trim();
+    var ml = String(mappedLabel).trim();
+    if (ua.toLowerCase() === ml.toLowerCase()) return "";
+    if (matchType === "exact") return "";
+    return "**Dein Wunsch:** " + ua + " → **NOCO Datenbank:** " + ml +
+      (matchPct ? " *(nächstes Motiv · " + matchPct + "% Ähnlichkeit)*" : " *(nächstes Motiv in der Bibliothek)*");
+  }
+
+  function resolveMotifSmart(prompt, opts) {
+    opts = opts || {};
+    var userRaw = String(prompt || "").trim();
+    var subject = applyMotifAliases(extractSubject(userRaw));
+    if (!subject) subject = applyMotifAliases(normalize(userRaw));
+    var ua = subject || userRaw;
+
+    var strict = matchMotifDetailed(userRaw, { allowFallback: false });
+    if (strict.supported && strict.motif && strict.score >= MIN_MOTIF_MATCH_SCORE) {
+      var lblExact = strict.label || getMotifLabel(strict.motif);
+      return enrichResolvedMeta(strict, ua, lblExact, "exact", 100, { subject: subject, matchScore: strict.score });
+    }
+
+    var soft = matchMotifDetailed(userRaw, { allowFallback: false });
+    if (soft.motif && soft.score >= 40) {
+      var pctSoft = Math.min(94, Math.round(48 + soft.score * 0.45));
+      var lblSoft = soft.label || getMotifLabel(soft.motif);
+      return enrichResolvedMeta(soft, ua, lblSoft, "partial", pctSoft, { subject: subject, matchScore: soft.score });
+    }
+
+    var candidates = findFuzzyMotifCandidates(subject || userRaw, 3);
+    if (candidates.length && candidates[0].motif) {
+      var fuzzy = candidates[0];
+      var pctFuzz = Math.round(fuzzy.sim * 100);
+      var lblFuzz = fuzzy.label || getMotifLabel(fuzzy.motif);
+      var alt = candidates[1] && candidates[1].motif ? candidates[1] : null;
+      return enrichResolvedMeta(fuzzy, ua, lblFuzz, "fuzzy", pctFuzz, {
+        subject: subject,
+        matchScore: pctFuzz,
+        fuzzyKey: fuzzy.key,
+        alternateLabel: alt ? alt.label : "",
+        alternatePct: alt ? Math.round(alt.sim * 100) : 0,
+        alternateMotif: alt ? alt.motif : null
+      });
+    }
+
+    var hashPick = matchMotifDetailed(userRaw, { allowFallback: true, uniqueId: opts.uniqueId });
+    if (hashPick.motif) {
+      var lblHash = hashPick.label || getMotifLabel(hashPick.motif);
+      return enrichResolvedMeta(hashPick, ua, lblHash, "catalog", 42, {
+        subject: subject,
+        matchScore: MIN_MOTIF_MATCH_SCORE
+      });
+    }
+
+    return {
+      supported: false,
+      message: buildUnsupportedMessage(subject || userRaw),
+      userAsked: subject || userRaw
+    };
   }
 
   function isGeneratedMotifKey(key) {
@@ -3724,9 +3930,15 @@
     return ALL_MOTIFS[index] || null;
   }
 
+  function isMotionRequest(text) {
+    var n = normalize(text);
+    return /\/motion\b|noco motion|pseudo.?video|video erstellen|film erstellen|animation erstellen|mach.*video|mach mir.*video|stell.*video|erstell.*video|generier.*video|will.*video|moechte.*video|video von|film von|animation von|motion von|bewegung von|animier|wie.*video|video.*von|clip von|locomotion|localotion/.test(n);
+  }
+
   function isImageRequest(text) {
     var n = normalize(text);
-    return /bild|generier|erstell.*bild|pixel|zeichne|male\s|zeig.*bild|\/image|\/bild|\/pixel|foto gener|noco render|mach.*bild|bild von|bild vom|bild einer|bild ein|render.*bild|pixel.*von|motiv.*von|ich will.*bild|ich moechte.*bild|kannst du.*bild/.test(n);
+    if (isMotionRequest(text)) return false;
+    return /bild|generier|erstell.*bild|pixel|zeichne|male\s|zeig.*bild|\/image|\/bild|\/pixel|foto gener|noco render|mach.*bild|mach mir.*bild|stell.*bild|bild von|bild vom|bild einer|bild ein|render.*bild|pixel.*von|motiv.*von|ich will.*bild|ich moechte.*bild|kannst du.*bild|wie.*bild.*erstell/.test(n);
   }
 
   function generate(prompt, opts) {
@@ -4959,8 +5171,12 @@
     getPixelRevealProgress: getPixelRevealProgress,
     getRenderInterrupts: function () { return RENDER_INTERRUPTS.slice(); },
     isImageRequest: isImageRequest,
+    isMotionRequest: isMotionRequest,
     matchMotif: matchMotif,
     resolveMotif: resolveMotif,
+    resolveMotifSmart: resolveMotifSmart,
+    buildMappingNote: buildMappingNote,
+    buildMotifClarifyMessage: buildMotifClarifyMessage,
     buildUnsupportedMessage: buildUnsupportedMessage,
     getStyles: getStyles,
     getExamplePrompts: getExamplePrompts,
